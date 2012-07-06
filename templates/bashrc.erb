@@ -1,0 +1,6 @@
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+export PS1="[<%= @hostgroup %>]\n$PS1"

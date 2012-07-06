@@ -1,0 +1,32 @@
+# -- Archive info
+#ArchiveJobs=yes
+#ArchiveDir="/tmp"
+#ArchiveSteps=yes
+#ArchiveScript=
+#JobPurge=12
+#StepPurge=1
+
+# -- Authentication (slurmdbd <-> slurmctld)
+AuthType=auth/munge
+
+# -- Slurmdbd core
+DbdAddr=<%= scope.lookupvar('slurm::params::slurmdbd_hostname') %>
+DbdHost=<%= scope.lookupvar('slurm::params::slurmdbd_hostname') %>
+DbdPort=<%= scope.lookupvar('slurm::params::slurmdbd_port') %>
+SlurmUser=slurm
+DebugLevel=3
+LogFile=/var/log/slurm/slurmdbd.log
+PidFile=/var/run/slurmdbd.pid
+PluginDir=/usr/lib64/slurm
+#MessageTimeout=300
+#DefaultQOS=normal,standby
+#PrivateData=accounts,users,usage,jobs
+#TrackWCKey=yes
+
+# -- External database
+StorageType=accounting_storage/mysql
+StorageHost=<%= scope.lookupvar('slurm::params::slurmdbd_mysql_hostname') %>
+StoragePort=<%= scope.lookupvar('slurm::params::slurmdbd_mysql_port') %>
+StorageLoc=<%= scope.lookupvar('slurm::params::slurmdbd_mysql_dbname') %>
+StorageUser=<%= scope.lookupvar('slurm::params::slurmdbd_mysql_user') %>
+StoragePass=<%= scope.lookupvar('slurm::params::slurmdbd_mysql_passwd') %>

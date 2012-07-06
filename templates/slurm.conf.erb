@@ -1,0 +1,101 @@
+#
+# CERN
+# Slurm evaluation configuration file -- 2012
+#
+ClusterName=test
+ControlMachine=<%= scope.lookupvar('slurm::params::slurm_master_hostname') %>
+#ControlAddr=
+
+BackupController=<%= scope.lookupvar('slurm::params::slurm_backup_hostname')%>
+#BackupAddr=
+
+SlurmUser=slurm
+#SlurmdUser=root
+SlurmctldPort=<%= scope.lookupvar('slurm::params::slurmctld_port') %>
+SlurmdPort=<%= scope.lookupvar('slurm::params::slurmd_port') %>
+AuthType=auth/munge
+#JobCredentialPrivateKey=
+#JobCredentialPublicCertificate=
+StateSaveLocation=/var/spool/slurmctld/state
+SlurmdSpoolDir=/var/spool/slurmd
+SwitchType=switch/none
+MpiDefault=none
+SlurmctldPidFile=/var/run/slurmctld.pid
+SlurmdPidFile=/var/run/slurmd.pid
+ProctrackType=proctrack/pgid
+PluginDir=/usr/lib64/slurm/
+CacheGroups=0
+#FirstJobId=
+ReturnToService=0
+#MaxJobCount=
+#PlugStackConfig=
+#PropagatePrioProcess=
+#PropagateResourceLimits=
+#PropagateResourceLimitsExcept=
+#Prolog=
+#Epilog=
+#SrunProlog=
+#SrunEpilog=
+#TaskProlog=
+#TaskEpilog=
+#TaskPlugin=
+#TrackWCKey=no
+#TreeWidth=50
+#TmpFs=
+#UsePAM=
+#
+# TIMERS
+SlurmctldTimeout=300
+SlurmdTimeout=300
+InactiveLimit=0
+MinJobAge=10
+KillWait=30
+Waittime=0
+#
+# SCHEDULING
+SchedulerType=sched/backfill
+#SchedulerAuth=
+#SchedulerPort=
+#SchedulerRootFilter=
+SelectType=select/cons_res
+SelectTypeParameters=CR_Core
+FastSchedule=0
+PriorityType=priority/multifactor
+#PriorityDecayHalfLife=14-0
+#PriorityUsageResetPeriod=14-0
+PriorityWeightFairshare=100000
+PriorityWeightAge=0
+PriorityWeightPartition=0
+PriorityWeightJobSize=0
+PriorityWeightQOS=0
+#PriorityMaxAge=1-0
+#
+# LOGGING
+SlurmctldDebug=3
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdDebug=3
+SlurmdLogFile=/var/log/slurm/slurmd.log
+
+JobCompType=jobcomp/none
+#JobCompLoc=/var/spool/slurmctld/jobcomp
+
+# ACCOUNTING
+JobAcctGatherType=jobacct_gather/linux
+JobAcctGatherFrequency=30
+AccountingStorageType=accounting_storage/slurmdbd
+#AccountingStorageLoc=/var/lib/slurm/accounting
+AccountingStorageEnforce=associations
+AccountingStorageHost=<%= scope.lookupvar('slurm::params::slurmdbd_hostname') %>
+AccountingStoragePort=<%= scope.lookupvar('slurm::params::slurmdbd_port') %>
+#AccountingStoragePass= # Not necessary, auth through Munge
+#AccountingStorageUser=
+
+# COMPUTE NODES
+<% scope.lookupvar('slurm::params::slurm_nodelist').each do |node| -%>
+NodeName=<%= node['name'] %> ThreadsPerCore=<%= node['threads'] %> CPUs=<%= node['cpu_tot'] %> State=<%= node['state'] %>
+<% end -%>
+
+# PARTITIONS
+<% scope.lookupvar('slurm::params::slurm_partitionlist').each do |part| -%>
+PartitionName=<%= part['name'] %> Nodes=<%= part['nodes'] %> Default=<%= part['default'] %> MaxTime=<%= part['maxtime'] %> State=UP
+<% end -%>
