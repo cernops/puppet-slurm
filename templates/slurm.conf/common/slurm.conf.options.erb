@@ -90,12 +90,5 @@ AccountingStoragePort=<%= scope.lookupvar('slurm::params::slurmdbd_port') %>
 #AccountingStoragePass= # Not necessary, auth through Munge
 #AccountingStorageUser=
 
-# COMPUTE NODES
-<% scope.lookupvar('slurm::params::slurm_nodelist').each do |node| -%>
-NodeName=<%= node['name'] %> ThreadsPerCore=<%= node['threads'] %> CPUs=<%= node['cpu_tot'] %> State=<%= node['state'] %>
-<% end -%>
-
-# PARTITIONS
-<% scope.lookupvar('slurm::params::slurm_partitionlist').each do |part| -%>
-PartitionName=<%= part['name'] %> Nodes=<%= part['nodes'] %> Default=<%= part['default'] %> MaxTime=<%= part['maxtime'] %> State=UP
-<% end -%>
+# We want config files to differ across nodes.
+DebugFlags=NO_CONF_HASH

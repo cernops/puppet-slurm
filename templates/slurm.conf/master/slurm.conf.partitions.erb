@@ -1,0 +1,4 @@
+# PARTITIONS
+<% scope.lookupvar('slurm::params::slurm_partitionlist').each do |part| -%>
+PartitionName=<%= part['name'] %> Nodes=<%= part['nodes'] %> Default=<%= part['default'] %> MaxTime=<%= part['maxtime'] %> State=UP
+<% end -%>

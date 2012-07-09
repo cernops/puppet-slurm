@@ -11,14 +11,24 @@ class slurm::worker::config {
     mode    => '0755',
   }
 
-  file{'/etc/slurm/slurm.conf':
-    ensure  => 'file',
+  concat{'/etc/slurm/slurm.conf':
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('slurm/slurm.conf.erb'),
     require => Class['slurm::worker::install'],
     notify  => Class['slurm::worker::service']
+  }
+
+  concat::fragment{'worker-options':
+    target  => '/etc/slurm/slurm.conf',
+    content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
+    order   => 1
+  }
+
+  concat::fragment{'worker-nodelist':
+    target  => '/etc/slurm/slurm.conf',
+    content => template('slurm/slurm.conf/worker/slurm.conf.nodelist.erb'),
+    order   => 2
   }
 
   file{'/etc/slurm/plugstack.conf.d':

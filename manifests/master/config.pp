@@ -41,14 +41,30 @@ class slurm::master::config {
     #refreshonly => true
   }
 
-  file{'/etc/slurm/slurm.conf':
-    ensure  => 'file',
+  concat{'/etc/slurm/slurm.conf':
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('slurm/slurm.conf.erb'),
     require => Class['slurm::master::install'],
     notify  => Class['slurm::master::service']
+  }
+
+  concat::fragment{'master-options':
+    target  => '/etc/slurm/slurm.conf',
+    content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
+    order   => 1
+  }
+
+  concat::fragment{'master-nodelist':
+    target  => '/etc/slurm/slurm.conf',
+    content => template('slurm/slurm.conf/master/slurm.conf.nodelist.erb'),
+    order   => 2
+  }
+
+  concat::fragment{'master-partitions':
+    target  => '/etc/slurm/slurm.conf',
+    content => template('slurm/slurm.conf/master/slurm.conf.partitions.erb'),
+    order   => 3
   }
 
   file{'/etc/slurm/plugstack.conf.d':
