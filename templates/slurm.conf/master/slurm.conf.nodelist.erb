@@ -1,4 +1,4 @@
 # COMPUTE NODES
 <% scope.lookupvar('slurm::params::slurm_nodelist').each do |node| -%>
-NodeName=<%= node['name'] %> ThreadsPerCore=<%= node['threads'] %> CPUs=<%= node['cpu_tot'] %> State=<%= node['state'] %>
+NodeName=<%= node['name'] %> Sockets=<%= node['sockets'] %> CoresPerSocket=<%= node['cores_per_socket'] %> ThreadsPerCore=<%= node['threads_per_core'] %> State=<%= node['state'] %>
 <% end -%>
