@@ -1,10 +1,10 @@
-# Fact: threadcountpercpu
+# Fact: threadcountpercore
 #
-# Purpose: Return the number of threads per core/cpu
+# Purpose: Return the number of threads per core
 #
 # Rants: Nacho Barrientos <nacho.barrientos@cern.ch>
 #
-Facter.add('threadcountpercpu') do
+Facter.add('threadcountpercore') do
   confine :kernel => :linux
 
   setcode do
