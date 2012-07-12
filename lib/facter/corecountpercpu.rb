@@ -14,7 +14,7 @@ Facter.add('corecountpercpu') do
 
     if File.exists?(source)
        info = Facter::Util::Resolution.exec("grep 'cpu cores' #{source}")
-       info.scan(/(\d+)/).uniq.first.first
+       info.scan(/(\d+)/).uniq.first.first.to_i
     end
   end
 end
