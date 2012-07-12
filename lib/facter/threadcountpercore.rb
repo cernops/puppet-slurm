@@ -10,7 +10,7 @@ Facter.add('threadcountpercore') do
   setcode do
     sockets = Facter.value(:physicalprocessorcount).to_i
     vcpus = Facter.value(:processorcount).to_i
-    corespercpu = Facter.value(:corecountpercpu).to_i
+    corespercpu = Facter.value(:corecountpercpu)
     vcpus / (sockets * corespercpu)
   end
 end
