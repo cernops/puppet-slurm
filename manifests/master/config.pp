@@ -55,11 +55,7 @@ class slurm::master::config {
     order   => 1
   }
 
-  concat::fragment{'master-nodelist':
-    target  => '/etc/slurm/slurm.conf',
-    content => template('slurm/slurm.conf/master/slurm.conf.nodelist.erb'),
-    order   => 2
-  }
+  Concat::Fragment <<| tag == '${::hostgroup_1}_slurm_nodelist' |>>
 
   concat::fragment{'master-partitions':
     target  => '/etc/slurm/slurm.conf',

@@ -31,6 +31,13 @@ class slurm::worker::config {
     order   => 2
   }
 
+  @@concat::fragment{"slurm_nodelist_${::hostname}":
+    tag     => "${::hostgroup_1}_slurm_nodelist",
+    order   => "2",
+    target  => "/etc/slurm/slurm.conf",
+    content => template('slurm/slurm.conf/worker/slurm.conf.nodelist.erb'),
+  }
+
   file{'/etc/slurm/plugstack.conf.d':
     ensure  => 'directory',
     require => Class['slurm::worker::install'],
