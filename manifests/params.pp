@@ -15,6 +15,5 @@ class slurm::params {
   $slurmdbd_mysql_user = hiera('slurmdbd_mysql_user')
   # Warning: this one is not hostgroup indep yet (common.yaml)
   $slurmdbd_mysql_passwd = hiera('slurmdbd_mysql_passwd')
-  $slurm_nodelist = hiera_array('nodes')
   $slurm_partitionlist = hiera_array('partitions')
 }
