@@ -55,7 +55,7 @@ class slurm::master::config {
     order   => 1
   }
 
-  Concat::Fragment <<| tag == '${::hostgroup_1}_slurm_nodelist' |>>
+  Concat::Fragment <<| tag == "${::hostgroup_1}_slurm_nodelist" |>>
 
   concat::fragment{'master-partitions':
     target  => '/etc/slurm/slurm.conf',
