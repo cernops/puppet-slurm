@@ -7,7 +7,7 @@
 # Rants: Nacho Barrientos <nacho.barrientos@cern.ch>
 #
 
-DEFAULT_CORECOUNT = 1
+default_corecount = 1
 
 Facter.add('corecountpercpu') do
   confine :kernel => :linux
@@ -18,7 +18,7 @@ Facter.add('corecountpercpu') do
     if File.exists?(source)
         info = Facter::Util::Resolution.exec("grep 'cpu cores' #{source}")
         if info.nil?
-            DEFAULT_CORECOUNT
+            default_corecount
         else
             info.scan(/(\d+)/).uniq.first.first.to_i
         end
