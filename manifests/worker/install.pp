@@ -9,6 +9,6 @@ class slurm::worker::install {
      ensure => $slurm_version,
   }
   package {'auks-slurm':
-     ensure => '0.4.0-1CERN2.ai6',
+     ensure => $auks::params::auks_version,
   }
 }
