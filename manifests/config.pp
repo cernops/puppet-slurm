@@ -63,12 +63,4 @@ class slurm::config {
     refreshonly => true
   }
 
-  # TODO: Rewrite using Augeas
-  exec{'disable-yum-autoupdate':
-    cwd         => "/",
-    path        => "/bin",
-    command     => "sed -i -e 's/YUMUPDATE=1/YUMUPDATE=0/' /etc/sysconfig/yum-autoupdate",
-    onlyif      => "test -f /etc/sysconfig/yum-autoupdate"
-  }
-
 }
