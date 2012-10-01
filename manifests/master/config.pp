@@ -15,22 +15,24 @@ class slurm::master::config {
     ensure  => 'directory',
   }
 
-  $nfs_volume = hiera('slurm_sharedstate_nfs_url')
+  $nfs_volume = hiera('slurm_sharedstate_nfs_url', undef)
 
-  augeas{'cluster state':
-    context => "/files/etc/fstab/",
-    changes => [
-      "set 01/spec ${nfs_volume}",
-      "set 01/file /var/spool/slurmctld/state",
-      "set 01/vfstype nfs",
-      "set 01/opt[1] sync",
-      "set 01/opt[2] rw",
-      "set 01/opt[3] noexec",
-      "set 01/opt[4] auto",
-      "set 01/dump 0",
-      "set 01/passno 0",
-    ],
-    onlyif => "match *[spec='${nfs_volume}'] size == 0",
+  if $nfs_volume {
+      augeas{'cluster state':
+        context => "/files/etc/fstab/",
+        changes => [
+          "set 01/spec ${nfs_volume}",
+          "set 01/file /var/spool/slurmctld/state",
+          "set 01/vfstype nfs",
+          "set 01/opt[1] sync",
+          "set 01/opt[2] rw",
+          "set 01/opt[3] noexec",
+          "set 01/opt[4] auto",
+          "set 01/dump 0",
+          "set 01/passno 0",
+        ],
+        onlyif => "match *[spec='${nfs_volume}'] size == 0",
+      }
   }
 
   exec{'mount-auto-filesystems':

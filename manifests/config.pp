@@ -29,7 +29,7 @@ class slurm::config {
     owner   => 'munge',
     group   => 'munge',
     mode    => '0400',
-    content => base64_decode(hiera('slurm_munge_key')),
+    content => base64_decode(hiera('slurm_munge_key', 'cGxhY2Vob2xkZXI=')),
     notify  => Service['munge']
   }
 
