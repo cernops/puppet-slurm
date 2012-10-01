@@ -14,5 +14,5 @@ class slurm::params {
   $slurmdbd_mysql_dbname = hiera('slurmdbd_mysql_dbname', 'slurm')
   $slurmdbd_mysql_user = hiera('slurmdbd_mysql_user', 'slurm')
   $slurmdbd_mysql_passwd = hiera('slurmdbd_mysql_passwd', 'slurm')
-  $slurm_partitionlist = hiera_array('partitions', '[]')
+  $slurm_partitionlist = hiera('partitions', '[]')
 }
