@@ -40,6 +40,7 @@ class slurm::master::config {
     path        => "/bin",
     command     => "mount -a",
     require     => File['/var/spool/slurmctld/state'],
+    onlyif      => "/bin/grep -q ${nfs_volume} /proc/mounts ; /usr/bin/test $? -eq 1"
     #refreshonly => true
   }
 
