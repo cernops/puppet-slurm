@@ -3,9 +3,9 @@ class slurm::slurmdb::install {
      ensure => 'latest',
   }
   package {'slurm-slurmdbd':
-     ensure => $slurm_version,
+     ensure => $slurm::params::slurm_version,
   }
   package {'slurm-sql':
-     ensure => $slurm_version,
+     ensure => $slurm::params::slurm_version,
   }
 }
