@@ -49,7 +49,7 @@ class slurm::master::config {
     group   => 'root',
     mode    => '0644',
     require => Class['slurm::master::install'],
-    notify  => Class['slurm::master::service']
+    #notify  => Class['slurm::master::service']
   }
 
   concat::fragment{'master-options':
