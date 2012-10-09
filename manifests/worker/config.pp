@@ -19,6 +19,9 @@ class slurm::worker::config {
     notify  => Class['slurm::worker::service']
   }
 
+  $fakecpucount = $::physicalprocessorcount*$::corecountpercpu*
+    $::threadcountpercore*$slurm::params::slurm_worker_slot_multiplier
+
   concat::fragment{'worker-options':
     target  => '/etc/slurm/slurm.conf',
     content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
