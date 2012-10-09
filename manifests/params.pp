@@ -16,4 +16,5 @@ class slurm::params {
   $slurmdbd_mysql_passwd = hiera('slurmdbd_mysql_passwd', 'slurm')
   $slurm_partitionlist = hiera('partitions', '[]')
   $slurm_worker_slot_multiplier = hiera('slurm_worker_slot_multiplier', 1)
+  $slurm_fastschedule = hiera('slurm_fastschedule', 2)
 }
