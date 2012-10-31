@@ -37,7 +37,7 @@ class slurm::config {
     path        => "/usr/bin",
     command     => "base64 -d munge.key.b64 > munge.key",
     creates     => "/etc/munge/munge.key",
-    subscribe   => File['/etc/munge/munge.key.gpg'],
+    subscribe   => File['/etc/munge/munge.key.b64'],
     notify      => File['/etc/munge/munge.key'],
     onlyif      => "test -f munge.key.b64",
     refreshonly => true
