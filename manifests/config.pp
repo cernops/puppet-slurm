@@ -24,12 +24,30 @@ class slurm::config {
     mode    => '0600',
   }
 
+  file{'/etc/munge/munge.key.b64':
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0400',
+    content => hiera('slurm_munge_key_b64', 'cGxhY2Vob2xkZXI='),
+  }
+
+  exec{'munge-key-decoding':
+    cwd         => "/etc/munge",
+    path        => "/usr/bin",
+    command     => "base64 -d munge.key.b64 > munge.key",
+    creates     => "/etc/munge/munge.key",
+    subscribe   => File['/etc/munge/munge.key.gpg'],
+    notify      => File['/etc/munge/munge.key'],
+    onlyif      => "test -f munge.key.b64",
+    refreshonly => true
+  }
+
   file{'/etc/munge/munge.key':
     ensure  => 'file',
     owner   => 'munge',
     group   => 'munge',
     mode    => '0400',
-    content => hiera('slurm_munge_key', 'empty'),
     notify  => Service['munge']
   }
 
