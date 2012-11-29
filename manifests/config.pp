@@ -30,6 +30,7 @@ class slurm::config {
     group   => 'root',
     mode    => '0400',
     content => hiera('slurm_munge_key_b64', 'cGxhY2Vob2xkZXI='),
+    require => Package['munge']
   }
 
   exec{'munge-key-decoding':
