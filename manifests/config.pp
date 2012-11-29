@@ -50,15 +50,6 @@ class slurm::config {
     notify  => Service['munge']
   }
 
-  file{'/root/.bashrc':
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0600',
-    content => template('slurm/bashrc.erb'),
-    require => Class['slurm::install'],
-  }
-
   # High performance tweaks recommended in:
   #   https://computing.llnl.gov/linux/slurm/high_throughput.html
   augeas{'sysctl-tweaks':
