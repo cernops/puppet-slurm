@@ -1,6 +1,6 @@
 class slurm::master::install {
   package {'nfs-utils':
-     ensure => 'latest',
+     ensure => 'present',
   }
   package {'slurm':
      ensure => $slurm::params::slurm_version,
