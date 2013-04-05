@@ -35,7 +35,7 @@ class slurm::worker::config {
   }
 
   @@concat::fragment{"slurm_nodelist_${::hostname}":
-    tag     => "${::hostgroup_1}_slurm_nodelist",
+    tag     => "${::hostgroup_0}_slurm_nodelist",
     order   => "2",
     target  => "/etc/slurm/slurm.conf",
     content => template('slurm/slurm.conf/worker/slurm.conf.nodelist.erb'),
