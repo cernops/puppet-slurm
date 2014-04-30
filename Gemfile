@@ -14,8 +14,11 @@ end
 group :development do
   gem 'beaker',                 :require => false
   gem 'beaker-rspec',           :require => false
-  gem 'system_timer',           :require => false if RUBY_VERSION =~ /^1.8/
   gem 'vagrant-wrapper',        :require => false
+end
+
+if RUBY_VERSION =~ /^1.8/
+  gem 'system_timer', :group => :development
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
