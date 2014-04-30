@@ -1,75 +1,111 @@
+# == Class: slurm::config
+#
 class slurm::config {
 
-  if ( $::osfamily != 'RedHat' ) {
-    fail('This module is only tested on RedHat based machines')
+  include slurm
+
+  $log_dir                = $slurm::log_dir
+  $slurmctld_log_file     = inline_template('<%= File.join(@log_dir, "slurmctld.log") %>')
+  $slurmd_log_file        = inline_template('<%= File.join(@log_dir, "slurmd.log") %>')
+  $pid_dir                = $slurm::pid_dir
+  $shared_state_dir       = $slurm::shared_state_dir
+  $spool_dir              = $slurm::spool_dir
+  $slurmd_spool_dir       = $slurm::slurmd_spool_dir
+  $epilog                 = $slurm::_epilog
+  $prolog                 = $slurm::_prolog
+  $task_prolog            = $slurm::_task_prolog
+  $partitionlist_content  = $slurm::partitionlist_content
+  $partitionlist_source   = $slurm::partitionlist_source
+
+  if $partitionlist_content {
+    $partition_source   = undef
+    $partition_content  = template($partitionlist_content)
+  } elsif $partitionlist_source {
+    $partition_source   = $partitionlist_source
+    $partition_content  = undef
+  } else {
+    $partition_source   = undef
+    $partition_content  = template('slurm/slurm.conf/master/slurm.conf.partitions.erb')
   }
 
-  group{'slurm':
-    ensure  => present
+  File {
+    owner => 'slurm',
+    group => 'slurm',
   }
 
-  user{'slurm':
-    ensure  => present,
-    uid     => $slurm::params::slurm_user_uid,
-    gid     => 'slurm',
-    shell   => '/bin/false',
-    home    => '/home/slurm',
-    require => Group['slurm']
-  }
-
-  file{'/var/log/slurm':
+  file { $log_dir:
     ensure  => 'directory',
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0600',
+    mode    => '0700',
   }
 
-  file{'/etc/munge/munge.key.b64':
-    ensure  => 'file',
+  file { $pid_dir:
+    ensure  => 'directory',
+    mode    => '0700',
+  }
+
+  file { $shared_state_dir:
+    ensure  => 'directory',
+    mode    => '0700',
+  }
+
+  file { $spool_dir:
+    ensure  => 'directory',
+    mode    => '0700',
+  }
+
+  if $slurm::manage_group {
+    $_group_gid = $slurm::group_gid ? {
+      'UNSET' => undef,
+      default => $slurm::group_gid,
+    }
+
+    group { 'slurm':
+      ensure  => present,
+      gid     => $_group_gid,
+    }
+  }
+
+  if $slurm::manage_user {
+    $_user_uid = $slurm::user_uid ? {
+      'UNSET' => undef,
+      default => $slurm::user_uid,
+    }
+
+    user { 'slurm':
+      ensure  => present,
+      uid     => $_user_uid,
+      gid     => 'slurm',
+      shell   => $slurm::user_shell,
+      home    => $slurm::user_home,
+      comment => $slurm::user_comment,
+    }
+  }
+
+  concat { '/etc/slurm/slurm.conf':
     owner   => 'root',
     group   => 'root',
-    mode    => '0400',
-    content => hiera('slurm_munge_key_b64', 'cGxhY2Vob2xkZXI='),
-    require => Package['munge']
+    mode    => '0644',
+    #notify  => Class['slurm::master::service']
   }
 
-  exec{'munge-key-decoding':
-    cwd         => "/etc/munge",
-    path        => "/usr/bin",
-    command     => "base64 -d munge.key.b64 > munge.key",
-    subscribe   => File['/etc/munge/munge.key.b64'],
-    notify      => File['/etc/munge/munge.key'],
-    onlyif      => "test -f munge.key.b64",
-    refreshonly => true
+  concat::fragment { 'slurm.conf-common':
+    target  => '/etc/slurm/slurm.conf',
+    content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
+    order   => 1,
   }
 
-  file{'/etc/munge/munge.key':
-    ensure  => 'file',
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '0400',
-    notify  => Service['munge']
+  concat::fragment { 'slurm.conf-partitions':
+    target  => '/etc/slurm/slurm.conf',
+    content => $partition_content,
+    source  => $partition_source,
+    order   => 3,
   }
 
-  # High performance tweaks recommended in:
-  #   https://computing.llnl.gov/linux/slurm/high_throughput.html
-  augeas{'sysctl-tweaks':
-    context => "/files/etc/sysctl.conf/",
-    changes => [
-      #"set net.ipv4.tcp_max_syn_backlog 1024", # remembered conn buf size
-      "set net.core.somaxconn 1024", # socket.listen() backlog size
-      # Not changed:
-      #   - file-max: default values are higher
-    ],
-    notify => Exec['refresh-sysctl']
-  }
+  Concat::Fragment <<| tag == 'slurm_nodelist' |>>
 
-  exec{'refresh-sysctl':
-    cwd         => "/",
-    path        => "/sbin",
-    command     => "sysctl -p /etc/sysctl.conf &>/dev/null",
-    subscribe   => Augeas['sysctl-tweaks'],
-    refreshonly => true
+  sysctl { 'net.core.somaxconn':
+    ensure  => present,
+    value   => '1024',
   }
 
 }

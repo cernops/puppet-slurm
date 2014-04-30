@@ -1,0 +1,2 @@
+# PARTITIONS
+PartitionName=DEFAULT Nodes=c[0-9] State=UP

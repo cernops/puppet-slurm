@@ -1,94 +1,96 @@
 #
-# CERN
-# Slurm evaluation configuration file -- 2012
+# File managed by Puppet!
 #
-ClusterName=test
-ControlMachine=<%= scope.lookupvar('slurm::params::slurm_master_hostname') %>
-#ControlAddr=
+# See the slurm.conf man page for more information.
+#
 
-BackupController=<%= scope.lookupvar('slurm::params::slurm_backup_hostname')%>
-#BackupAddr=
-
-SlurmUser=slurm
-#SlurmdUser=root
-SlurmctldPort=<%= scope.lookupvar('slurm::params::slurmctld_port') %>
-SlurmdPort=<%= scope.lookupvar('slurm::params::slurmd_port') %>
+AccountingStorageEnforce=associations,limits,safe
+AccountingStorageHost=<%= scope.lookupvar('slurm::accounting_storage_host') %>
+#AccountingStorageLoc=
+AccountingStoragePass=<%= scope.lookupvar('slurm::accounting_storage_pass') %>
+AccountingStoragePort=<%= scope.lookupvar('slurm::slurmdbd_port') %>
+AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageUser=<%= scope.lookupvar('slurm::accounting_storage_user') %>
 AuthType=auth/munge
+#BackupAddr=
+#BackupController=
+CacheGroups=0
+ClusterName=<%= scope.lookupvar('slurm::cluster_name') %>
+#ControlAddr=
+ControlMachine=<%= scope.lookupvar('slurm::control_machine') %>
+CryptoType=crypto/munge
+<% if @epilog -%>
+Epilog=<%= @epilog %>
+<% end -%>
+FastSchedule=1
+FirstJobId=1
+InactiveLimit=0
+JobAcctGatherFrequency=30
+JobAcctGatherType=jobacct_gather/linux
+JobCheckpointDir=<%= scope.lookupvar('slurm::job_checkpoint_dir') %>
+JobCompType=jobcomp/none
+#JobCompLoc=
 #JobCredentialPrivateKey=
 #JobCredentialPublicCertificate=
-StateSaveLocation=/var/spool/slurmctld/state
-SlurmdSpoolDir=/var/spool/slurmd
-SwitchType=switch/none
+KillWait=15
+MailProg=/usr/bin/Mail
+MaxJobCount=<%= scope.lookupvar('slurm::max_job_count') %>
+MinJobAge=300
 MpiDefault=none
-SlurmctldPidFile=/var/run/slurmctld.pid
-SlurmdPidFile=/var/run/slurmd.pid
-ProctrackType=proctrack/pgid
-PluginDir=/usr/lib64/slurm/
-CacheGroups=0
-#FirstJobId=
-ReturnToService=0
-#MaxJobCount=
+<% if scope.lookupvar('slurm::mpi_params') != 'UNSET' -%>
+MpiParams=<%= scope.lookupvar('slurm::mpi_params') %>
+<% end -%>
+PluginDir=/usr/lib64/slurm
 #PlugStackConfig=
+PreemptMode=<%= scope.lookupvar('slurm::preempt_mode') %>
+PreemptType=<%= scope.lookupvar('slurm::preempt_type') %>
+PriorityDecayHalfLife=<%= scope.lookupvar('slurm::priority_decay_half_life') %>
+#PriorityMaxAge=1-0
+PriorityType=<%= scope.lookupvar('slurm::priority_type') %>
+PriorityUsageResetPeriod=<%= scope.lookupvar('slurm::priority_usage_reset_period') %>
+#PriorityWeightAge=1000
+#PriorityWeightFairshare=100000
+#PriorityWeightJobSize=1000
+#PriorityWeightPartition=10000
+ProctrackType=<%= scope.lookupvar('slurm::proctrack_type') %>
+<% if @prolog -%>
+Prolog=<%= @prolog %>
+<% end -%>
 #PropagatePrioProcess=
-#PropagateResourceLimits=
+PropagateResourceLimits=<%= scope.lookupvar('slurm::propagate_resource_limits') %>
 #PropagateResourceLimitsExcept=
-#Prolog=
-#Epilog=
-#SrunProlog=
-#SrunEpilog=
-#TaskProlog=
-#TaskEpilog=
-#TaskPlugin=
-#TrackWCKey=no
-#TreeWidth=50
-#TmpFs=
-#UsePAM=
-#
-# TIMERS
-SlurmctldTimeout=300
-SlurmdTimeout=300
-InactiveLimit=0
-MinJobAge=3600
-KillWait=30
-Waittime=0
-#
-# SCHEDULING
-SchedulerType=sched/backfill
+ReturnToService=<%= scope.lookupvar('slurm::return_to_service') %>
 #SchedulerAuth=
 #SchedulerPort=
 #SchedulerRootFilter=
-SelectType=select/cons_res
-SelectTypeParameters=CR_Core
-FastSchedule=<%= scope.lookupvar('slurm::params::slurm_fastschedule') %>
-PriorityType=priority/multifactor
-#PriorityDecayHalfLife=14-0
-#PriorityUsageResetPeriod=14-0
-PriorityWeightFairshare=100000
-PriorityWeightAge=0
-PriorityWeightPartition=0
-PriorityWeightJobSize=0
-PriorityWeightQOS=0
-#PriorityMaxAge=1-0
-#
-# LOGGING
+SchedulerType=sched/backfill
+SelectType=<%= scope.lookupvar('slurm::select_type') %>
+SelectTypeParameters=<%= scope.lookupvar('slurm::select_type_parameters') %>
+SlurmUser=slurm
 SlurmctldDebug=3
-SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmctldLogFile=<%= @slurmctld_log_file %>
+SlurmctldPidFile=<%= File.join(@pid_dir, 'slurmctld.pid') %>
+SlurmctldPort=<%= scope.lookupvar('slurm::slurmctld_port') %>
+SlurmctldTimeout=300
 SlurmdDebug=3
-SlurmdLogFile=/var/log/slurm/slurmd.log
-
-JobCompType=jobcomp/none
-#JobCompLoc=/var/spool/slurmctld/jobcomp
-
-# ACCOUNTING
-JobAcctGatherType=jobacct_gather/linux
-JobAcctGatherFrequency=30
-AccountingStorageType=accounting_storage/slurmdbd
-#AccountingStorageLoc=/var/lib/slurm/accounting
-AccountingStorageEnforce=associations
-AccountingStorageHost=<%= scope.lookupvar('slurm::params::slurmdbd_hostname') %>
-AccountingStoragePort=<%= scope.lookupvar('slurm::params::slurmdbd_port') %>
-#AccountingStoragePass= # Not necessary, auth through Munge
-#AccountingStorageUser=
-
-# We want config files to differ across nodes.
-DebugFlags=NO_CONF_HASH
+SlurmdLogFile=<%= @slurmd_log_file %>
+SlurmdPidFile=<%= File.join(@pid_dir, 'slurmd.pid') %>
+SlurmdPort=<%= scope.lookupvar('slurm::slurmd_port') %>
+SlurmdSpoolDir=<%= @slurmd_spool_dir %>
+SlurmdTimeout=300
+#SlurmdUser=root
+#SrunEpilog=
+#SrunProlog=
+StateSaveLocation=<%= scope.lookupvar('slurm::state_save_location') %>
+SwitchType=switch/none
+#TaskEpilog=
+TaskPlugin=<%= scope.lookupvar('slurm::task_plugin') %>
+TaskPluginParam=<%= scope.lookupvar('slurm::task_plugin_param') %>
+<% if @task_prolog -%>
+TaskProlog=<%= @task_prolog %>
+<% end -%>
+#TmpFS=
+#TrackWCKey=no
+#TreeWidth=50
+#UsePAM=
+Waittime=0

@@ -1,5 +1,12 @@
-<% if scope.lookupvar('slurm::params::slurm_worker_slot_multiplier') > 1 %>
-NodeName=<%= @hostname %> CPUs=<%= @fakecpucount %> Feature=<%= @virtual %> State=UNKNOWN
-<% else %>
-NodeName=<%= @hostname %> Sockets=<%= @physicalprocessorcount %> CoresPerSocket=<%= @corecountpercpu %> ThreadsPerCore=<%= @threadcountpercore %> Feature=<%= @virtual %> State=UNKNOWN
-<% end %>
+<% 
+node = []
+node << "NodeName=#{@hostname}"
+node << "Sockets=#{@physicalprocessorcount}" if @physicalprocessorcount
+node << "CoresPerSocket=#{@corecountpercpu}" if @corecountpercpu
+node << "ThreadsPerCore=#{@threadcountpercore}" if @threadcountpercore
+node << "Procs=#{@procs}" if @procs
+node << "RealMemory=#{@real_memory}" if @real_memory
+node << "TmpDisk=#{@tmp_disk}" if @tmp_disk
+node << "State=UNKNOWN"
+-%>
+<%= node.join(" ") %>

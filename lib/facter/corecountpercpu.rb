@@ -8,20 +8,23 @@
 #
 
 default_corecount = 1
+source = '/proc/cpuinfo'
 
 Facter.add('corecountpercpu') do
   confine :kernel => :linux
 
-  setcode do
-    source = '/proc/cpuinfo'
+  if File.exists?(source)
+    output = Facter::Util::FileRead.read(source)
+    info = output.grep(/cpu cores/).first
 
-    if File.exists?(source)
-        info = Facter::Util::Resolution.exec("grep 'cpu cores' #{source}")
-        if info.nil?
-            default_corecount
-        else
-            info.scan(/(\d+)/).uniq.first.first.to_i
-        end
+    if info.nil?
+      result = default_corecount
+    else
+      result = info[/(\d+)/].to_i
     end
+  end
+
+  setcode do
+    result
   end
 end
