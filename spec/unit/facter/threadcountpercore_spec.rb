@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'facter/util/file_read'
 
 describe 'threadcountpercore Fact' do
   before :each do
