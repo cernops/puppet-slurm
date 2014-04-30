@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'corecountpercpu Fact' do
-  
   before :each do
     Facter.clear
     Facter.fact(:kernel).stubs(:value).returns("Linux")

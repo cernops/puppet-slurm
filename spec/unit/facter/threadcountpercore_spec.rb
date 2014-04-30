@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'threadcountpercore Fact' do
-  
   before :each do
     Facter.clear
     Facter.collection.internal_loader.load(:processor)

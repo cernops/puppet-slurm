@@ -15,16 +15,14 @@ Facter.add('corecountpercpu') do
 
   if File.exists?(source)
     output = Facter::Util::FileRead.read(source)
-    info = output.grep(/cpu cores/).first
+    result = output[/^cpu cores.*(\d+)/, 1]
 
-    if info.nil?
-      result = default_corecount
-    else
-      result = info[/(\d+)/].to_i
+    setcode do
+      if result.nil?
+        default_corecount
+      else
+        result.to_i
+      end
     end
-  end
-
-  setcode do
-    result
   end
 end

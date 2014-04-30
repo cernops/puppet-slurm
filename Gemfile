@@ -3,7 +3,7 @@ source "http://rubygems.org"
 rakeversion = RUBY_VERSION =~ /^1.8/ ? "<10.2.0" : ">= 0"
 
 group :development, :test do
-  gem 'rake', rakeversion,      :require => false
+  gem 'rake', rakeversion
   gem 'rspec-puppet',           :require => false, :git => 'https://github.com/rodjek/rspec-puppet.git'
   gem 'puppetlabs_spec_helper', :require => false
   gem 'puppet-lint',            :require => false
@@ -16,7 +16,7 @@ end
 group :development do
   gem 'beaker',                 :require => false
   gem 'beaker-rspec',           :require => false
-  gem 'system_timer',           :require => false
+  gem 'system_timer',           :require => false if RUBY_VERSION =~ /^1.8/
   gem 'vagrant-wrapper',        :require => false
 end
 
