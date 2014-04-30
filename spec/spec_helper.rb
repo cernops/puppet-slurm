@@ -14,7 +14,6 @@ end
 RSpec.configure do |config|
   config.mock_with :mocha
 
-#=begin
   config.before :each do
     # Ensure that we don't accidentally cache facts and environment
     # between test cases.
@@ -33,7 +32,6 @@ RSpec.configure do |config|
     to_remove = ENV.keys.reject {|key| @old_env.include? key }
     to_remove.each {|key| ENV.delete key }
   end
-#=end
 end
 
 dir = File.expand_path(File.dirname(__FILE__))

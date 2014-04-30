@@ -17,10 +17,6 @@ group :development do
   gem 'vagrant-wrapper',        :require => false
 end
 
-if RUBY_VERSION =~ /^1.8/
-  gem 'system_timer', :group => :development
-end
-
 if puppetversion = ENV['PUPPET_GEM_VERSION']
   gem 'puppet', puppetversion, :require => false
 else
