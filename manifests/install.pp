@@ -11,6 +11,7 @@ class slurm::install {
     #TODO: slurm-plugins pulled in by slurm package
     package { 'slurm-plugins': ensure => $slurm::slurm_package_ensure }
     package { 'slurm-munge': ensure => $slurm::slurm_package_ensure }
+    #TODO: Make dependent on parameter that enables auks usage
     package { 'auks-slurm': ensure => $slurm::auks_package_ensure }
   }
 
