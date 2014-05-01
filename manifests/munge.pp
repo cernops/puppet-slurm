@@ -9,6 +9,7 @@ class slurm::munge {
     default => $slurm::munge_key,
   }
 
+  #TODO: Remove as pulled in by slurm-munge
   package { 'munge':
     ensure  => $slurm::munge_package_ensure,
     before  => File['/etc/munge/munge.key'],
