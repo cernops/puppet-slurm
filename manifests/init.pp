@@ -82,6 +82,9 @@ class slurm (
   # Munge
   $munge_key = 'UNSET',
 
+  # auks
+  $use_auks = false,
+
   # Firewall / ports
   $manage_firewall = true,
   $slurmd_port = '6818',
@@ -109,8 +112,6 @@ class slurm (
     default => $task_prolog,
   }
 
-  #TODO: master - require NFS
-  #TODO: slurmdb - require MySQL
   anchor { 'slurm::start': }->
   class { 'slurm::install': }->
   class { 'slurm::config': }->

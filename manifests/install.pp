@@ -8,11 +8,10 @@ class slurm::install {
 
   if $slurm::worker or $slurm::master {
     package { 'slurm': ensure => $slurm::slurm_package_ensure }
-    #TODO: slurm-plugins pulled in by slurm package
-    package { 'slurm-plugins': ensure => $slurm::slurm_package_ensure }
     package { 'slurm-munge': ensure => $slurm::slurm_package_ensure }
-    #TODO: Make dependent on parameter that enables auks usage
-    package { 'auks-slurm': ensure => $slurm::auks_package_ensure }
+    if $slurm::use_auks {
+      package { 'auks-slurm': ensure => $slurm::auks_package_ensure }
+    }
   }
 
   if $slurm::slurmdb {

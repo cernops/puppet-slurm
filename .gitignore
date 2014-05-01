@@ -1,6 +1,6 @@
 # IDE related
 .idea/
-.project/
+.project
 
 # Testing and development
 .vagrant/

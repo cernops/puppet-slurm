@@ -20,18 +20,20 @@ shared_examples 'slurm::install' do
     include_context 'common'
 
     # +1 for logrotate
-    it { should have_package_resource_count(12) }
+    it { should have_package_resource_count(10) }
 
     it { should contain_package('slurm').with_ensure('present') }
-    it { should contain_package('slurm-plugins').with_ensure('present') }
     it { should contain_package('slurm-munge').with_ensure('present') }
-    it { should contain_package('auks-slurm').with_ensure('present') }
+
+    context 'when use_auks => true' do
+      let(:params) { context_params.merge({ :use_auks => true }) }
+      it { should contain_package('auks-slurm').with_ensure('present') }
+    end
 
     context 'when slurm_package_ensure => "2.6.9"' do
       let(:params) { context_params.merge({ :slurm_package_ensure => '2.6.9' }) }
 
       it { should contain_package('slurm').with_ensure('2.6.9') }
-      it { should contain_package('slurm-plugins').with_ensure('2.6.9') }
       it { should contain_package('slurm-munge').with_ensure('2.6.9') }
     end
   end
