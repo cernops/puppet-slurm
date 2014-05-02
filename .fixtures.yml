@@ -18,6 +18,9 @@ fixtures:
     logrotate:
       repo: git://github.com/rodjek/puppet-logrotate.git
       ref: 1.1.1
+    epel:
+      repo: git://github.com/stahnma/puppet-module-epel.git
+      ref: 0.0.6
   symlinks:
     slurm: "#{source_dir}"
     site_slurm: "#{File.join(source_dir, 'tests', 'site_slurm')}"
