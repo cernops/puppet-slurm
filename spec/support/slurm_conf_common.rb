@@ -126,4 +126,23 @@ shared_examples 'slurm_conf_common' do
       ])
     end
   end
+
+  context 'when slurm_conf_source defined' do
+    let(:params) { context_params.merge({ :slurm_conf_source => 'puppet:///modules/site_slurm/slurm.conf'}) }
+
+    it do
+      should contain_file('/etc/slurm/slurm.conf').with({
+        :ensure => 'present',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0644',
+        :source => 'puppet:///modules/site_slurm/slurm.conf',
+        :notify => 'Service[slurm]',
+      })
+    end
+
+    it { should_not contain_concat('/etc/slurm/slurm.conf') }
+    it { should_not contain_concat__fragment('slurm.conf-common') }
+    it { should_not contain_file("#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common") }
+  end
 end

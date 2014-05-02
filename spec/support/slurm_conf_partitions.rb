@@ -168,4 +168,11 @@ shared_examples 'slurm_conf_partitions' do
       ])
     end
   end
+
+  context 'when slurm_conf_source defined' do
+    let(:params) { context_params.merge({ :slurm_conf_source => 'puppet:///modules/site_slurm/slurm.conf'}) }
+
+    it { should_not contain_concat__fragment('slurm.conf-partitions') }
+    it { should_not contain_file("#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/3_slurm.conf-partitions") }
+  end
 end

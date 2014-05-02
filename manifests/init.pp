@@ -70,6 +70,7 @@ class slurm (
 
   # slurm.conf - overrides
   $slurm_conf_override = {},
+  $slurm_conf_source = undef,
 
   # slurmdbd.conf
   $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',

@@ -50,27 +50,38 @@ class slurm::master::config {
     }
   }
 
-  concat { '/etc/slurm/slurm.conf':
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    #notify  => Class['slurm::master::service']
-  }
+  if $slurm::slurm_conf_source {
+    file { '/etc/slurm/slurm.conf':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => $slurm::slurm_conf_source,
+      notify  => Service['slurm'],
+    }
+  } else {
+    concat { '/etc/slurm/slurm.conf':
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      #notify  => Class['slurm::master::service']
+    }
 
-  concat::fragment { 'slurm.conf-common':
-    target  => '/etc/slurm/slurm.conf',
-    content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
-    order   => 1,
-  }
+    concat::fragment { 'slurm.conf-common':
+      target  => '/etc/slurm/slurm.conf',
+      content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
+      order   => 1,
+    }
 
-  concat::fragment { 'slurm.conf-partitions':
-    target  => '/etc/slurm/slurm.conf',
-    content => $slurm::partition_content,
-    source  => $slurm::partition_source,
-    order   => 3,
-  }
+    concat::fragment { 'slurm.conf-partitions':
+      target  => '/etc/slurm/slurm.conf',
+      content => $slurm::partition_content,
+      source  => $slurm::partition_source,
+      order   => 3,
+    }
 
-  Concat::Fragment <<| tag == 'slurm_nodelist' |>>
+    Concat::Fragment <<| tag == 'slurm_nodelist' |>>
+  }
 
   if $slurm::manage_logrotate {
     #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
