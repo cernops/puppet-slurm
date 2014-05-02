@@ -4,39 +4,9 @@ class slurm::master::config {
 
   include slurm
 
-  if $slurm::manage_slurm_group {
-    $gid = $slurm::slurm_group_gid ? {
-      'UNSET' => undef,
-      default => $slurm::slurm_group_gid,
-    }
-
-    group { 'slurm':
-      ensure  => present,
-      name    => $slurm::slurm_user_group,
-      gid     => $gid,
-    }
-  }
-
-  if $slurm::manage_slurm_user {
-    $uid = $slurm::slurm_user_uid ? {
-      'UNSET' => undef,
-      default => $slurm::slurm_user_uid,
-    }
-
-    user { 'slurm':
-      ensure  => present,
-      name    => $slurm::slurm_user,
-      uid     => $uid,
-      gid     => $slurm::slurm_user_group,
-      shell   => $slurm::slurm_user_shell,
-      home    => $slurm::slurm_user_home,
-      comment => $slurm::slurm_user_comment,
-    }
-  }
-
   File {
-    owner => 'slurm',
-    group => 'slurm',
+    owner => $slurm::slurm_user,
+    group => $slurm::slurm_user_group,
   }
 
   file { $slurm::log_dir:
@@ -54,29 +24,29 @@ class slurm::master::config {
     mode    => '0700',
   }
 
-  file { $slurm::spool_dir:
+  file { 'StateSaveLocation':
     ensure  => 'directory',
+    path    => $slurm::state_save_location,
     mode    => '0700',
+    require => File[$slurm::shared_state_dir],
   }
 
-  file { $slurm::state_save_location:
+  file { 'JobCheckpointDir':
     ensure  => 'directory',
+    path    => $slurm::job_checkpoint_dir,
     mode    => '0700',
-  }
-
-  file { $slurm::job_checkpoint_dir:
-    ensure  => 'directory',
-    mode    => '0700',
+    require => File[$slurm::shared_state_dir],
   }
 
   if $slurm::manage_state_dir_nfs_mount {
-    mount { $slurm::state_save_location:
+    mount { 'StateSaveLocation':
       ensure  => 'mounted',
+      name    => $slurm::state_save_location,
       atboot  => true,
       device  => $slurm::state_dir_nfs_device,
       fstype  => 'nfs',
       options => $slurm::state_dir_nfs_options,
-      require => File[$slurm::state_save_location],
+      require => File['StateSaveLocation'],
     }
   }
 
@@ -116,7 +86,7 @@ class slurm::master::config {
       size          => '10M',
       create        => true,
       create_mode   => '0640',
-      create_owner  => 'slurm',
+      create_owner  => $slurm::slurm_user,
       create_group  => 'root',
       postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
     }

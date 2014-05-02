@@ -4,13 +4,11 @@ class slurm::worker::config {
 
   include slurm
 
-  #$slurm_conf = $slurm::slurm_conf
-  #$tmp_disk   = $slurm::tmp_disk
-  $procs      = $::physicalprocessorcount*$::corecountpercpu*$::threadcountpercore
+  $procs = $::physicalprocessorcount*$::corecountpercpu*$::threadcountpercore
 
   File {
-    owner => 'slurm',
-    group => 'slurm',
+    owner => $slurm::slurm_user,
+    group => $slurm::slurm_user_group,
   }
 
   file { $slurm::log_dir:
@@ -31,13 +29,11 @@ class slurm::worker::config {
   file { $slurm::spool_dir:
     ensure  => 'directory',
     mode    => '0700',
-  }
-
-  file { $slurm::slurmd_spool_dir:
+  }->
+  file { 'SlurmdSpoolDir':
     ensure  => 'directory',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0755',
+    path    => $slurm::slurmd_spool_dir,
+    mode    => '0700',
   }
 
   if $slurm::epilog {
@@ -138,7 +134,7 @@ class slurm::worker::config {
       size          => '10M',
       create        => true,
       create_mode   => '0640',
-      create_owner  => 'slurm',
+      create_owner  => $slurm::slurm_user,
       create_group  => 'root',
       postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
     }

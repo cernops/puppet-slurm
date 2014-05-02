@@ -5,6 +5,7 @@ class slurm::slurmdbd {
   anchor { 'slurm::slurmdbd::start': }
   anchor { 'slurm::slurmdbd::end': }
 
+  include slurm::user
   include slurm::munge
   include slurm::slurmdbd::install
   include slurm::slurmdbd::config
@@ -13,6 +14,7 @@ class slurm::slurmdbd {
 
   if $slurm::manage_firewall {
     Anchor['slurm::slurmdbd::start']->
+    Class['slurm::user']->
     Class['slurm::munge']->
     Class['slurm::slurmdbd::install']->
     Class['slurm::slurmdbd::config']->
@@ -21,6 +23,7 @@ class slurm::slurmdbd {
     Anchor['slurm::slurmdbd::end']
   } else {
     Anchor['slurm::slurmdbd::start']->
+    Class['slurm::user']->
     Class['slurm::munge']->
     Class['slurm::slurmdbd::install']->
     Class['slurm::slurmdbd::config']->

@@ -22,7 +22,7 @@ shared_examples 'slurm_conf_common' do
     content = catalogue.resource('file', "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common").send(:parameters)[:content]
     config = content.split("\n").reject { |c| c =~ /(^#|^$)/ }
     config.should == [
-      "AccountingStorageHost=slurm.example.com",
+      "AccountingStorageHost=slurm",
       "AccountingStoragePass=slurmdbd",
       "AccountingStoragePort=6819",
       "AccountingStorageType=accounting_storage/slurmdbd",
@@ -36,7 +36,7 @@ shared_examples 'slurm_conf_common' do
       "ControlAddr=slurm",
       "ControlMachine=slurm",
       "CryptoType=crypto/munge",
-      "DefaultStorageHost=slurm.example.com",
+      "DefaultStorageHost=slurm",
       "DefaultStoragePass=slurmdbd",
       "DefaultStoragePort=6819",
       "DefaultStorageType=slurmdbd",
@@ -108,10 +108,10 @@ shared_examples 'slurm_conf_common' do
     ]
   end
 
-  context 'when config_override defined' do
+  context 'when slurm_conf_override defined' do
     let :params do
       context_params.merge({
-        :config_override => {
+        :slurm_conf_override => {
           'PreemptMode'   => 'SUSPEND,GANG',
           'PreemptType'   => 'preempt/partition_prio',
           'ProctrackType' => 'proctrack/linuxproc',

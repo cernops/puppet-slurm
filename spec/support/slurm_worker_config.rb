@@ -1,12 +1,6 @@
 shared_examples 'slurm::worker::config' do
   let(:params) { context_params }
 
-  it { should_not contain_group('slurm') }
-  it { should_not contain_user('slurm') }
-
-  it { should have_group_resource_count(0) }
-  it { should have_user_resource_count(0) }
-
   it do
     should contain_file('/var/log/slurm').with({
       :ensure => 'directory',
@@ -43,12 +37,15 @@ shared_examples 'slurm::worker::config' do
     })
   end
 
+  it { should contain_file('/var/spool/slurm').that_comes_before('File[SlurmdSpoolDir]')}
+
   it do
-    should contain_file('/var/spool/slurm/slurmd').with({
+    should contain_file('SlurmdSpoolDir').with({
       :ensure => 'directory',
-      :owner  => 'root',
-      :group  => 'root',
-      :mode   => '0755',
+      :path   => '/var/spool/slurm/slurmd',
+      :owner  => 'slurm',
+      :group  => 'slurm',
+      :mode   => '0700',
     })
   end
 

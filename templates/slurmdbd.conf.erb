@@ -1,34 +1,12 @@
-# -- Archive info
-ArchiveDir=/tmp
-ArchiveEvents=yes
-ArchiveJobs=yes
-#ArchiveScript=
-ArchiveSteps=no
-ArchiveSuspend=no
-#JobPurge=12
-#StepPurge=1
+#
+# File managed by Puppet!
+#
+# See the slurmdbd.conf man page for more information.
+#
+#
 
-# -- Authentication (slurmdbd <-> slurmctld)
-AuthType=auth/munge
-
-# -- Slurmdbd core
-#DbdBackupHost
-DbdHost=<%= scope.lookupvar('slurm::accounting_storage_host') %>
-DbdPort=<%= scope.lookupvar('slurm::slurmdbd_port') %>
-DebugLevel=3
-SlurmUser=slurm
-LogFile=<%= @log_file %>
-PidFile=<%= File.join(@pid_dir, 'slurmdbd.pid') %>
-PluginDir=/usr/lib64/slurm
-#MessageTimeout=300
-#DefaultQOS=normal,standby
-#PrivateData=accounts,users,usage,jobs
-#TrackWCKey=yes
-
-# -- External database
-StorageType=<%= scope.lookupvar('slurm::storage_type') %>
-StorageHost=<%= scope.lookupvar('slurm::storage_host') %>
-StoragePort=<%= scope.lookupvar('slurm::storage_port') %>
-StorageLoc=<%= scope.lookupvar('slurm::storage_loc') %>
-StorageUser=<%= scope.lookupvar('slurm::storage_user') %>
-StoragePass=<%= scope.lookupvar('slurm::storage_pass') %>
+<% @slurmdbd_conf.keys.sort.each do |key| -%>
+<% unless @slurmdbd_conf[key] == :undef or ! @slurmdbd_conf[key] -%>
+<%= "#{key}=#{@slurmdbd_conf[key]}" %>
+<% end -%>
+<% end -%>

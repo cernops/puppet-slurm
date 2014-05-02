@@ -5,6 +5,7 @@ class slurm::worker {
   anchor { 'slurm::worker::start': }
   anchor { 'slurm::worker::end': }
 
+  include slurm::user
   include slurm::munge
   include slurm::worker::install
   if $slurm::use_auks { include slurm::auks }
@@ -14,6 +15,7 @@ class slurm::worker {
 
   if $slurm::manage_firewall {
     Anchor['slurm::worker::start']->
+    Class['slurm::user']->
     Class['slurm::munge']->
     Class['slurm::worker::install']->
     Class['slurm::worker::config']->
@@ -22,6 +24,7 @@ class slurm::worker {
     Anchor['slurm::worker::end']
   } else {
     Anchor['slurm::worker::start']->
+    Class['slurm::user']->
     Class['slurm::munge']->
     Class['slurm::worker::install']->
     Class['slurm::worker::config']->

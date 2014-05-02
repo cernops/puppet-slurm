@@ -13,6 +13,8 @@ shared_examples 'slurm::slurmdbd::firewall' do
 
   context 'when manage_firewall => false' do
     let(:params) { context_params.merge({ :manage_firewall => false }) }
+    it { should contain_class('slurm::slurmdbd::config').that_comes_before('Class[slurm::slurmdbd::service]') }
+    it { should_not contain_class('slurm::slurmdbd::firewall') }
     it { should have_firewall_resource_count(0) }
     it { should_not contain_firewall('100 allow access to slurmdbd') }
   end

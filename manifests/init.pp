@@ -13,10 +13,9 @@ class slurm (
   $package_runtime_dependencies = $slurm::params::package_runtime_dependencies,
 
   # User/group management - master
-  $manage_slurm_group = true,
+  $manage_slurm_user = true,
   $slurm_user_group = 'slurm',
   $slurm_group_gid = 'UNSET',
-  $manage_slurm_user = true,
   $slurm_user = 'slurm',
   $slurm_user_uid = 'UNSET',
   $slurm_user_comment = 'SLURM User',
@@ -50,6 +49,7 @@ class slurm (
   # slurm.conf - worker
   $slurmd_log_file = '/var/log/slurm/slurmd.log',
   $slurmd_user = 'root',
+  $slurmd_user_group = 'root',
   $slurmd_spool_dir = '/var/spool/slurm/slurmd',
 
   # slurm.conf - epilog/prolog
@@ -65,15 +65,19 @@ class slurm (
   $task_prolog_source = undef,
 
   # slurm.conf - overrides
-  $config_override = {},
+  $slurm_conf_override = {},
 
   # slurmdbd.conf
-  $storage_type = 'accounting_storage/mysql',
+  $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
   $storage_host = 'localhost',
-  $storage_port = '3306',
   $storage_loc = 'slurmdbd',
-  $storage_user = 'slurmdbd',
   $storage_pass = 'slurmdbd',
+  $storage_port = '3306',
+  $storage_type = 'accounting_storage/mysql',
+  $storage_user = 'slurmdbd',
+
+  # slurmdbd.conf - overrides
+  $slurmdbd_conf_override = {},
 
   # Munge
   $munge_key = undef,
@@ -98,18 +102,18 @@ class slurm (
   validate_bool($worker)
   validate_bool($master)
   validate_bool($slurmdbd)
-  validate_bool($manage_slurm_group)
   validate_bool($manage_slurm_user)
   validate_bool($manage_state_dir_nfs_mount)
   validate_array($partitionlist)
-  validate_hash($config_override)
+  validate_hash($slurm_conf_override)
+  validate_hash($slurmdbd_conf_override)
   validate_bool($use_auks)
   validate_bool($use_pam)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
-  $config_defaults = {
-    'AccountingStorageHost' => $::fqdn,
+  $slurm_conf_defaults = {
+    'AccountingStorageHost' => $::hostname,
     'AccountingStoragePass' => 'slurmdbd',
     'AccountingStoragePort' => $slurmdbd_port,
     'AccountingStorageType' => 'accounting_storage/slurmdbd',
@@ -123,7 +127,7 @@ class slurm (
     'ControlAddr' => $::hostname,
     'ControlMachine' => $::hostname,
     'CryptoType' => 'crypto/munge',
-    'DefaultStorageHost' => $::fqdn,
+    'DefaultStorageHost' => $::hostname,
     'DefaultStoragePass' => $storage_pass,
     'DefaultStoragePort' => $slurmdbd_port,
     'DefaultStorageType' => 'slurmdbd',
@@ -199,7 +203,42 @@ class slurm (
     'WaitTime' => '0',
   }
 
-  $slurm_conf = merge($config_defaults, $config_override)
+  $slurmdbd_conf_defaults = {
+    'ArchiveDir' => '/tmp',
+    'ArchiveEvents' => 'no',
+    'ArchiveJobs' => 'no',
+    'ArchiveSteps' => 'no',
+    'ArchiveSuspend' => 'no',
+    'AuthType' => 'auth/munge',
+    'DbdHost' => $::hostname,
+    'DbdPort' => $slurmdbd_port,
+    'DebugLevel' => '3',
+    'LogFile' => $slurmdbd_log_file,
+    'MessageTimeout' => '10',
+    'PidFile' => "${pid_dir}/slurmdbd.pid",
+    'PluginDir' => '/usr/lib64/slurm',
+    'SlurmUser' => $slurm_user,
+    'StorageHost' => $storage_host,
+    'StorageLoc' => $storage_loc,
+    'StoragePass' => $storage_pass,
+    'StoragePort' => $storage_port,
+    'StorageType' => $storage_type,
+    'StorageUser' => $storage_user,
+    'TrackSlurmctldDown' => 'no',
+  }
+
+  $gid = $slurm::slurm_group_gid ? {
+    'UNSET' => undef,
+    default => $slurm_group_gid,
+  }
+
+  $uid = $slurm::slurm_user_uid ? {
+    'UNSET' => undef,
+    default => $slurm_user_uid,
+  }
+
+  $slurm_conf = merge($slurm_conf_defaults, $slurm_conf_override)
+  $slurmdbd_conf = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
 
   if $partitionlist_content {
     $partition_source   = undef

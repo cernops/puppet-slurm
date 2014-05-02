@@ -4,13 +4,9 @@ class slurm::slurmdbd::config {
 
   include slurm
 
-  $log_dir  = $slurm::log_dir
-  $log_file = inline_template('<%= File.join(@log_dir, "slurmdbd.log") %>')
-  $pid_dir  = $slurm::pid_dir
-
   File {
-    owner => 'slurm',
-    group => 'slurm',
+    owner => $slurm::slurm_user,
+    group => $slurm::slurm_user_group,
   }
 
   file { $slurm::log_dir:
@@ -35,7 +31,7 @@ class slurm::slurmdbd::config {
   if $slurm::manage_logrotate {
     #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmdbd':
-      path          => $log_file,
+      path          => $slurm::slurmdbd_log_file,
       compress      => true,
       missingok     => true,
       copytruncate  => false,
@@ -46,7 +42,7 @@ class slurm::slurmdbd::config {
       size          => '10M',
       create        => true,
       create_mode   => '0640',
-      create_owner  => 'slurm',
+      create_owner  => $slurm::slurm_user,
       create_group  => 'root',
       postrotate    => '/etc/init.d/slurmdbd reconfig >/dev/null 2>&1',
     }
