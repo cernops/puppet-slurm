@@ -1,6 +1,7 @@
+
 # PARTITIONS
 <% 
-scope.lookupvar('slurm::partitionlist').each do |part|
+@partitionlist.each do |part|
   partition = []
   [
     'PartitionName',
@@ -27,3 +28,4 @@ scope.lookupvar('slurm::partitionlist').each do |part|
 -%>
 <%= partition.join(" ") %>
 <% end -%>
+
