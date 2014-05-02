@@ -22,6 +22,10 @@ class slurm (
   $slurm_user_home = '/home/slurm',
   $slurm_user_shell = '/bin/false',
 
+  # Cluster config
+  $cluster_name = 'linux',
+  $control_machine = 'slurm',
+
   # Master config
   $manage_state_dir_nfs_mount = true,
   $state_dir_nfs_device = undef,
@@ -113,7 +117,7 @@ class slurm (
   validate_bool($manage_logrotate)
 
   $slurm_conf_defaults = {
-    'AccountingStorageHost' => $::hostname,
+    'AccountingStorageHost' => $control_machine,
     'AccountingStoragePass' => 'slurmdbd',
     'AccountingStoragePort' => $slurmdbd_port,
     'AccountingStorageType' => 'accounting_storage/slurmdbd',
@@ -122,12 +126,11 @@ class slurm (
     'AuthType' => 'auth/munge',
     'CacheGroups' => '0',
     'CheckpointType' => 'checkpoint/none',
-    'ClusterName' => 'linux',
+    'ClusterName' => $cluster_name,
     'CompleteWait' => '0',
-    'ControlAddr' => $::hostname,
-    'ControlMachine' => $::hostname,
+    'ControlMachine' => $control_machine,
     'CryptoType' => 'crypto/munge',
-    'DefaultStorageHost' => $::hostname,
+    'DefaultStorageHost' => $control_machine,
     'DefaultStoragePass' => $storage_pass,
     'DefaultStoragePort' => $slurmdbd_port,
     'DefaultStorageType' => 'slurmdbd',

@@ -33,7 +33,6 @@ shared_examples 'slurm_conf_common' do
       "CheckpointType=checkpoint/none",
       "ClusterName=linux",
       "CompleteWait=0",
-      "ControlAddr=slurm",
       "ControlMachine=slurm",
       "CryptoType=crypto/munge",
       "DefaultStorageHost=slurm",
