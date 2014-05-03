@@ -56,24 +56,6 @@ shared_examples 'slurm::worker::config' do
   it { should_not contain_file('task_prolog') }
 
   it do
-    should contain_concat__fragment("slurm.conf-nodelist_#{facts[:hostname]}").with({
-      :tag    => 'slurm_nodelist',
-      :target => '/etc/slurm/slurm.conf',
-      :order  => '2',
-    })
-  end
-
-  it { should contain_file("#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/2_slurm.conf-nodelist_#{facts[:hostname]}") }
-
-  it do
-    content = catalogue.resource('file', "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/2_slurm.conf-nodelist_#{facts[:hostname]}").send(:parameters)[:content]
-    config = content.split("\n").reject { |c| c =~ /(^#|^$)/ }
-    config.should == [
-      "NodeName=#{facts[:hostname]} Sockets=2 CoresPerSocket=4 ThreadsPerCore=1 Procs=8 RealMemory=32000 TmpDisk=16000 State=UNKNOWN",
-    ]
-  end
-
-  it do
     should contain_logrotate__rule('slurmd').with({
       :path          => '/var/log/slurm/slurmd.log',
       :compress      => 'true',
@@ -119,9 +101,11 @@ shared_examples 'slurm::worker::config' do
     end
 
     it "should set the Epilog option" do
-      verify_contents(catalogue, "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common", [
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
         'Epilog=/tmp/foo',
-      ])
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 
@@ -140,9 +124,11 @@ shared_examples 'slurm::worker::config' do
     end
 
     it "should set the HealthCheckProgram option" do
-      verify_contents(catalogue, "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common", [
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
         'HealthCheckProgram=/tmp/nhc',
-      ])
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 
@@ -161,9 +147,11 @@ shared_examples 'slurm::worker::config' do
     end
 
     it "should set the Prolog option" do
-      verify_contents(catalogue, "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common", [
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
         'Prolog=/tmp/bar',
-      ])
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 
@@ -182,9 +170,11 @@ shared_examples 'slurm::worker::config' do
     end
 
     it "should set the TaskEpilog option" do
-      verify_contents(catalogue, "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common", [
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
         'TaskEpilog=/tmp/epilog',
-      ])
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 
@@ -203,9 +193,11 @@ shared_examples 'slurm::worker::config' do
     end
 
     it "should set the TaskProlog option" do
-      verify_contents(catalogue, "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common", [
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
         'TaskProlog=/tmp/foobar',
-      ])
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 end

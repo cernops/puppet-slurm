@@ -37,7 +37,6 @@ class slurm (
   # Partitions
   $partitionlist = [],
   $partitionlist_content = undef,
-  $partitionlist_source = undef,
 
   # Managed directories
   $log_dir = '/var/log/slurm',
@@ -119,10 +118,8 @@ class slurm (
 
   $slurm_conf_defaults = {
     'AccountingStorageHost' => $control_machine,
-    'AccountingStoragePass' => 'slurmdbd',
     'AccountingStoragePort' => $slurmdbd_port,
     'AccountingStorageType' => 'accounting_storage/slurmdbd',
-    'AccountingStorageUser' => $storage_user,
     'AccountingStoreJobComment' => 'YES',
     'AuthType' => 'auth/munge',
     'CacheGroups' => '0',
@@ -132,10 +129,8 @@ class slurm (
     'ControlMachine' => $control_machine,
     'CryptoType' => 'crypto/munge',
     'DefaultStorageHost' => $control_machine,
-    'DefaultStoragePass' => $storage_pass,
     'DefaultStoragePort' => $slurmdbd_port,
     'DefaultStorageType' => 'slurmdbd',
-    'DefaultStorageUser' => $storage_user,
     'DisableRootJobs' => 'NO',
     'Epilog' => $epilog,
     'EpilogMsgTime' => '2000',
@@ -245,13 +240,8 @@ class slurm (
   $slurmdbd_conf = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
 
   if $partitionlist_content {
-    $partition_source   = undef
     $partition_content  = template($partitionlist_content)
-  } elsif $partitionlist_source {
-    $partition_source   = $partitionlist_source
-    $partition_content  = undef
   } else {
-    $partition_source   = undef
     $partition_content  = template('slurm/slurm.conf/master/slurm.conf.partitions.erb')
   }
 

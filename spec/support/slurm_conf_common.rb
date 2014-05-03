@@ -1,32 +1,23 @@
 shared_examples 'slurm_conf_common' do
   let(:params) { context_params }
 
+  it { should contain_concat_build('slurm.conf') }
+
   it do
-    should contain_concat('/etc/slurm/slurm.conf').with({
-      :owner  => 'root',
-      :group  => 'root',
-      :mode   => '0644',
+    should contain_file('/etc/slurm/slurm.conf').with({
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0644',
+      :require  => 'Concat_build[slurm.conf]',
     })
   end
 
   it do
-    should contain_concat__fragment('slurm.conf-common').with({
-      :target => '/etc/slurm/slurm.conf',
-      :order  => '1',
-    })
-  end
-
-  it { should contain_file("#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common") }
-
-  it do
-    content = catalogue.resource('file', "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common").send(:parameters)[:content]
-    config = content.split("\n").reject { |c| c =~ /(^#|^$)/ }
-    config.should == [
+    content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+    expected_lines = [
       "AccountingStorageHost=slurm",
-      "AccountingStoragePass=slurmdbd",
       "AccountingStoragePort=6819",
       "AccountingStorageType=accounting_storage/slurmdbd",
-      "AccountingStorageUser=slurmdbd",
       "AccountingStoreJobComment=YES",
       "AuthType=auth/munge",
       "CacheGroups=0",
@@ -36,10 +27,8 @@ shared_examples 'slurm_conf_common' do
       "ControlMachine=slurm",
       "CryptoType=crypto/munge",
       "DefaultStorageHost=slurm",
-      "DefaultStoragePass=slurmdbd",
       "DefaultStoragePort=6819",
       "DefaultStorageType=slurmdbd",
-      "DefaultStorageUser=slurmdbd",
       "DisableRootJobs=NO",
       "EpilogMsgTime=2000",
       "FastSchedule=1",
@@ -105,6 +94,7 @@ shared_examples 'slurm_conf_common' do
       "VSizeFactor=0",
       "WaitTime=0",
     ]
+    (content.split("\n") & expected_lines).should == expected_lines
   end
 
   context 'when slurm_conf_override defined' do
@@ -119,11 +109,13 @@ shared_examples 'slurm_conf_common' do
     end
 
     it "should override values" do
-      verify_contents(catalogue, "#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common", [
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
         'PreemptMode=SUSPEND,GANG',
         'PreemptType=preempt/partition_prio',
         'ProctrackType=proctrack/linuxproc',
-      ])
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 
@@ -141,8 +133,7 @@ shared_examples 'slurm_conf_common' do
       })
     end
 
-    it { should_not contain_concat('/etc/slurm/slurm.conf') }
-    it { should_not contain_concat__fragment('slurm.conf-common') }
-    it { should_not contain_file("#{facts[:concat_basedir]}/_etc_slurm_slurm.conf/fragments/1_slurm.conf-common") }
+    it { should_not contain_concat_build('slurm.conf') }
+    it { should_not contain_concat_fragment('slurm.conf+01-common') }
   end
 end

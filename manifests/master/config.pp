@@ -60,27 +60,26 @@ class slurm::master::config {
       notify  => Service['slurm'],
     }
   } else {
-    concat { '/etc/slurm/slurm.conf':
+    concat_build { 'slurm.conf': }
+
+    file { '/etc/slurm/slurm.conf':
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      #notify  => Class['slurm::master::service']
+      source  => concat_output('slurm.conf'),
+      require => Concat_build['slurm.conf'],
+      #notify  => Service['slurm'],
     }
 
-    concat::fragment { 'slurm.conf-common':
-      target  => '/etc/slurm/slurm.conf',
+    concat_fragment { 'slurm.conf+01-common':
       content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
-      order   => 1,
     }
 
-    concat::fragment { 'slurm.conf-partitions':
-      target  => '/etc/slurm/slurm.conf',
+    concat_fragment { 'slurm.conf+03-partitions':
       content => $slurm::partition_content,
-      source  => $slurm::partition_source,
-      order   => 3,
     }
 
-    Concat::Fragment <<| tag == 'slurm_nodelist' |>>
+    Concat_fragment <<| tag == 'slurm_nodelist' |>>
   }
 
   if $slurm::manage_logrotate {
