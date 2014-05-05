@@ -9,21 +9,6 @@ class slurm::master::config {
     group => $slurm::slurm_user_group,
   }
 
-  file { $slurm::log_dir:
-    ensure  => 'directory',
-    mode    => '0700',
-  }
-
-  file { $slurm::pid_dir:
-    ensure  => 'directory',
-    mode    => '0700',
-  }
-
-  file { $slurm::shared_state_dir:
-    ensure  => 'directory',
-    mode    => '0700',
-  }
-
   file { 'StateSaveLocation':
     ensure  => 'directory',
     path    => $slurm::state_save_location,
@@ -100,11 +85,6 @@ class slurm::master::config {
       create_group  => 'root',
       postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
     }
-  }
-
-  sysctl { 'net.core.somaxconn':
-    ensure  => present,
-    value   => '1024',
   }
 
 }

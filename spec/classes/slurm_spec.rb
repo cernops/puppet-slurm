@@ -39,7 +39,8 @@ describe 'slurm' do
     it { should contain_anchor('slurm::worker::start').that_comes_before('Class[slurm::user]') }
     it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
     it { should contain_class('slurm::munge').that_comes_before('Class[slurm::worker::install]') }
-    it { should contain_class('slurm::worker::install').that_comes_before('Class[slurm::worker::config]') }
+    it { should contain_class('slurm::worker::install').that_comes_before('Class[slurm::config]') }
+    it { should contain_class('slurm::config').that_comes_before('Class[slurm::worker::config]') }
     it { should contain_class('slurm::worker::config').that_comes_before('Class[slurm::worker::firewall]') }
     it { should contain_class('slurm::worker::firewall').that_comes_before('Class[slurm::worker::service]') }
     it { should contain_class('slurm::worker::service').that_comes_before('Anchor[slurm::worker::end]') }
@@ -49,6 +50,7 @@ describe 'slurm' do
     it_behaves_like 'slurm::munge'
     it_behaves_like 'slurm::auks'
     it_behaves_like 'slurm::worker::install'
+    it_behaves_like 'slurm::config'
     it_behaves_like 'slurm::worker::config'
     it_behaves_like 'slurm_conf_common'
     it_behaves_like 'slurm_conf_partitions'
@@ -75,7 +77,8 @@ describe 'slurm' do
     it { should contain_anchor('slurm::master::start').that_comes_before('Class[slurm::user]') }
     it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
     it { should contain_class('slurm::munge').that_comes_before('Class[slurm::master::install]') }
-    it { should contain_class('slurm::master::install').that_comes_before('Class[slurm::master::config]') }
+    it { should contain_class('slurm::master::install').that_comes_before('Class[slurm::config]') }
+    it { should contain_class('slurm::config').that_comes_before('Class[slurm::master::config]') }
     it { should contain_class('slurm::master::config').that_comes_before('Class[slurm::master::firewall]') }
     it { should contain_class('slurm::master::firewall').that_comes_before('Class[slurm::master::service]') }
     it { should contain_class('slurm::master::service').that_comes_before('Anchor[slurm::master::end]') }
@@ -85,6 +88,7 @@ describe 'slurm' do
     it_behaves_like 'slurm::munge'
     it_behaves_like 'slurm::auks'
     it_behaves_like 'slurm::master::install'
+    it_behaves_like 'slurm::config'
     it_behaves_like 'slurm::master::config'
     it_behaves_like 'slurm_conf_common'
     it_behaves_like 'slurm_conf_partitions'
@@ -111,7 +115,8 @@ describe 'slurm' do
     it { should contain_anchor('slurm::slurmdbd::start').that_comes_before('Class[slurm::user]') }
     it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
     it { should contain_class('slurm::munge').that_comes_before('Class[slurm::slurmdbd::install]') }
-    it { should contain_class('slurm::slurmdbd::install').that_comes_before('Class[slurm::slurmdbd::config]') }
+    it { should contain_class('slurm::slurmdbd::install').that_comes_before('Class[slurm::config]') }
+    it { should contain_class('slurm::config').that_comes_before('Class[slurm::slurmdbd::config]') }
     it { should contain_class('slurm::slurmdbd::config').that_comes_before('Class[slurm::slurmdbd::firewall]') }
     it { should contain_class('slurm::slurmdbd::firewall').that_comes_before('Class[slurm::slurmdbd::service]') }
     it { should contain_class('slurm::slurmdbd::service').that_comes_before('Anchor[slurm::slurmdbd::end]') }
@@ -120,6 +125,7 @@ describe 'slurm' do
     it_behaves_like 'slurm::user'
     it_behaves_like 'slurm::munge'
     it_behaves_like 'slurm::slurmdbd::install'
+    it_behaves_like 'slurm::config'
     it_behaves_like 'slurm::slurmdbd::config'
     it_behaves_like 'slurm::slurmdbd::firewall'
     it_behaves_like 'slurm::slurmdbd::service'

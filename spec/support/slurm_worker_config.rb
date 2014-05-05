@@ -2,33 +2,6 @@ shared_examples 'slurm::worker::config' do
   let(:params) { context_params }
 
   it do
-    should contain_file('/var/log/slurm').with({
-      :ensure => 'directory',
-      :owner  => 'slurm',
-      :group  => 'slurm',
-      :mode   => '0700',
-    })
-  end
-
-  it do
-    should contain_file('/var/run/slurm').with({
-      :ensure => 'directory',
-      :owner  => 'slurm',
-      :group  => 'slurm',
-      :mode   => '0700',
-    })
-  end
-
-  it do
-    should contain_file('/var/lib/slurm').with({
-      :ensure => 'directory',
-      :owner  => 'slurm',
-      :group  => 'slurm',
-      :mode   => '0700',
-    })
-  end
-
-  it do
     should contain_file('/var/spool/slurm').with({
       :ensure => 'directory',
       :owner  => 'slurm',
@@ -71,13 +44,6 @@ shared_examples 'slurm::worker::config' do
       :create_owner  => 'slurm',
       :create_group  => 'root',
       :postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
-    })
-  end
-
-  it do
-    should contain_sysctl('net.core.somaxconn').with({
-      :ensure => 'present',
-      :value  => '1024',
     })
   end
 

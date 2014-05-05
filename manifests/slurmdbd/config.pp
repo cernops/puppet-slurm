@@ -9,16 +9,6 @@ class slurm::slurmdbd::config {
     group => $slurm::slurm_user_group,
   }
 
-  file { $slurm::log_dir:
-    ensure  => 'directory',
-    mode    => '0700',
-  }
-
-  file { $slurm::pid_dir:
-    ensure  => 'directory',
-    mode    => '0700',
-  }
-
   file { '/etc/slurm/slurmdbd.conf':
     ensure  => 'file',
     owner   => 'root',
@@ -48,8 +38,4 @@ class slurm::slurmdbd::config {
     }
   }
 
-  sysctl { 'net.core.somaxconn':
-    ensure  => present,
-    value   => '1024',
-  }
 }
