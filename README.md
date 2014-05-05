@@ -4,7 +4,6 @@ Puppet module for SLURM client and server
 
 ## TODO
 
-* verify config defaults w/ 14.03 release of SLURM
 * rspec test passing storage_* parameters
 * Manage slurm.conf JobComp* config options
 * master - require NFS or somehow ensure NFS present before applying mount resource

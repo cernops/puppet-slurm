@@ -120,6 +120,66 @@ shared_examples 'slurm_conf_common' do
     end
   end
 
+  context 'when epilog => /tmp/foo' do
+    let(:params) { context_params.merge({ :epilog => '/tmp/foo' }) }
+
+    it "should set the Epilog option" do
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
+        'Epilog=/tmp/foo',
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
+    end
+  end
+
+  context 'when health_check_program => /tmp/nhc' do
+    let(:params) { context_params.merge({ :health_check_program => '/tmp/nhc' }) }
+
+    it "should set the HealthCheckProgram option" do
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
+        'HealthCheckProgram=/tmp/nhc',
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
+    end
+  end
+
+  context 'when prolog => /tmp/bar' do
+    let(:params) { context_params.merge({ :prolog => '/tmp/bar' }) }
+
+    it "should set the Prolog option" do
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
+        'Prolog=/tmp/bar',
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
+    end
+  end
+
+  context 'when task_epilog => /tmp/epilog' do
+    let(:params) { context_params.merge({ :task_epilog => '/tmp/epilog' }) }
+
+    it "should set the TaskEpilog option" do
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
+        'TaskEpilog=/tmp/epilog',
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
+    end
+  end
+
+  context 'when task_prolog => /tmp/foobar' do
+    let(:params) { context_params.merge({ :task_prolog => '/tmp/foobar' }) }
+
+    it "should set the TaskProlog option" do
+      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      expected_lines = [
+        'TaskProlog=/tmp/foobar',
+      ]
+      (content.split("\n") & expected_lines).should == expected_lines
+    end
+  end
+
   context 'when slurm_conf_source defined' do
     let(:params) { context_params.merge({ :slurm_conf_source => 'puppet:///modules/site_slurm/slurm.conf'}) }
 

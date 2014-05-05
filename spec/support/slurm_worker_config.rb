@@ -65,14 +65,6 @@ shared_examples 'slurm::worker::config' do
         :mode   => '0754',
       })
     end
-
-    it "should set the Epilog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
-      expected_lines = [
-        'Epilog=/tmp/foo',
-      ]
-      (content.split("\n") & expected_lines).should == expected_lines
-    end
   end
 
   context 'when health_check_program => /tmp/nhc' do
@@ -87,14 +79,6 @@ shared_examples 'slurm::worker::config' do
         :group  => 'root',
         :mode   => '0754',
       })
-    end
-
-    it "should set the HealthCheckProgram option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
-      expected_lines = [
-        'HealthCheckProgram=/tmp/nhc',
-      ]
-      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 
@@ -111,14 +95,6 @@ shared_examples 'slurm::worker::config' do
         :mode   => '0754',
       })
     end
-
-    it "should set the Prolog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
-      expected_lines = [
-        'Prolog=/tmp/bar',
-      ]
-      (content.split("\n") & expected_lines).should == expected_lines
-    end
   end
 
   context 'when task_epilog => /tmp/epilog' do
@@ -134,14 +110,6 @@ shared_examples 'slurm::worker::config' do
         :mode   => '0754',
       })
     end
-
-    it "should set the TaskEpilog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
-      expected_lines = [
-        'TaskEpilog=/tmp/epilog',
-      ]
-      (content.split("\n") & expected_lines).should == expected_lines
-    end
   end
 
   context 'when task_prolog => /tmp/foobar' do
@@ -156,14 +124,6 @@ shared_examples 'slurm::worker::config' do
         :group  => 'root',
         :mode   => '0754',
       })
-    end
-
-    it "should set the TaskProlog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
-      expected_lines = [
-        'TaskProlog=/tmp/foobar',
-      ]
-      (content.split("\n") & expected_lines).should == expected_lines
     end
   end
 end

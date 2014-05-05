@@ -5,6 +5,7 @@ class slurm (
   $worker = true,
   $master = false,
   $slurmdbd = false,
+  $client = false,
 
   # Package ensures
   $munge_package_ensure = 'present',
@@ -107,6 +108,7 @@ class slurm (
   validate_bool($worker)
   validate_bool($master)
   validate_bool($slurmdbd)
+  validate_bool($client)
   validate_bool($manage_slurm_user)
   validate_bool($manage_state_dir_nfs_mount)
   validate_array($partitionlist)
@@ -251,6 +253,10 @@ class slurm (
 
   if $slurmdbd {
     class { 'slurm::slurmdbd': }
+  }
+
+  if $client {
+    class { 'slurm::client': }
   }
 
 }

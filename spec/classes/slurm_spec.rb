@@ -52,8 +52,6 @@ describe 'slurm' do
     it_behaves_like 'slurm::worker::install'
     it_behaves_like 'slurm::config'
     it_behaves_like 'slurm::worker::config'
-    it_behaves_like 'slurm_conf_common'
-    it_behaves_like 'slurm_conf_partitions'
     it_behaves_like 'slurm::worker::firewall'
     it_behaves_like 'slurm::worker::service'
   end
@@ -90,8 +88,6 @@ describe 'slurm' do
     it_behaves_like 'slurm::master::install'
     it_behaves_like 'slurm::config'
     it_behaves_like 'slurm::master::config'
-    it_behaves_like 'slurm_conf_common'
-    it_behaves_like 'slurm_conf_partitions'
     it_behaves_like 'slurm::master::firewall'
     it_behaves_like 'slurm::master::service'
   end
@@ -131,11 +127,46 @@ describe 'slurm' do
     it_behaves_like 'slurm::slurmdbd::service'
   end
 
+  context 'when client only' do
+    let :context_params do
+      {
+        :worker   => false,
+        :master   => false,
+        :slurmdbd => false,
+        :client   => true,
+      }
+    end
+
+    let(:facts) { default_facts }
+    let(:params) { context_params }
+
+    it { should contain_class('slurm::client') }
+    it { should_not contain_class('slurm::worker') }
+    it { should_not contain_class('slurm::master') }
+    it { should_not contain_class('slurm::slurmdb') }
+
+    it { should contain_anchor('slurm::client::start').that_comes_before('Class[slurm::user]') }
+    it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
+    it { should contain_class('slurm::munge').that_comes_before('Class[slurm::client::install]') }
+    it { should contain_class('slurm::client::install').that_comes_before('Class[slurm::client::config]') }
+    it { should contain_class('slurm::client::config').that_comes_before('Class[slurm::client::service]') }
+    it { should contain_class('slurm::client::service').that_comes_before('Anchor[slurm::client::end]') }
+    it { should contain_anchor('slurm::client::end') }
+
+    it_behaves_like 'slurm::user'
+    it_behaves_like 'slurm::munge'
+    it_behaves_like 'slurm::auks'
+    it_behaves_like 'slurm::client::install'
+    it_behaves_like 'slurm::client::config'
+    it_behaves_like 'slurm::client::service'
+  end
+
   # Test validate_bool parameters
   [
     'worker',
     'master',
     'slurmdbd',
+    'client',
     'manage_slurm_user',
     'manage_state_dir_nfs_mount',
     'use_auks',

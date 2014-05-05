@@ -1,4 +1,4 @@
-shared_examples 'slurm::worker::install' do
+shared_examples 'slurm::client::install' do
   let(:params) { context_params }
 
   package_runtime_dependencies = [
@@ -15,7 +15,7 @@ shared_examples 'slurm::worker::install' do
   end
 
   # +1 for logrotate
-  it { should have_package_resource_count(10) }
+  it { should have_package_resource_count(9) }
 
   it { should contain_package('slurm').with_ensure('present') }
   it { should contain_package('slurm-munge').with_ensure('present') }
