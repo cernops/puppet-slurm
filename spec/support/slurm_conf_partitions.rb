@@ -31,8 +31,8 @@ shared_examples 'slurm_conf_partitions' do
     end
   end
 
-  context 'when partitionlist_content defined' do
-    let(:params) { context_params.merge({ :partitionlist_content => 'site_slurm/slurm.conf/partitions.erb' }) }
+  context 'when partitionlist_template defined' do
+    let(:params) { context_params.merge({ :partitionlist_template => 'site_slurm/slurm.conf/partitions.erb' }) }
 
     it do
       content = catalogue.resource('concat_fragment', "slurm.conf+03-partitions").send(:parameters)[:content]
@@ -44,7 +44,7 @@ shared_examples 'slurm_conf_partitions' do
     end
   end
 
-  context "partitionlist hierarchy - partitionlist_content first" do
+  context "partitionlist hierarchy - partitionlist_template first" do
     let :params do
       context_params.merge({
         :partitionlist => [
@@ -61,7 +61,7 @@ shared_examples 'slurm_conf_partitions' do
             'Default'       => 'YES',
           }
         ],
-        :partitionlist_content => 'site_slurm/slurm.conf/partitions.erb',
+        :partitionlist_template => 'site_slurm/slurm.conf/partitions.erb',
       })
     end
 
@@ -92,11 +92,10 @@ shared_examples 'slurm_conf_partitions' do
             'Default'       => 'YES',
           }
         ],
-        :partitionlist_content => false,
       })
     end
 
-    it "slurm.conf-partitions should use partitionlist_content" do
+    it "slurm.conf-partitions should use partitionlist_template" do
       content = catalogue.resource('concat_fragment', "slurm.conf+03-partitions").send(:parameters)[:content]
       expected_lines = [
         "PartitionName=DEFAULT Nodes=c[0-9] State=UP",
@@ -108,7 +107,6 @@ shared_examples 'slurm_conf_partitions' do
 
   context 'when slurm_conf_source defined' do
     let(:params) { context_params.merge({ :slurm_conf_source => 'puppet:///modules/site_slurm/slurm.conf'}) }
-
     it { should_not contain_concat_fragment('slurm.conf+03-partitions') }
   end
 end

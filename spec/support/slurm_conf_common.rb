@@ -37,6 +37,7 @@ shared_examples 'slurm_conf_common' do
       "GroupUpdateForce=0",
       "GroupUpdateTime=600",
       "HealthCheckInterval=0",
+      "HealthCheckNodeState=ANY",
       "InactiveLimit=0",
       "JobAcctGatherFrequency=30",
       "JobAcctGatherType=jobacct_gather/linux",

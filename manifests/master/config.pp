@@ -57,11 +57,11 @@ class slurm::master::config {
     }
 
     concat_fragment { 'slurm.conf+01-common':
-      content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
+      content => template($slurm::slurm_conf_template),
     }
 
     concat_fragment { 'slurm.conf+03-partitions':
-      content => $slurm::partition_content,
+      content => template($slurm::partitionlist_template),
     }
 
     Concat_fragment <<| tag == 'slurm_nodelist' |>>

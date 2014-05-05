@@ -103,18 +103,18 @@ class slurm::worker::config {
     }
 
     concat_fragment { 'slurm.conf+01-common':
-      content => template('slurm/slurm.conf/common/slurm.conf.options.erb'),
+      content => template($slurm::slurm_conf_template),
     }
 
     concat_fragment { 'slurm.conf+03-partitions':
-      content => $slurm::partition_content,
+      content => template($slurm::partitionlist_template),
     }
 
     Concat_fragment <<| tag == 'slurm_nodelist' |>>
   }
 
   if $slurm::manage_logrotate {
-    #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
+    #Refer to: http://slurm.schedmd.com/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmd':
       path          => $slurm::slurmd_log_file,
       compress      => true,

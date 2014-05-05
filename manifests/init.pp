@@ -36,7 +36,7 @@ class slurm (
 
   # Partitions
   $partitionlist = [],
-  $partitionlist_content = undef,
+  $partitionlist_template = 'slurm/slurm.conf/master/slurm.conf.partitions.erb',
 
   # Managed directories
   $log_dir = '/var/log/slurm',
@@ -69,6 +69,7 @@ class slurm (
 
   # slurm.conf - overrides
   $slurm_conf_override = {},
+  $slurm_conf_template = 'slurm/slurm.conf/common/slurm.conf.options.erb',
   $slurm_conf_source = undef,
 
   # slurmdbd.conf
@@ -140,6 +141,7 @@ class slurm (
     'GroupUpdateForce' => '0',
     'GroupUpdateTime' => '600',
     'HealthCheckInterval' => '0',
+    'HealthCheckNodeState' => 'ANY',
     'HealthCheckProgram' => $health_check_program,
     'InactiveLimit' => '0',
     'JobAcctGatherFrequency' => '30',
@@ -238,12 +240,6 @@ class slurm (
 
   $slurm_conf = merge($slurm_conf_defaults, $slurm_conf_override)
   $slurmdbd_conf = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
-
-  if $partitionlist_content {
-    $partition_content  = template($partitionlist_content)
-  } else {
-    $partition_content  = template('slurm/slurm.conf/master/slurm.conf.partitions.erb')
-  }
 
   if $worker {
     class { 'slurm::worker': }
