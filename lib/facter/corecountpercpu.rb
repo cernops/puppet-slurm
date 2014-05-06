@@ -7,6 +7,8 @@
 # Rants: Nacho Barrientos <nacho.barrientos@cern.ch>
 #
 
+require 'facter/util/file_read'
+
 default_corecount = 1
 source = '/proc/cpuinfo'
 

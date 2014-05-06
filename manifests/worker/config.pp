@@ -86,12 +86,31 @@ class slurm::worker::config {
       notify  => Service['slurm'],
     }
   } else {
-    File <<| name == 'slurm.conf-exported' |>>
+    concat_build { 'slurm.conf': }
 
     @@concat_fragment { "slurm.conf+02-node-${::hostname}":
       tag     => 'slurm_nodelist',
       content => template('slurm/slurm.conf/worker/slurm.conf.nodelist.erb'),
     }
+
+    file { '/etc/slurm/slurm.conf':
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => concat_output('slurm.conf'),
+      require => Concat_build['slurm.conf'],
+      #notify  => Service['slurm'],
+    }
+
+    concat_fragment { 'slurm.conf+01-common':
+      content => template($slurm::slurm_conf_template),
+    }
+
+    concat_fragment { 'slurm.conf+03-partitions':
+      content => template($slurm::partitionlist_template),
+    }
+
+    Concat_fragment <<| tag == 'slurm_nodelist' |>>
   }
 
   if $slurm::manage_logrotate {

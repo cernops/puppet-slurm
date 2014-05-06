@@ -19,7 +19,26 @@ class slurm::client::config {
       notify  => Service['slurm'],
     }
   } else {
-    File <<| name == 'slurm.conf-exported' |>>
+    concat_build { 'slurm.conf': }
+
+    file { '/etc/slurm/slurm.conf':
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => concat_output('slurm.conf'),
+      require => Concat_build['slurm.conf'],
+      #notify  => Service['slurm'],
+    }
+
+    concat_fragment { 'slurm.conf+01-common':
+      content => template($slurm::slurm_conf_template),
+    }
+
+    concat_fragment { 'slurm.conf+03-partitions':
+      content => template($slurm::partitionlist_template),
+    }
+
+    Concat_fragment <<| tag == 'slurm_nodelist' |>>
   }
 
 }

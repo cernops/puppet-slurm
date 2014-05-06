@@ -12,6 +12,8 @@ shared_examples 'slurm_conf_common' do
     })
   end
 
+  it { should contain_concat_fragment('slurm.conf+01-common') }
+
   it do
     content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
     expected_lines = [

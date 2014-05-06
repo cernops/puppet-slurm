@@ -47,6 +47,9 @@ shared_examples 'slurm::worker::config' do
     })
   end
 
+  it_behaves_like 'slurm_conf_common'
+  it_behaves_like 'slurm_conf_partitions'
+
   context 'when manage_logrotate => false' do
     let(:params) { context_params.merge({ :manage_logrotate => false }) }
     it { should_not contain_logrotate__rule('slurmd') }

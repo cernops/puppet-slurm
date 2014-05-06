@@ -10,4 +10,3 @@ Puppet module for SLURM client and server
 * slurmdbd - unit test config file
 * Slurmdbd - manage MySQL and other supported 'StorageType' values
 * Add acceptance tests using beaker
-* Notify Service resources when corresponding config changes
