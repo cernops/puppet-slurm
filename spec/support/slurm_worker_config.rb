@@ -18,7 +18,7 @@ shared_examples 'slurm::worker::config' do
       :path   => '/var/spool/slurm/slurmd',
       :owner  => 'slurm',
       :group  => 'slurm',
-      :mode   => '0700',
+      :mode   => '0755',
     })
   end
 

@@ -18,7 +18,7 @@ class slurm::worker::config {
   file { 'SlurmdSpoolDir':
     ensure  => 'directory',
     path    => $slurm::slurmd_spool_dir,
-    mode    => '0700',
+    mode    => '0755',
   }
 
   if $slurm::epilog {
