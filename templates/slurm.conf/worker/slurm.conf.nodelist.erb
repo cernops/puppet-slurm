@@ -1,6 +1,7 @@
 <% 
 node = []
 node << "NodeName=#{@hostname}"
+node << "NodeAddr=#{@ipaddress}" if @ipaddress
 node << "Sockets=#{@physicalprocessorcount}" if @physicalprocessorcount
 node << "CoresPerSocket=#{@corecountpercpu}" if @corecountpercpu
 node << "ThreadsPerCore=#{@threadcountpercore}" if @threadcountpercore
