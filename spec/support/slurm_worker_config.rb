@@ -6,7 +6,7 @@ shared_examples 'slurm::worker::config' do
       :ensure => 'directory',
       :owner  => 'slurm',
       :group  => 'slurm',
-      :mode   => '0700',
+      :mode   => '0755',
     })
   end
 

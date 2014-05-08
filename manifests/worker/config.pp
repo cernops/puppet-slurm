@@ -13,7 +13,7 @@ class slurm::worker::config {
 
   file { $slurm::spool_dir:
     ensure  => 'directory',
-    mode    => '0700',
+    mode    => '0755',
   }->
   file { 'SlurmdSpoolDir':
     ensure  => 'directory',
