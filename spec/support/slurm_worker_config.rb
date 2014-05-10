@@ -2,22 +2,11 @@ shared_examples 'slurm::worker::config' do
   let(:params) { context_params }
 
   it do
-    should contain_file('/var/spool/slurm').with({
-      :ensure => 'directory',
-      :owner  => 'slurm',
-      :group  => 'slurm',
-      :mode   => '0700',
-    })
-  end
-
-  it { should contain_file('/var/spool/slurm').that_comes_before('File[SlurmdSpoolDir]')}
-
-  it do
     should contain_file('SlurmdSpoolDir').with({
       :ensure => 'directory',
-      :path   => '/var/spool/slurm/slurmd',
-      :owner  => 'slurm',
-      :group  => 'slurm',
+      :path   => '/var/spool/slurmd',
+      :owner  => 'root',
+      :group  => 'root',
       :mode   => '0755',
     })
   end

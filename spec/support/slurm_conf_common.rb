@@ -83,7 +83,7 @@ shared_examples 'slurm_conf_common' do
       "SlurmdLogFile=/var/log/slurm/slurmd.log",
       "SlurmdPidFile=/var/run/slurm/slurmd.pid",
       "SlurmdPort=6818",
-      "SlurmdSpoolDir=/var/spool/slurm/slurmd",
+      "SlurmdSpoolDir=/var/spool/slurmd",
       "SlurmdTimeout=300",
       "SlurmdUser=root",
       "StateSaveLocation=/var/lib/slurm/state",

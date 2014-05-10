@@ -7,14 +7,10 @@ class slurm::worker::config {
   $procs = $::physicalprocessorcount*$::corecountpercpu*$::threadcountpercore
 
   File {
-    owner => $slurm::slurm_user,
-    group => $slurm::slurm_user_group,
+    owner => $slurm::slurmd_user,
+    group => $slurm::slurmd_user_group,
   }
 
-  file { $slurm::spool_dir:
-    ensure  => 'directory',
-    mode    => '0700',
-  }->
   file { 'SlurmdSpoolDir':
     ensure  => 'directory',
     path    => $slurm::slurmd_spool_dir,
@@ -26,8 +22,6 @@ class slurm::worker::config {
       ensure  => 'file',
       path    => $slurm::epilog,
       source  => $slurm::epilog_source,
-      owner   => 'root',
-      group   => 'root',
       mode    => '0754',
     }
   }
@@ -37,8 +31,6 @@ class slurm::worker::config {
       ensure  => 'file',
       path    => $slurm::health_check_program,
       source  => $slurm::health_check_program_source,
-      owner   => 'root',
-      group   => 'root',
       mode    => '0754',
     }
   }
@@ -48,8 +40,6 @@ class slurm::worker::config {
       ensure  => 'file',
       path    => $slurm::prolog,
       source  => $slurm::prolog_source,
-      owner   => 'root',
-      group   => 'root',
       mode    => '0754',
     }
   }
@@ -59,8 +49,6 @@ class slurm::worker::config {
       ensure  => 'file',
       path    => $slurm::task_epilog,
       source  => $slurm::task_epilog_source,
-      owner   => 'root',
-      group   => 'root',
       mode    => '0754',
     }
   }
@@ -70,8 +58,6 @@ class slurm::worker::config {
       ensure  => 'file',
       path    => $slurm::task_prolog,
       source  => $slurm::task_prolog_source,
-      owner   => 'root',
-      group   => 'root',
       mode    => '0754',
     }
   }
@@ -79,8 +65,6 @@ class slurm::worker::config {
   if $slurm::slurm_conf_source {
     file { '/etc/slurm/slurm.conf':
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
       mode    => '0644',
       source  => $slurm::slurm_conf_source,
       notify  => Service['slurm'],
@@ -94,8 +78,6 @@ class slurm::worker::config {
     }
 
     file { '/etc/slurm/slurm.conf':
-      owner   => 'root',
-      group   => 'root',
       mode    => '0644',
       source  => concat_output('slurm.conf'),
       require => Concat_build['slurm.conf'],

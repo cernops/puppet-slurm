@@ -42,7 +42,6 @@ class slurm (
   # Managed directories
   $log_dir = '/var/log/slurm',
   $pid_dir = '/var/run/slurm',
-  $spool_dir = '/var/spool/slurm',
   $shared_state_dir = '/var/lib/slurm',
 
   # slurm.conf - master
@@ -54,7 +53,7 @@ class slurm (
   $slurmd_log_file = '/var/log/slurm/slurmd.log',
   $slurmd_user = 'root',
   $slurmd_user_group = 'root',
-  $slurmd_spool_dir = '/var/spool/slurm/slurmd',
+  $slurmd_spool_dir = '/var/spool/slurmd',
 
   # slurm.conf - epilog/prolog
   $epilog = undef,

@@ -1,14 +1,15 @@
 # Fact: real_memory
 #
 # Purpose: Return the system memory rounded to nearest
-#          thousandth.
+#          hundredth.
 #
 Facter.add('real_memory') do
   confine :kernel => :linux
 
   mem = Facter.value(:memorysize_mb).to_i
+  real_mem = mem / 100 * 100
 
   setcode do
-    mem / 1000 * 1000
+    real_mem
   end
 end
