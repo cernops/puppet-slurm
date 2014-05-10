@@ -7,8 +7,9 @@ shared_examples 'slurm::master::service' do
     should contain_service('slurm').with({
       :ensure     => 'running',
       :enable     => 'true',
-      :hasstatus  => 'true',
+      :hasstatus  => 'false',
       :hasrestart => 'true',
+      :pattern    => '/usr/sbin/slurm(d|ctld)$',
     })
   end
 end
