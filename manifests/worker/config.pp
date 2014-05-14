@@ -4,8 +4,6 @@ class slurm::worker::config {
 
   include slurm
 
-  $procs = $::physicalprocessorcount*$::corecountpercpu*$::threadcountpercore
-
   File {
     owner => $slurm::slurmd_user,
     group => $slurm::slurmd_user_group,
@@ -62,40 +60,7 @@ class slurm::worker::config {
     }
   }
 
-  if $slurm::slurm_conf_source {
-    file { '/etc/slurm/slurm.conf':
-      ensure  => present,
-      mode    => '0644',
-      source  => $slurm::slurm_conf_source,
-      notify  => Service['slurm'],
-    }
-  } else {
-    concat_build { 'slurm.conf': }
-
-    @@concat_fragment { "slurm.conf+02-node-${::hostname}":
-      tag     => 'slurm_nodelist',
-      content => template('slurm/slurm.conf/worker/slurm.conf.nodelist.erb'),
-    }
-
-    file { '/etc/slurm/slurm.conf':
-      mode    => '0644',
-      source  => concat_output('slurm.conf'),
-      require => Concat_build['slurm.conf'],
-      #notify  => Service['slurm'],
-    }
-
-    concat_fragment { 'slurm.conf+01-common':
-      content => template($slurm::slurm_conf_template),
-    }
-
-    concat_fragment { 'slurm.conf+03-partitions':
-      content => template($slurm::partitionlist_template),
-    }
-
-    Concat_fragment <<| tag == 'slurm_nodelist' |>>
-  }
-
-  if $slurm::manage_logrotate {
+  if $slurm::worker::manage_logrotate {
     #Refer to: http://slurm.schedmd.com/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmd':
       path          => $slurm::slurmd_log_file,

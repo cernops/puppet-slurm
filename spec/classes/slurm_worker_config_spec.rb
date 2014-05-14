@@ -1,5 +1,12 @@
-shared_examples 'slurm::worker::config' do
-  let(:params) { context_params }
+require 'spec_helper'
+
+describe 'slurm::worker::config' do
+  let(:facts) { default_facts }
+
+  let(:pre_condition) { [ "class { 'slurm': }", "class { 'slurm::worker': }" ] }
+
+  it { should create_class('slurm::worker::config') }
+  it { should contain_class('slurm') }
 
   it do
     should contain_file('SlurmdSpoolDir').with({
@@ -36,16 +43,13 @@ shared_examples 'slurm::worker::config' do
     })
   end
 
-  it_behaves_like 'slurm_conf_common'
-  it_behaves_like 'slurm_conf_partitions'
-
   context 'when manage_logrotate => false' do
-    let(:params) { context_params.merge({ :manage_logrotate => false }) }
+    let(:pre_condition) { "class { 'slurm::worker': manage_logrotate => false }" }
     it { should_not contain_logrotate__rule('slurmd') }
   end
 
   context 'when epilog => /tmp/foo' do
-    let(:params) { context_params.merge({ :epilog => '/tmp/foo' }) }
+    let(:pre_condition) { "class { 'slurm': epilog => '/tmp/foo' }" }
 
     it do
       should contain_file('epilog').with({
@@ -60,7 +64,7 @@ shared_examples 'slurm::worker::config' do
   end
 
   context 'when health_check_program => /tmp/nhc' do
-    let(:params) { context_params.merge({ :health_check_program => '/tmp/nhc' }) }
+    let(:pre_condition) { "class { 'slurm': health_check_program => '/tmp/nhc' }" }
 
     it do
       should contain_file('health_check_program').with({
@@ -75,7 +79,7 @@ shared_examples 'slurm::worker::config' do
   end
 
   context 'when prolog => /tmp/bar' do
-    let(:params) { context_params.merge({ :prolog => '/tmp/bar' }) }
+    let(:pre_condition) { "class { 'slurm': prolog => '/tmp/bar' }" }
 
     it do
       should contain_file('prolog').with({
@@ -90,7 +94,7 @@ shared_examples 'slurm::worker::config' do
   end
 
   context 'when task_epilog => /tmp/epilog' do
-    let(:params) { context_params.merge({ :task_epilog => '/tmp/epilog' }) }
+    let(:pre_condition) { "class { 'slurm': task_epilog => '/tmp/epilog' }" }
 
     it do
       should contain_file('task_epilog').with({
@@ -105,7 +109,7 @@ shared_examples 'slurm::worker::config' do
   end
 
   context 'when task_prolog => /tmp/foobar' do
-    let(:params) { context_params.merge({ :task_prolog => '/tmp/foobar' }) }
+    let(:pre_condition) { "class { 'slurm': task_prolog => '/tmp/foobar' }" }
 
     it do
       should contain_file('task_prolog').with({

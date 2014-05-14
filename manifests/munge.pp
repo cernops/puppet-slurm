@@ -3,6 +3,7 @@
 class slurm::munge {
 
   include slurm
+  include epel
 
   package { 'munge':
     ensure  => $slurm::munge_package_ensure,

@@ -1,5 +1,12 @@
-shared_examples 'slurm::user' do
-  let(:params) { context_params }
+require 'spec_helper'
+
+describe 'slurm::user' do
+  let(:facts) { default_facts }
+
+  let(:pre_condition) { "class { 'slurm': }" }
+
+  it { should create_class('slurm::user') }
+  it { should contain_class('slurm') }
 
   it { should have_group_resource_count(1) }
   it { should have_user_resource_count(1) }
@@ -25,19 +32,19 @@ shared_examples 'slurm::user' do
   end
 
   context 'when slurm_group_gid => 400' do
-    let(:params) { context_params.merge({ :slurm_group_gid => 400 }) }
+    let(:pre_condition) { "class { 'slurm': slurm_group_gid => 400 }" }
 
     it { should contain_group('slurm').with_gid('400') }
   end
 
   context 'when slurm_user_uid => 400' do
-    let(:params) { context_params.merge({ :slurm_user_uid => 400 }) }
+    let(:pre_condition) { "class { 'slurm': slurm_user_uid => 400 }" }
 
     it { should contain_user('slurm').with_uid('400') }
   end
 
   context 'when manage_slurm_user => false' do
-    let(:params) { context_params.merge({ :manage_slurm_user => false }) }
+    let(:pre_condition) { "class { 'slurm': manage_slurm_user => false }" }
 
     it { should have_group_resource_count(0) }
     it { should have_user_resource_count(0) }

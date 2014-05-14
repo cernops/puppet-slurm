@@ -7,7 +7,6 @@ class slurm::slurmdbd::service {
     enable      => true,
     hasstatus   => true,
     hasrestart  => true,
-    #require     => Class['mysql::server'],
   }
 
 }

@@ -6,27 +6,13 @@ class slurm::auks {
 
   package { 'auks-slurm': ensure => $slurm::auks_package_ensure }
 
-  file { '/etc/slurm/plugstack.conf.d':
-    ensure  => 'directory',
-  }
-
-  file { '/etc/slurm/plugstack.conf':
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('slurm/plugstack.conf.erb'),
-    notify  => Service['slurm'],
-  }
-
   file { '/etc/slurm/plugstack.conf.d/auks.conf':
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
     content => template('slurm/plugstack.conf.d/auks.conf.erb'),
-    require => File['/etc/slurm/plugstack.conf.d'],
-    notify  => Service['slurm'],
+    require => File['plugstack.conf.d'],
   }
 
 #  shellvar { 'slurm KRB5CCNAME':

@@ -58,3 +58,16 @@ class String
     split('_').map{|e| e.capitalize}.join
   end
 end
+
+def default_facts
+  {
+    :osfamily => 'RedHat',
+    :concat_basedir => '/tmp',
+    :fqdn => 'slurm.example.com',
+    :hostname => 'slurm',
+    :physicalprocessorcount => '2',
+    :corecountpercpu => '4',
+    :threadcountpercore => '1',
+    :real_memory => '32000',
+  }
+end

@@ -1,13 +1,8 @@
 # == Class: slurm
 #
 class slurm (
-  # Role booleans
-  $worker = true,
-  $master = false,
-  $slurmdbd = false,
-  $client = false,
-
   # Package ensures
+  $package_require = undef,
   $munge_package_ensure = 'present',
   $slurm_package_ensure = 'present',
   $auks_package_ensure = 'present',
@@ -21,25 +16,19 @@ class slurm (
   $slurm_user_uid = 'UNSET',
   $slurm_user_comment = 'SLURM User',
   $slurm_user_home = '/home/slurm',
+  $slurm_user_managehome = true,
   $slurm_user_shell = '/bin/false',
 
   # Cluster config
   $cluster_name = 'linux',
   $control_machine = 'slurm',
 
-  # Master config
-  $manage_state_dir_nfs_mount = true,
-  $state_dir_nfs_device = undef,
-  $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
-
-  # Worker config
-  $tmp_disk = '16000',
-
   # Partitions
   $partitionlist = [],
-  $partitionlist_template = 'slurm/slurm.conf/master/slurm.conf.partitions.erb',
+  $partitionlist_template = 'slurm/slurm.conf/slurm.conf.partitions.erb',
 
   # Managed directories
+  $conf_dir = '/home/slurm/conf',
   $log_dir = '/var/log/slurm',
   $pid_dir = '/var/run/slurm',
   $shared_state_dir = '/var/lib/slurm',
@@ -69,20 +58,8 @@ class slurm (
 
   # slurm.conf - overrides
   $slurm_conf_override = {},
-  $slurm_conf_template = 'slurm/slurm.conf/common/slurm.conf.options.erb',
+  $slurm_conf_template = 'slurm/slurm.conf/slurm.conf.options.erb',
   $slurm_conf_source = undef,
-
-  # slurmdbd.conf
-  $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
-  $storage_host = 'localhost',
-  $storage_loc = 'slurmdbd',
-  $storage_pass = 'slurmdbd',
-  $storage_port = '3306',
-  $storage_type = 'accounting_storage/mysql',
-  $storage_user = 'slurmdbd',
-
-  # slurmdbd.conf - overrides
-  $slurmdbd_conf_override = {},
 
   # Munge
   $munge_key = undef,
@@ -93,30 +70,18 @@ class slurm (
   # pam
   $use_pam = false,
 
-  # Firewall / ports
-  $manage_firewall = true,
+  # ports
   $slurmd_port = '6818',
   $slurmctld_port = '6817',
   $slurmdbd_port = '6819',
-
-  # Logrotate
-  $manage_logrotate = true,
 ) inherits slurm::params {
 
   # Parameter validations
-  validate_bool($worker)
-  validate_bool($master)
-  validate_bool($slurmdbd)
-  validate_bool($client)
   validate_bool($manage_slurm_user)
-  validate_bool($manage_state_dir_nfs_mount)
   validate_array($partitionlist)
   validate_hash($slurm_conf_override)
-  validate_hash($slurmdbd_conf_override)
   validate_bool($use_auks)
   validate_bool($use_pam)
-  validate_bool($manage_firewall)
-  validate_bool($manage_logrotate)
 
   $slurm_conf_defaults = {
     'AccountingStorageHost' => $control_machine,
@@ -163,6 +128,7 @@ class slurm (
     'MinJobAge' => '300',
     'MpiDefault' => 'none',
     'OverTimeLimit' => '0',
+    'PlugStackConfig' => "${conf_dir}/plugstack.conf",
     'PluginDir' => '/usr/lib64/slurm',
     'PreemptMode' => 'OFF',
     'PreemptType' => 'preempt/none',
@@ -205,30 +171,6 @@ class slurm (
     'WaitTime' => '0',
   }
 
-  $slurmdbd_conf_defaults = {
-    'ArchiveDir' => '/tmp',
-    'ArchiveEvents' => 'no',
-    'ArchiveJobs' => 'no',
-    'ArchiveSteps' => 'no',
-    'ArchiveSuspend' => 'no',
-    'AuthType' => 'auth/munge',
-    'DbdHost' => $::hostname,
-    'DbdPort' => $slurmdbd_port,
-    'DebugLevel' => '3',
-    'LogFile' => $slurmdbd_log_file,
-    'MessageTimeout' => '10',
-    'PidFile' => "${pid_dir}/slurmdbd.pid",
-    'PluginDir' => '/usr/lib64/slurm',
-    'SlurmUser' => $slurm_user,
-    'StorageHost' => $storage_host,
-    'StorageLoc' => $storage_loc,
-    'StoragePass' => $storage_pass,
-    'StoragePort' => $storage_port,
-    'StorageType' => $storage_type,
-    'StorageUser' => $storage_user,
-    'TrackSlurmctldDown' => 'no',
-  }
-
   $gid = $slurm::slurm_group_gid ? {
     'UNSET' => undef,
     default => $slurm_group_gid,
@@ -240,22 +182,6 @@ class slurm (
   }
 
   $slurm_conf = merge($slurm_conf_defaults, $slurm_conf_override)
-  $slurmdbd_conf = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
 
-  if $worker {
-    class { 'slurm::worker': }
-  }
-
-  if $master {
-    class { 'slurm::master': }
-  }
-
-  if $slurmdbd {
-    class { 'slurm::slurmdbd': }
-  }
-
-  if $client {
-    class { 'slurm::client': }
-  }
-
+  $slurm_conf_path = "${conf_dir}/slurm.conf"
 }

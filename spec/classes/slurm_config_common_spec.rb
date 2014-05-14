@@ -1,5 +1,9 @@
-shared_examples 'slurm::config' do
-  let(:params) { context_params }
+require 'spec_helper'
+
+describe 'slurm::config::common' do
+  let(:params) {{ }}
+
+  it { should create_class('slurm::config::common') }
 
   it do
     should contain_file('/var/log/slurm').with({
@@ -25,13 +29,6 @@ shared_examples 'slurm::config' do
       :owner  => 'slurm',
       :group  => 'slurm',
       :mode   => '0700',
-    })
-  end
-
-  it do
-    should contain_sysctl('net.core.somaxconn').with({
-      :ensure => 'present',
-      :value  => '1024',
     })
   end
 end

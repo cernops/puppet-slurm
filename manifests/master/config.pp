@@ -23,51 +23,19 @@ class slurm::master::config {
     require => File[$slurm::shared_state_dir],
   }
 
-  if $slurm::manage_state_dir_nfs_mount {
+  if $slurm::master::manage_state_dir_nfs_mount {
     mount { 'StateSaveLocation':
       ensure  => 'mounted',
       name    => $slurm::state_save_location,
       atboot  => true,
-      device  => $slurm::state_dir_nfs_device,
+      device  => $slurm::master::state_dir_nfs_device,
       fstype  => 'nfs',
-      options => $slurm::state_dir_nfs_options,
+      options => $slurm::master::state_dir_nfs_options,
       require => File['StateSaveLocation'],
     }
   }
 
-  if $slurm::slurm_conf_source {
-    file { '/etc/slurm/slurm.conf':
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => $slurm::slurm_conf_source,
-      notify  => Service['slurm'],
-    }
-  } else {
-    concat_build { 'slurm.conf': }
-
-    file { '/etc/slurm/slurm.conf':
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => concat_output('slurm.conf'),
-      require => Concat_build['slurm.conf'],
-      #notify  => Service['slurm'],
-    }
-
-    concat_fragment { 'slurm.conf+01-common':
-      content => template($slurm::slurm_conf_template),
-    }
-
-    concat_fragment { 'slurm.conf+03-partitions':
-      content => template($slurm::partitionlist_template),
-    }
-
-    Concat_fragment <<| tag == 'slurm_nodelist' |>>
-  }
-
-  if $slurm::manage_logrotate {
+  if $slurm::master::manage_logrotate {
     #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmctld':
       path          => $slurm::slurmctld_log_file,

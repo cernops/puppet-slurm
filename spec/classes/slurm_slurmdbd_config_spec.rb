@@ -1,18 +1,40 @@
-shared_examples 'slurm::slurmdbd::config' do
-  let(:params) { context_params }
+require 'spec_helper'
+
+describe 'slurm::slurmdbd::config' do
+  let(:facts) { default_facts }
+  let :pre_condition do
+    [
+      "class { 'slurm': }",
+    ]
+  end
+  let(:params) {{ }}
+
+  it { should create_class('slurm::slurmdbd::config') }
+
+  it { should contain_class('mysql::server') }
 
   it do
-    should contain_file('/etc/slurm/slurmdbd.conf').with({
+    should contain_mysql__db('slurmdbd').with({
+      :user     => 'slurmdbd',
+      :password => 'slurmdbd',
+      :host     => 'localhost',
+      :grant    => ['ALL'],
+    })
+  end
+
+  it do
+    should contain_file('slurmdbd.conf').with({
       :ensure => 'file',
-      :owner  => 'root',
-      :group  => 'root',
-      :mode   => '0644',
+      :path   => '/home/slurm/conf/slurmdbd.conf',
+      :owner  => 'slurm',
+      :group  => 'slurm',
+      :mode   => '0600',
       :notify => 'Service[slurmdbd]',
     })
   end
 
   it do
-    content = catalogue.resource('file', '/etc/slurm/slurmdbd.conf').send(:parameters)[:content]
+    content = catalogue.resource('file', 'slurmdbd.conf').send(:parameters)[:content]
     config = content.split("\n").reject { |c| c =~ /(^#|^$)/ }
     config.should == [
       "ArchiveDir=/tmp",
@@ -59,30 +81,28 @@ shared_examples 'slurm::slurmdbd::config' do
   end
 
   context 'when slurmdbd_conf_override defined' do
-    let :params do
-      context_params.merge({
-        :slurmdbd_conf_override => {
-          'PrivateData'   => 'users',
-        }
-      })
-    end
+    let(:params) {{ :slurmdbd_conf_override => { 'PrivateData' => 'users' } }}
 
     it "should override values" do
-      verify_contents(catalogue, '/etc/slurm/slurmdbd.conf', [
-        'PrivateData=users',
-      ])
+      verify_contents(catalogue, 'slurmdbd.conf', ['PrivateData=users'])
     end
   end
 
   context 'when storage_pass => "foobar"' do
-    let(:params) { context_params.merge({ :storage_pass => 'foobar' }) }
+    let(:params) {{ :storage_pass => 'foobar' }}
     it "should override values" do
-      verify_contents(catalogue, '/etc/slurm/slurmdbd.conf', ['StoragePass=foobar'])
+      verify_contents(catalogue, 'slurmdbd.conf', ['StoragePass=foobar'])
     end
   end
 
   context 'when manage_logrotate => false' do
-    let(:params) { context_params.merge({ :manage_logrotate => false }) }
+    let(:params) {{ :manage_logrotate => false }}
     it { should_not contain_logrotate__rule('slurmdbd') }
+  end
+
+  context 'when manage_database => false' do
+    let(:params) {{ :manage_database => false }}
+    it { should_not contain_class('mysql::server') }
+    it { should_not contain_mysql__db('slurmdbd') }
   end
 end

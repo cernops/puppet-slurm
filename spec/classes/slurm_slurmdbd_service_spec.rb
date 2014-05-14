@@ -1,7 +1,9 @@
-shared_examples 'slurm::slurmdbd::service' do
-  let(:params) { context_params }
+require 'spec_helper'
 
-  it { should have_service_resource_count(2) }
+describe 'slurm::slurmdbd::service' do
+  let(:facts) { default_facts }
+
+  it { should create_class('slurm::slurmdbd::service') }
 
   it do
     should contain_service('slurmdbd').with({
@@ -9,7 +11,6 @@ shared_examples 'slurm::slurmdbd::service' do
       :enable     => 'true',
       :hasstatus  => 'true',
       :hasrestart => 'true',
-      #:require    => 'Class[Mysql::Server]',
     })
   end
 end
