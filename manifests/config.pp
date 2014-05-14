@@ -16,11 +16,6 @@ class slurm::config (
     group => $slurm::slurm_user_group,
   }
 
-  Shellvar {
-    ensure  => 'present',
-    target  => '/etc/sysconfig/slurm',
-  }
-
   file { 'slurm CONFDIR':
     ensure  => 'directory',
     path    => $conf_dir,
@@ -92,6 +87,9 @@ class slurm::config (
     file { 'plugstack.conf.d':
       ensure  => 'directory',
       path    => "${conf_dir}/plugstack.conf.d",
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
       require => File['slurm CONFDIR'],
     }
 

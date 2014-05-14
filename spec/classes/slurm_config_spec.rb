@@ -181,6 +181,9 @@ describe 'slurm::config' do
     should contain_file('plugstack.conf.d').with({
       :ensure   => "directory",
       :path     => "/home/slurm/conf/plugstack.conf.d",
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0755',
       :require  => 'File[slurm CONFDIR]',
     })
   end
