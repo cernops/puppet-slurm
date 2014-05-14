@@ -1,6 +1,11 @@
-# == Class: slurm::master::config
+# == Class: slurm::controller::config
 #
-class slurm::master::config {
+class slurm::controller::config (
+  $manage_state_dir_nfs_mount = false,
+  $state_dir_nfs_device = undef,
+  $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
+  $manage_logrotate = true,
+) {
 
   include slurm
 
@@ -23,19 +28,19 @@ class slurm::master::config {
     require => File[$slurm::shared_state_dir],
   }
 
-  if $slurm::master::manage_state_dir_nfs_mount {
+  if $manage_state_dir_nfs_mount {
     mount { 'StateSaveLocation':
       ensure  => 'mounted',
       name    => $slurm::state_save_location,
       atboot  => true,
-      device  => $slurm::master::state_dir_nfs_device,
+      device  => $state_dir_nfs_device,
       fstype  => 'nfs',
-      options => $slurm::master::state_dir_nfs_options,
+      options => $state_dir_nfs_options,
       require => File['StateSaveLocation'],
     }
   }
 
-  if $slurm::master::manage_logrotate {
+  if $manage_logrotate {
     #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmctld':
       path          => $slurm::slurmctld_log_file,

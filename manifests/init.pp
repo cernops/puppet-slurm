@@ -8,7 +8,7 @@ class slurm (
   $auks_package_ensure = 'present',
   $package_runtime_dependencies = $slurm::params::package_runtime_dependencies,
 
-  # User/group management - master
+  # User/group management - controller
   $manage_slurm_user = true,
   $slurm_user_group = 'slurm',
   $slurm_group_gid = 'UNSET',
@@ -33,12 +33,12 @@ class slurm (
   $pid_dir = '/var/run/slurm',
   $shared_state_dir = '/var/lib/slurm',
 
-  # slurm.conf - master
+  # slurm.conf - controller
   $job_checkpoint_dir = '/var/lib/slurm/checkpoint',
   $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
   $state_save_location = '/var/lib/slurm/state',
 
-  # slurm.conf - worker
+  # slurm.conf - node
   $slurmd_log_file = '/var/log/slurm/slurmd.log',
   $slurmd_user = 'root',
   $slurmd_user_group = 'root',

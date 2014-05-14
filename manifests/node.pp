@@ -1,7 +1,8 @@
-# == Class: slurm::worker
+# == Class: slurm::node
 #
-class slurm::worker (
+class slurm::node (
   $manage_slurm_conf = false,
+  $manage_scripts = false,
   $with_devel = false,
   $manage_firewall = true,
   $manage_logrotate = true,
@@ -9,6 +10,7 @@ class slurm::worker (
 ) {
 
   validate_bool($manage_slurm_conf)
+  validate_bool($manage_scripts)
   validate_bool($with_devel)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
@@ -18,11 +20,10 @@ class slurm::worker (
   include slurm
   include slurm::user
   include slurm::munge
-  include slurm::worker::config
   if $slurm::use_auks { include slurm::auks }
 
-  anchor { 'slurm::worker::start': }
-  anchor { 'slurm::worker::end': }
+  anchor { 'slurm::node::start': }
+  anchor { 'slurm::node::end': }
 
   class { 'slurm::install':
     ensure          => $slurm::slurm_package_ensure,
@@ -43,6 +44,11 @@ class slurm::worker (
     manage_slurm_conf => $manage_slurm_conf,
   }
 
+  class { 'slurm::node::config':
+    manage_scripts    => $manage_scripts,
+    manage_logrotate  => $manage_logrotate,
+  }
+
   class { 'slurm::service':
     ensure  => 'running',
     enable  => true,
@@ -61,14 +67,14 @@ class slurm::worker (
     content => template('slurm/slurm.conf/slurm.conf.nodelist.erb'),
   }
 
-  Anchor['slurm::worker::start']->
+  Anchor['slurm::node::start']->
   Class['slurm::user']->
   Class['slurm::munge']->
   Class['slurm::install']->
   Class['slurm::config::common']->
   Class['slurm::config']->
-  Class['slurm::worker::config']->
+  Class['slurm::node::config']->
   Class['slurm::service']->
-  Anchor['slurm::worker::end']
+  Anchor['slurm::node::end']
 
 }

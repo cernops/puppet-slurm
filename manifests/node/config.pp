@@ -1,6 +1,9 @@
-# == Class: slurm::worker::config
+# == Class: slurm::node::config
 #
-class slurm::worker::config {
+class slurm::node::config (
+  $manage_scripts = false,
+  $manage_logrotate = true,
+) {
 
   include slurm
 
@@ -15,7 +18,7 @@ class slurm::worker::config {
     mode    => '0755',
   }
 
-  if $slurm::epilog {
+  if $slurm::epilog and $manage_scripts {
     file { 'epilog':
       ensure  => 'file',
       path    => $slurm::epilog,
@@ -24,7 +27,7 @@ class slurm::worker::config {
     }
   }
 
-  if $slurm::health_check_program {
+  if $slurm::health_check_program and $manage_scripts {
     file { 'health_check_program':
       ensure  => 'file',
       path    => $slurm::health_check_program,
@@ -33,7 +36,7 @@ class slurm::worker::config {
     }
   }
 
-  if $slurm::prolog {
+  if $slurm::prolog and $manage_scripts {
     file { 'prolog':
       ensure  => 'file',
       path    => $slurm::prolog,
@@ -42,7 +45,7 @@ class slurm::worker::config {
     }
   }
 
-  if $slurm::task_epilog {
+  if $slurm::task_epilog and $manage_scripts {
     file { 'task_epilog':
       ensure  => 'file',
       path    => $slurm::task_epilog,
@@ -51,7 +54,7 @@ class slurm::worker::config {
     }
   }
 
-  if $slurm::task_prolog {
+  if $slurm::task_prolog and $manage_scripts {
     file { 'task_prolog':
       ensure  => 'file',
       path    => $slurm::task_prolog,
@@ -60,7 +63,7 @@ class slurm::worker::config {
     }
   }
 
-  if $slurm::worker::manage_logrotate {
+  if $manage_logrotate {
     #Refer to: http://slurm.schedmd.com/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmd':
       path          => $slurm::slurmd_log_file,

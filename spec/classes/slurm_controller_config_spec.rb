@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe 'slurm::master::config' do
+describe 'slurm::controller::config' do
   let(:facts) { default_facts }
 
-  let(:pre_condition) { [ "class { 'slurm': }", "class { 'slurm::master': }" ] }
+  let(:pre_condition) { "class { 'slurm': }" }
 
-  it { should create_class('slurm::master::config') }
+  it { should create_class('slurm::controller::config') }
   it { should contain_class('slurm') }
 
   it do
@@ -52,12 +52,12 @@ describe 'slurm::master::config' do
   end
 
   context 'when manage_logrotate => false' do
-    let(:pre_condition) { "class { 'slurm::master': manage_logrotate => false }" }
+    let(:params) {{ :manage_logrotate => false }}
     it { should_not contain_logrotate__rule('slurmctld') }
   end
 
   context 'when manage_state_dir_nfs_mount => true' do
-    let(:pre_condition) { "class { 'slurm::master': manage_state_dir_nfs_mount => true }" }
+    let(:params) {{ :manage_state_dir_nfs_mount => true }}
 
     it do
       should contain_mount('StateSaveLocation').with({
@@ -72,12 +72,12 @@ describe 'slurm::master::config' do
     end
 
     context 'when state_dir_nfs_device => "192.168.1.1:/slurm/state"' do
-      let(:pre_condition) { "class { 'slurm::master': manage_state_dir_nfs_mount => true, state_dir_nfs_device => '192.168.1.1:/slurm/state' }" }
+      let(:params) {{ :manage_state_dir_nfs_mount => true, :state_dir_nfs_device => '192.168.1.1:/slurm/state' }}
       it { should contain_mount('StateSaveLocation').with_device('192.168.1.1:/slurm/state') }
     end
 
     context 'when state_dir_nfs_options => "foo,bar"' do
-      let(:pre_condition) { "class { 'slurm::master': manage_state_dir_nfs_mount => true, state_dir_nfs_options => 'foo,bar' }" }
+      let(:params) {{ :manage_state_dir_nfs_mount => true, :state_dir_nfs_options => 'foo,bar' }}
       it { should contain_mount('StateSaveLocation').with_options('foo,bar') }
     end
   end

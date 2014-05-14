@@ -1,6 +1,6 @@
-# == Class: slurm::master
+# == Class: slurm::controller
 #
-class slurm::master (
+class slurm::controller (
   $manage_slurm_conf = true,
   $manage_state_dir_nfs_mount = false,
   $state_dir_nfs_device = undef,
@@ -16,13 +16,12 @@ class slurm::master (
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
-  anchor { 'slurm::master::start': }
-  anchor { 'slurm::master::end': }
+  anchor { 'slurm::controller::start': }
+  anchor { 'slurm::controller::end': }
 
   include slurm
   include slurm::user
   include slurm::munge
-  include slurm::master::config
   if $slurm::use_auks { include slurm::auks }
 
   class { 'slurm::install':
@@ -44,6 +43,13 @@ class slurm::master (
     manage_slurm_conf => $manage_slurm_conf,
   }
 
+  class { 'slurm::controller::config':
+    manage_state_dir_nfs_mount  => $manage_state_dir_nfs_mount,
+    state_dir_nfs_device        => $state_dir_nfs_device,
+    state_dir_nfs_options       => $state_dir_nfs_options,
+    manage_logrotate            => $manage_logrotate,
+  }
+
   class { 'slurm::service':
     ensure  => 'running',
     enable  => true,
@@ -57,14 +63,14 @@ class slurm::master (
     }
   }
 
-  Anchor['slurm::master::start']->
+  Anchor['slurm::controller::start']->
   Class['slurm::user']->
   Class['slurm::munge']->
   Class['slurm::install']->
   Class['slurm::config::common']->
   Class['slurm::config']->
-  Class['slurm::master::config']->
+  Class['slurm::controller::config']->
   Class['slurm::service']->
-  Anchor['slurm::master::end']
+  Anchor['slurm::controller::end']
 
 }

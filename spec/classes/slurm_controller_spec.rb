@@ -1,18 +1,17 @@
 require 'spec_helper'
 
-describe 'slurm::worker' do
+describe 'slurm::controller' do
   let(:facts) { default_facts }
   let(:params) {{ }}
   let(:pre_condition) { "class { 'slurm': }" }
 
-  it { should create_class('slurm::worker') }
+  it { should create_class('slurm::controller') }
   it { should contain_class('slurm') }
 
-  it { should contain_anchor('slurm::worker::start').that_comes_before('Class[slurm::user]') }
+  it { should contain_anchor('slurm::controller::start').that_comes_before('Class[slurm::user]') }
   it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
   it { should contain_class('slurm::munge').that_comes_before('Class[slurm::install]') }
-  it { should contain_class('slurm::worker::config').that_comes_before('Class[slurm::service]') }
-  it { should contain_anchor('slurm::worker::end') }
+  it { should contain_anchor('slurm::controller::end') }
 
   it do
     should contain_class('slurm::install').with({
@@ -35,40 +34,57 @@ describe 'slurm::worker' do
 
   it do
     should contain_class('slurm::config').with({
-      :manage_slurm_conf  => 'false',
-    }).that_comes_before('Class[slurm::worker::config]')
+      :manage_slurm_conf  => 'true',
+    }).that_comes_before('Class[slurm::controller::config]')
+  end
+
+  it do
+    should contain_class('slurm::controller::config').with({
+      :manage_state_dir_nfs_mount  => 'false',
+      :state_dir_nfs_device        => nil,
+      :state_dir_nfs_options       => 'rw,sync,noexec,nolock,auto',
+      :manage_logrotate            => 'true',
+    }).that_comes_before('Class[slurm::service]')
   end
 
   it do
     should contain_class('slurm::service').with({
       :ensure => 'running',
       :enable => 'true',
-    }).that_comes_before('Anchor[slurm::worker::end]')
+    }).that_comes_before('Anchor[slurm::controller::end]')
   end
 
   it do
-    should contain_firewall('100 allow access to slurmd').with({
+    should contain_firewall('100 allow access to slurmctld').with({
       :proto  => 'tcp',
-      :dport  => '6818',
+      :dport  => '6817',
       :action => 'accept',
     })
   end
 
   context 'when manage_firewall => false' do
     let(:params) {{ :manage_firewall => false }}
-    it { should_not contain_firewall('100 allow access to slurmd') }
+    it { should_not contain_firewall('100 allow access to slurmctld') }
   end
+
+#  it_behaves_like 'slurm::auks'
+#  it_behaves_like 'slurm::controller::install'
+#  it_behaves_like 'slurm::config'
+#  it_behaves_like 'slurm::controller::config'
+#  it_behaves_like 'slurm::controller::firewall'
+#  it_behaves_like 'slurm::controller::service'
 
   # Test validate_bool parameters
   [
     'manage_slurm_conf',
+    'manage_state_dir_nfs_mount',
     'with_devel',
     'manage_firewall',
     'manage_logrotate',
   ].each do |param|
     context "with #{param} => 'foo'" do
       let(:params) {{ param => 'foo' }}
-      it { expect { should create_class('slurm::worker') }.to raise_error(Puppet::Error, /is not a boolean/) }
+      it { expect { should create_class('slurm::controller') }.to raise_error(Puppet::Error, /is not a boolean/) }
     end
   end
 end
