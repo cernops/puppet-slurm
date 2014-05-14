@@ -77,6 +77,14 @@ class slurm::slurmdbd::config (
     notify  => Service['slurmdbd'],
   }
 
+  if $slurm::conf_dir != '/etc/slurm' {
+    file { '/etc/slurm/slurmdbd.conf':
+      ensure  => 'link',
+      path    => '/etc/slurm/slurmdbd.conf',
+      target  => $slurmdbd_conf_path,
+    }
+  }
+
   if $manage_logrotate {
     #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmdbd':

@@ -104,6 +104,32 @@ class slurm::config (
       content => template('slurm/plugstack.conf.erb'),
       require => File['slurm CONFDIR'],
     }
+  } else {
+    if $conf_dir != '/etc/slurm' {
+      file { 'slurm.conf':
+        ensure  => 'link',
+        path    => '/etc/slurm/slurm.conf',
+        target  => $slurm_conf_path,
+        owner   => 'root',
+        group   => 'root',
+      }
+
+      file { 'plugstack.conf.d':
+        ensure  => 'link',
+        path    => '/etc/slurm/plugstack.conf.d',
+        target  => "${conf_dir}/plugstack.conf.d",
+        owner   => 'root',
+        group   => 'root',
+      }
+
+      file { 'plugstack.conf':
+        ensure  => 'link',
+        path    => '/etc/slurm/plugstack.conf',
+        target  => "${conf_dir}/plugstack.conf",
+        owner   => 'root',
+        group   => 'root',
+      }
+    }
   }
 
   sysctl { 'net.core.somaxconn':
