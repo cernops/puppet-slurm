@@ -17,37 +17,22 @@ describe 'slurm::config' do
   end
 
   it do
-    should contain_shellvar('slurm CONFDIR').with({
-      :ensure    => 'present',
-      :variable  => 'CONFDIR',
-      :target    => '/etc/sysconfig/slurm',
-      :value     => '/home/slurm/conf',
-    }).that_comes_before('Shellvar[SLURMCTLD_OPTIONS]')
-  end
-
-  it do
-    should contain_shellvar('SLURMCTLD_OPTIONS').with({
-      :ensure    => 'present',
-      :target    => '/etc/sysconfig/slurm',
-      :value     => 'SLURMCTLD_OPTIONS="-f /home/slurm/conf/slurm.conf"',
-    }).that_comes_before('Shellvar[SLURMD_OPTIONS]')
-  end
-
-  it do
-    should contain_shellvar('SLURMD_OPTIONS').with({
-      :ensure    => 'present',
-      :target    => '/etc/sysconfig/slurm',
-      :value     => 'SLURMD_OPTIONS="-f /home/slurm/conf/slurm.conf"',
-    }).that_comes_before('File_line[export SLURM_CONF]')
-  end
-
-  it do
-    should contain_file_line('export SLURM_CONF').with({
-      :ensure  => 'present',
+    should contain_file('/etc/sysconfig/slurm').with({
+      :ensure  => 'file',
       :path    => '/etc/sysconfig/slurm',
-      :line    => "export SLURM_CONF=/home/slurm/conf/slurm.conf",
-      :match   => '^export SLURM_CONF.*$',
+      :owner   => 'root',
+      :group   => 'root',
+      :mode    => '0644',
     })
+  end
+
+  it do
+    verify_contents(catalogue, '/etc/sysconfig/slurm', [
+      'CONFDIR="/home/slurm/conf"',
+      'SLURMCTLD_OPTIONS="-f /home/slurm/conf/slurm.conf"',
+      'SLURMD_OPTIONS="-f /home/slurm/conf/slurm.conf"',
+      'export SLURM_CONF="/home/slurm/conf/slurm.conf"',
+    ])
   end
 
   it do

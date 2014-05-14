@@ -27,21 +27,13 @@ class slurm::config (
     mode    => '0755',
   }
 
-  shellvar { 'slurm CONFDIR':
-    variable  => 'CONFDIR',
-    value     => $conf_dir,
-  }->
-  shellvar { 'SLURMCTLD_OPTIONS':
-    value => "SLURMCTLD_OPTIONS=\"-f ${slurm_conf_path}\"",
-  }->
-  shellvar { 'SLURMD_OPTIONS':
-    value => "SLURMD_OPTIONS=\"-f ${slurm_conf_path}\"",
-  }->
-  file_line { 'export SLURM_CONF':
-    ensure  => present,
+  file { '/etc/sysconfig/slurm':
+    ensure  => 'file',
     path    => '/etc/sysconfig/slurm',
-    line    => "export SLURM_CONF=${slurm_conf_path}",
-    match   => '^export SLURM_CONF.*$',
+    content => template('slurm/sysconfig/slurm.erb'),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
   }
 
   file { '/etc/profile.d/slurm.sh':
