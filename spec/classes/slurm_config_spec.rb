@@ -200,6 +200,36 @@ describe 'slurm::config' do
   end
 
   it do
+    should contain_file('/etc/slurm/slurm.conf').only_with({
+      :ensure   => 'link',
+      :path     => '/etc/slurm/slurm.conf',
+      :target   => '/home/slurm/conf/slurm.conf',
+      :owner    => 'root',
+      :group    => 'root',
+    })
+  end
+
+  it do
+    should contain_file('/etc/slurm/plugstack.conf.d').only_with({
+      :ensure   => 'link',
+      :path     => '/etc/slurm/plugstack.conf.d',
+      :target   => '/home/slurm/conf/plugstack.conf.d',
+      :owner    => 'root',
+      :group    => 'root',
+    })
+  end
+
+  it do
+    should contain_file('/etc/slurm/plugstack.conf').only_with({
+      :ensure   => 'link',
+      :path     => '/etc/slurm/plugstack.conf',
+      :target   => '/home/slurm/conf/plugstack.conf',
+      :owner    => 'root',
+      :group    => 'root',
+    })
+  end
+
+  it do
     should contain_sysctl('net.core.somaxconn').with({
       :ensure => 'present',
       :value  => '1024',
@@ -386,47 +416,15 @@ describe 'slurm::config' do
 
   context 'when manage_slurm_conf => false' do
     let(:params) {{ :manage_slurm_conf => false }}
-
-    it do
-      should contain_file('slurm.conf').only_with({
-        :ensure   => 'link',
-        :path     => '/etc/slurm/slurm.conf',
-        :target   => '/home/slurm/conf/slurm.conf',
-        :owner    => 'root',
-        :group    => 'root',
-      })
-    end
-
-    it do
-      should contain_file('plugstack.conf.d').only_with({
-        :ensure   => 'link',
-        :path     => '/etc/slurm/plugstack.conf.d',
-        :target   => '/home/slurm/conf/plugstack.conf.d',
-        :owner    => 'root',
-        :group    => 'root',
-      })
-    end
-
-    it do
-      should contain_file('plugstack.conf').only_with({
-        :ensure   => 'link',
-        :path     => '/etc/slurm/plugstack.conf',
-        :target   => '/home/slurm/conf/plugstack.conf',
-        :owner    => 'root',
-        :group    => 'root',
-      })
-    end
-
     it { should_not contain_concat_build('slurm.conf') }
     it { should_not contain_concat_fragment('slurm.conf+01-common') }
     it { should_not contain_concat_fragment('slurm.conf+03-partitions') }
+  end
 
-    context 'when conf_dir => "/etc/slurm"' do
-      let(:pre_condition) { "class { 'slurm': conf_dir => '/etc/slurm' }" }
-      let(:params) {{ :manage_slurm_conf => false }}
-      it { should_not contain_file('slurm.conf') }
-      it { should_not contain_file('plugstack.conf.d') }
-      it { should_not contain_file('plugstack.conf') }
-    end
+  context 'when conf_dir => "/etc/slurm"' do
+    let(:pre_condition) { "class { 'slurm': conf_dir => '/etc/slurm' }" }
+    it { should_not contain_file('/etc/slurm/slurm.conf') }
+    it { should_not contain_file('/etc/slurm/plugstack.conf.d') }
+    it { should_not contain_file('/etc/slurm/plugstack.conf') }
   end
 end
