@@ -62,12 +62,13 @@ class slurm::config (
       }
     } else {
       concat { 'slurm.conf':
-        ensure  => 'present',
-        path    => $slurm_conf_path,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        require => File['slurm CONFDIR'],
+        ensure          => 'present',
+        path            => $slurm_conf_path,
+        owner           => 'root',
+        group           => 'root',
+        mode            => '0644',
+        ensure_newline  => true,
+        require         => File['slurm CONFDIR'],
       }
 
       concat::fragment { 'slurm.conf-common':

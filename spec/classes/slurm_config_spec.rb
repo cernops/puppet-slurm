@@ -69,12 +69,13 @@ describe 'slurm::config' do
 
   it do
     should contain_concat('slurm.conf').with({
-      :ensure   => 'present',
-      :path     => '/home/slurm/conf/slurm.conf',
-      :owner    => 'root',
-      :group    => 'root',
-      :mode     => '0644',
-      :require  => 'File[slurm CONFDIR]',
+      :ensure         => 'present',
+      :path           => '/home/slurm/conf/slurm.conf',
+      :owner          => 'root',
+      :group          => 'root',
+      :mode           => '0644',
+      :ensure_newline => 'true',
+      :require        => 'File[slurm CONFDIR]',
     })
   end
 
