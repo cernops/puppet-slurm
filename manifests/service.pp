@@ -10,7 +10,7 @@ class slurm::service (
     enable      => $enable,
     hasstatus   => false,
     hasrestart  => true,
-    pattern     => '/usr/sbin/slurm(d|ctld)$',
+    pattern     => '/usr/sbin/slurm(d|ctld)',
   }
 
 }

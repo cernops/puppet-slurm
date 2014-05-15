@@ -13,7 +13,7 @@ describe 'slurm::service' do
       :enable     => 'true',
       :hasstatus  => 'false',
       :hasrestart => 'true',
-      :pattern    => '/usr/sbin/slurm(d|ctld)$',
+      :pattern    => '/usr/sbin/slurm(d|ctld)',
     })
   end
 
