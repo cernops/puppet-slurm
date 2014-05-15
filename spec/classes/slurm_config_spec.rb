@@ -67,23 +67,26 @@ describe 'slurm::config' do
     ])
   end
 
-  it { should contain_concat_build('slurm.conf') }
-
   it do
-    should contain_file('slurm.conf').with({
-      :ensure   => 'file',
+    should contain_concat('slurm.conf').with({
+      :ensure   => 'present',
       :path     => '/home/slurm/conf/slurm.conf',
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0644',
-      :require  => ['File[slurm CONFDIR]', 'Concat_build[slurm.conf]'],
+      :require  => 'File[slurm CONFDIR]',
     })
   end
 
-  it { should contain_concat_fragment('slurm.conf+01-common') }
+  it do
+    should contain_concat__fragment('slurm.conf-common').with({
+      :target => 'slurm.conf',
+      :order  => '01',
+    })
+  end
 
   it do
-    content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+    content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
     expected_lines = [
       "AccountingStorageHost=slurm",
       "AccountingStoragePort=6819",
@@ -169,10 +172,15 @@ describe 'slurm::config' do
     (content.split("\n") & expected_lines).should == expected_lines
   end
 
-  it { should contain_concat_fragment('slurm.conf+03-partitions') }
+  it do
+    should contain_concat__fragment('slurm.conf-partitions').with({
+      :target => 'slurm.conf',
+      :order  => '03',
+    })
+  end
 
   it do
-    content = catalogue.resource('concat_fragment', "slurm.conf+03-partitions").send(:parameters)[:content]
+    content = catalogue.resource('concat::fragment', "slurm.conf-partitions").send(:parameters)[:content]
     expected_lines = []
     (content.split("\n") & expected_lines).should == expected_lines
   end
@@ -248,7 +256,7 @@ describe 'slurm::config' do
     end
 
     it "should override values" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
       expected_lines = [
         'PreemptMode=SUSPEND,GANG',
         'PreemptType=preempt/partition_prio',
@@ -279,7 +287,7 @@ describe 'slurm::config' do
     end
 
     it do
-      content = catalogue.resource('concat_fragment', "slurm.conf+03-partitions").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-partitions").send(:parameters)[:content]
       expected_lines = [
         "PartitionName=DEFAULT Nodes=c[0-9] State=UP",
         "PartitionName=general Default=YES Priority=3 MaxNodes=1 MaxTime=48:00:00",
@@ -294,7 +302,7 @@ describe 'slurm::config' do
     end
 
     it do
-      content = catalogue.resource('concat_fragment', "slurm.conf+03-partitions").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-partitions").send(:parameters)[:content]
       expected_lines = [
         "PartitionName=DEFAULT Nodes=c[0-9] State=UP",
         "PartitionName=ib Nodes=c[0101-0102] Priority=6 MaxTime=12:00:00 State=UP",
@@ -325,7 +333,7 @@ describe 'slurm::config' do
     end
 
     it "slurm.conf-partitions should use partitionlist_content" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+03-partitions").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-partitions").send(:parameters)[:content]
       expected_lines = [
         "PartitionName=DEFAULT Nodes=c[0-9] State=UP",
         "PartitionName=ib Nodes=c[0101-0102] Priority=6 MaxTime=12:00:00 State=UP",
@@ -338,7 +346,7 @@ describe 'slurm::config' do
     let(:pre_condition) { "class { 'slurm': epilog => '/tmp/foo' }" }
 
     it "should set the Epilog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
       expected_lines = [
         'Epilog=/tmp/foo',
       ]
@@ -350,7 +358,7 @@ describe 'slurm::config' do
     let(:pre_condition) { "class { 'slurm': health_check_program => '/tmp/nhc' }" }
 
     it "should set the HealthCheckProgram option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
       expected_lines = [
         'HealthCheckProgram=/tmp/nhc',
       ]
@@ -362,7 +370,7 @@ describe 'slurm::config' do
     let(:pre_condition) { "class { 'slurm': prolog => '/tmp/bar' }" }
 
     it "should set the Prolog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
       expected_lines = [
         'Prolog=/tmp/bar',
       ]
@@ -374,7 +382,7 @@ describe 'slurm::config' do
     let(:pre_condition) { "class { 'slurm': task_epilog => '/tmp/epilog' }" }
 
     it "should set the TaskEpilog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
       expected_lines = [
         'TaskEpilog=/tmp/epilog',
       ]
@@ -386,7 +394,7 @@ describe 'slurm::config' do
     let(:pre_condition) { "class { 'slurm': task_prolog => '/tmp/foobar' }" }
 
     it "should set the TaskProlog option" do
-      content = catalogue.resource('concat_fragment', "slurm.conf+01-common").send(:parameters)[:content]
+      content = catalogue.resource('concat::fragment', "slurm.conf-common").send(:parameters)[:content]
       expected_lines = [
         'TaskProlog=/tmp/foobar',
       ]
@@ -409,16 +417,16 @@ describe 'slurm::config' do
       })
     end
 
-    it { should_not contain_concat_build('slurm.conf') }
-    it { should_not contain_concat_fragment('slurm.conf+01-common') }
-    it { should_not contain_concat_fragment('slurm.conf+03-partitions') }
+    it { should_not contain_concat('slurm.conf') }
+    it { should_not contain_concat__fragment('slurm.conf-common') }
+    it { should_not contain_concat__fragment('slurm.conf-partitions') }
   end
 
   context 'when manage_slurm_conf => false' do
     let(:params) {{ :manage_slurm_conf => false }}
-    it { should_not contain_concat_build('slurm.conf') }
-    it { should_not contain_concat_fragment('slurm.conf+01-common') }
-    it { should_not contain_concat_fragment('slurm.conf+03-partitions') }
+    it { should_not contain_concat('slurm.conf') }
+    it { should_not contain_concat__fragment('slurm.conf-common') }
+    it { should_not contain_concat__fragment('slurm.conf-partitions') }
   end
 
   context 'when conf_dir => "/etc/slurm"' do

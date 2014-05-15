@@ -62,9 +62,11 @@ class slurm::node (
     }
   }
 
-  @@concat_fragment { "slurm.conf+02-node-${::hostname}":
-    tag     => 'slurm_nodelist',
+  @@concat::fragment { "slurm.conf-node-${::hostname}":
+    target  => 'slurm.conf',
     content => template('slurm/slurm.conf/slurm.conf.nodelist.erb'),
+    order   => '02',
+    tag     => 'slurm_nodelist',
   }
 
   Anchor['slurm::node::start']->

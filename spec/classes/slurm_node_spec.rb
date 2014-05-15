@@ -14,10 +14,6 @@ describe 'slurm::node' do
   it { should contain_anchor('slurm::node::end') }
 
   it do
-    pp catalogue.resource('class', "slurm::node::config").send(:parameters)
-  end
-
-  it do
     should contain_class('slurm::install').with({
       :ensure           => 'present',
       :package_require  => nil,

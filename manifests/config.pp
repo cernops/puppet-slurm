@@ -61,27 +61,28 @@ class slurm::config (
         require => File['slurm CONFDIR'],
       }
     } else {
-      concat_build { 'slurm.conf': }
-
-      file { 'slurm.conf':
-        ensure  => 'file',
+      concat { 'slurm.conf':
+        ensure  => 'present',
         path    => $slurm_conf_path,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
-        source  => concat_output('slurm.conf'),
-        require => [File['slurm CONFDIR'], Concat_build['slurm.conf']],
+        require => File['slurm CONFDIR'],
       }
 
-      concat_fragment { 'slurm.conf+01-common':
+      concat::fragment { 'slurm.conf-common':
+        target  => 'slurm.conf',
         content => template($slurm::slurm_conf_template),
+        order   => '01',
       }
 
-      concat_fragment { 'slurm.conf+03-partitions':
+      concat::fragment { 'slurm.conf-partitions':
+        target  => 'slurm.conf',
         content => template($slurm::partitionlist_template),
+        order   => '03',
       }
 
-      Concat_fragment <<| tag == 'slurm_nodelist' |>>
+      Concat::Fragment <<| tag == 'slurm_nodelist' |>>
     }
 
     file { 'plugstack.conf.d':
