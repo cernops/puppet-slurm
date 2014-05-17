@@ -18,6 +18,16 @@ describe 'slurm::node::config' do
     })
   end
 
+  it do
+    should contain_limits__limits('unlimited_memlock').with({
+      :ensure      => 'present',
+      :user        => '*',
+      :limit_type  => 'memlock',
+      :hard        => 'unlimited',
+      :soft        => 'unlimited',
+    })
+  end
+
   it { should_not contain_file('epilog') }
   it { should_not contain_file('health_check_program') }
   it { should_not contain_file('prolog') }

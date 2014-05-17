@@ -1,4 +1,11 @@
+#
+# File managed by Puppet!
+#
+
+ulimit -l unlimited
+ulimit -n 8192
+
 CONFDIR="<%= @conf_dir %>"
 SLURMCTLD_OPTIONS="-f <%= @slurm_conf_path %>"
-SLURMD_OPTIONS="-f <%= @slurm_conf_path %>"
+SLURMD_OPTIONS="-f <%= @slurm_conf_path %> -M"
 export SLURM_CONF="<%= @slurm_conf_path %>"

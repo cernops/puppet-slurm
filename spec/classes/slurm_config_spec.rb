@@ -28,9 +28,11 @@ describe 'slurm::config' do
 
   it do
     verify_contents(catalogue, '/etc/sysconfig/slurm', [
+      'ulimit -l unlimited',
+      'ulimit -n 8192',
       'CONFDIR="/home/slurm/conf"',
       'SLURMCTLD_OPTIONS="-f /home/slurm/conf/slurm.conf"',
-      'SLURMD_OPTIONS="-f /home/slurm/conf/slurm.conf"',
+      'SLURMD_OPTIONS="-f /home/slurm/conf/slurm.conf -M"',
       'export SLURM_CONF="/home/slurm/conf/slurm.conf"',
     ])
   end

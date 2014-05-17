@@ -18,6 +18,14 @@ class slurm::node::config (
     mode    => '0755',
   }
 
+  limits::limits { 'unlimited_memlock':
+    ensure      => 'present',
+    user        => '*',
+    limit_type  => 'memlock',
+    hard        => 'unlimited',
+    soft        => 'unlimited',
+  }
+
   if $slurm::epilog and $manage_scripts {
     file { 'epilog':
       ensure  => 'file',

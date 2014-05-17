@@ -21,6 +21,9 @@ fixtures:
     epel:
       repo: git://github.com/stahnma/puppet-module-epel.git
       ref: 0.0.6
+    limits:
+      repo: git://github.com/saz/puppet-limits.git
+      ref: v2.0.1
   symlinks:
     slurm: "#{source_dir}"
     site_slurm: "#{File.join(source_dir, 'tests', 'site_slurm')}"
