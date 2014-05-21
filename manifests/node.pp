@@ -1,7 +1,7 @@
 # == Class: slurm::node
 #
 class slurm::node (
-  $manage_slurm_conf = false,
+  $manage_slurm_conf = true,
   $manage_scripts = false,
   $with_devel = false,
   $manage_firewall = true,

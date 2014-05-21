@@ -24,7 +24,7 @@ describe 'slurm::client' do
 
   it do
     should contain_class('slurm::config').with({
-      :manage_slurm_conf  => 'false',
+      :manage_slurm_conf  => 'true',
     }).that_comes_before('Class[slurm::service]')
   end
 
@@ -35,8 +35,15 @@ describe 'slurm::client' do
     }).that_comes_before('Anchor[slurm::client::end]')
   end
 
+  context 'when manage_slurm_conf => false' do
+    let(:params) {{ :manage_slurm_conf => false }}
+    
+    it { should contain_class('slurm::config').with_manage_slurm_conf('false') }
+  end
+
   # Test validate_bool parameters
   [
+    'manage_slurm_conf',
     'with_devel',
   ].each do |param|
     context "with #{param} => 'foo'" do

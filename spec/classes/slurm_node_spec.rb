@@ -25,7 +25,7 @@ describe 'slurm::node' do
 
   it do
     should contain_class('slurm::config').with({
-      :manage_slurm_conf  => 'false',
+      :manage_slurm_conf  => 'true',
     }).that_comes_before('Class[slurm::node::config]')
   end
 
@@ -49,6 +49,12 @@ describe 'slurm::node' do
       :dport  => '6818',
       :action => 'accept',
     })
+  end
+
+  context 'when manage_slurm_conf => false' do
+    let(:params) {{ :manage_slurm_conf => false }}
+    
+    it { should contain_class('slurm::config').with_manage_slurm_conf('false') }
   end
 
   context 'when manage_firewall => false' do

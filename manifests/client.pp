@@ -1,9 +1,11 @@
 # == Class: slurm::client
 #
-class slurm::client(
+class slurm::client (
+  $manage_slurm_conf = true,
   $with_devel = false,
 ) {
 
+  validate_bool($manage_slurm_conf)
   validate_bool($with_devel)
 
   include slurm
@@ -21,7 +23,7 @@ class slurm::client(
   }
 
   class { 'slurm::config':
-    manage_slurm_conf => false,
+    manage_slurm_conf => $manage_slurm_conf,
   }
 
   class { 'slurm::service':
