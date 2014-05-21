@@ -11,6 +11,7 @@ describe 'slurm::controller' do
   it { should contain_anchor('slurm::controller::start').that_comes_before('Class[slurm::user]') }
   it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
   it { should contain_class('slurm::munge').that_comes_before('Class[slurm::install]') }
+  it { should contain_class('slurm::config::common').that_comes_before('Class[slurm::config]') }
   it { should contain_anchor('slurm::controller::end') }
 
   it do
@@ -20,16 +21,6 @@ describe 'slurm::controller' do
       :use_pam          => 'false',
       :with_devel       => 'false',
     }).that_comes_before('Class[slurm::config::common]')
-  end
-
-  it do
-    should contain_class('slurm::config::common').with({
-      :slurm_user        => 'slurm',
-      :slurm_user_group  => 'slurm',
-      :log_dir           => '/var/log/slurm',
-      :pid_dir           => '/var/run/slurm',
-      :shared_state_dir  => '/var/lib/slurm',
-    }).that_comes_before('Class[slurm::config]')
   end
 
   it do
@@ -67,12 +58,11 @@ describe 'slurm::controller' do
     it { should_not contain_firewall('100 allow access to slurmctld') }
   end
 
-#  it_behaves_like 'slurm::auks'
-#  it_behaves_like 'slurm::controller::install'
-#  it_behaves_like 'slurm::config'
-#  it_behaves_like 'slurm::controller::config'
-#  it_behaves_like 'slurm::controller::firewall'
-#  it_behaves_like 'slurm::controller::service'
+  context 'when both slurm::controller and slurm::slurmdbd' do
+    let(:pre_condition) { "class { 'slurm::slurmdbd': }" }
+
+    it { should contain_class('slurm::slurmdbd') }
+  end
 
   # Test validate_bool parameters
   [

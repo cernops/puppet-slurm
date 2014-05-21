@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe 'slurm::config::common' do
-  let(:params) {{ }}
+  let(:facts) { default_facts }
+  let(:pre_condition) { "class { 'slurm': }" }
 
   it { should create_class('slurm::config::common') }
 

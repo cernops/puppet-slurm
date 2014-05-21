@@ -20,6 +20,7 @@ class slurm::node (
   include slurm
   include slurm::user
   include slurm::munge
+  include slurm::config::common
   if $slurm::use_auks { include slurm::auks }
 
   anchor { 'slurm::node::start': }
@@ -30,14 +31,6 @@ class slurm::node (
     package_require => $slurm::package_require,
     use_pam         => $slurm::use_pam,
     with_devel      => $with_devel,
-  }
-
-  class { 'slurm::config::common':
-    slurm_user        => $slurm::slurm_user,
-    slurm_user_group  => $slurm::slurm_user_group,
-    log_dir           => $slurm::log_dir,
-    pid_dir           => $slurm::pid_dir,
-    shared_state_dir  => $slurm::shared_state_dir,
   }
 
   class { 'slurm::config':

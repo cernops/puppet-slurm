@@ -11,6 +11,7 @@ describe 'slurm::node' do
   it { should contain_anchor('slurm::node::start').that_comes_before('Class[slurm::user]') }
   it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
   it { should contain_class('slurm::munge').that_comes_before('Class[slurm::install]') }
+  it { should contain_class('slurm::config::common').that_comes_before('Class[slurm::config]') }
   it { should contain_anchor('slurm::node::end') }
 
   it do
@@ -20,16 +21,6 @@ describe 'slurm::node' do
       :use_pam          => 'false',
       :with_devel       => 'false',
     }).that_comes_before('Class[slurm::config::common]')
-  end
-
-  it do
-    should contain_class('slurm::config::common').with({
-      :slurm_user        => 'slurm',
-      :slurm_user_group  => 'slurm',
-      :log_dir           => '/var/log/slurm',
-      :pid_dir           => '/var/run/slurm',
-      :shared_state_dir  => '/var/lib/slurm',
-    }).that_comes_before('Class[slurm::config]')
   end
 
   it do
