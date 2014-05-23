@@ -15,10 +15,11 @@ describe 'slurm::client' do
 
   it do
     should contain_class('slurm::install').with({
-      :ensure           => 'present',
-      :package_require  => nil,
-      :use_pam          => 'false',
-      :with_devel       => 'false',
+      :ensure                 => 'present',
+      :package_require        => nil,
+      :use_pam                => 'false',
+      :with_devel             => 'false',
+      :install_torque_wrapper => 'false',
     }).that_comes_before('Class[slurm::config]')
   end
 
@@ -45,6 +46,7 @@ describe 'slurm::client' do
   [
     'manage_slurm_conf',
     'with_devel',
+    'install_torque_wrapper',
   ].each do |param|
     context "with #{param} => 'foo'" do
       let(:params) {{ param => 'foo' }}

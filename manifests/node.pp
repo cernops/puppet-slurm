@@ -4,6 +4,7 @@ class slurm::node (
   $manage_slurm_conf = true,
   $manage_scripts = false,
   $with_devel = false,
+  $install_torque_wrapper = false,
   $manage_firewall = true,
   $manage_logrotate = true,
   $tmp_disk = '16000',
@@ -12,6 +13,7 @@ class slurm::node (
   validate_bool($manage_slurm_conf)
   validate_bool($manage_scripts)
   validate_bool($with_devel)
+  validate_bool($install_torque_wrapper)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
@@ -27,10 +29,11 @@ class slurm::node (
   anchor { 'slurm::node::end': }
 
   class { 'slurm::install':
-    ensure          => $slurm::slurm_package_ensure,
-    package_require => $slurm::package_require,
-    use_pam         => $slurm::use_pam,
-    with_devel      => $with_devel,
+    ensure                  => $slurm::slurm_package_ensure,
+    package_require         => $slurm::package_require,
+    use_pam                 => $slurm::use_pam,
+    with_devel              => $with_devel,
+    install_torque_wrapper  => $install_torque_wrapper,
   }
 
   class { 'slurm::config':

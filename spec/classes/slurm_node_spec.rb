@@ -16,10 +16,11 @@ describe 'slurm::node' do
 
   it do
     should contain_class('slurm::install').with({
-      :ensure           => 'present',
-      :package_require  => nil,
-      :use_pam          => 'false',
-      :with_devel       => 'false',
+      :ensure                 => 'present',
+      :package_require        => nil,
+      :use_pam                => 'false',
+      :with_devel             => 'false',
+      :install_torque_wrapper => 'false',
     }).that_comes_before('Class[slurm::config::common]')
   end
 
@@ -67,6 +68,7 @@ describe 'slurm::node' do
     'manage_slurm_conf',
     'manage_scripts',
     'with_devel',
+    'install_torque_wrapper',
     'manage_firewall',
     'manage_logrotate',
   ].each do |param|

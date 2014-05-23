@@ -6,6 +6,7 @@ class slurm::controller (
   $state_dir_nfs_device = undef,
   $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
   $with_devel = false,
+  $install_torque_wrapper = false,
   $manage_firewall = true,
   $manage_logrotate = true,
 ) {
@@ -13,6 +14,7 @@ class slurm::controller (
   validate_bool($manage_slurm_conf)
   validate_bool($manage_state_dir_nfs_mount)
   validate_bool($with_devel)
+  validate_bool($install_torque_wrapper)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
@@ -26,10 +28,11 @@ class slurm::controller (
   if $slurm::use_auks { include slurm::auks }
 
   class { 'slurm::install':
-    ensure          => $slurm::slurm_package_ensure,
-    package_require => $slurm::package_require,
-    use_pam         => $slurm::use_pam,
-    with_devel      => $with_devel,
+    ensure                  => $slurm::slurm_package_ensure,
+    package_require         => $slurm::package_require,
+    use_pam                 => $slurm::use_pam,
+    with_devel              => $with_devel,
+    install_torque_wrapper  => $install_torque_wrapper,
   }
 
   class { 'slurm::config':

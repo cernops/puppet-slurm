@@ -5,6 +5,7 @@ class slurm::install (
   $package_require = undef,
   $use_pam = false,
   $with_devel = false,
+  $install_torque_wrapper = false,
 ) {
 
   include slurm
@@ -20,7 +21,8 @@ class slurm::install (
   package { 'slurm-munge': }
   package { 'slurm-plugins': }
 
-  if $with_devel  { package { 'slurm-devel': } }
-  if $use_pam     { package { 'slurm-pam_slurm': } }
+  if $with_devel              { package { 'slurm-devel': } }
+  if $use_pam                 { package { 'slurm-pam_slurm': } }
+  if $install_torque_wrapper  { package { 'slurm-torque': } }
 
 }

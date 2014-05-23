@@ -29,6 +29,7 @@ describe 'slurm::install' do
 
   it { should_not contain_package('slurm-devel') }
   it { should_not contain_package('slurm-pam_slurm') }
+  it { should_not contain_package('slurm-torque') }
 
   context 'when ensure => "2.6.9"' do
     let(:params) {{ :ensure => '2.6.9-1.el6' }}
@@ -54,5 +55,10 @@ describe 'slurm::install' do
   context 'when with_devel => true' do
     let(:params) {{ :with_devel => true }}
     it { should contain_package('slurm-devel').with_ensure('present') }
+  end
+
+  context 'when install_torque_wrapper => true' do
+    let(:params) {{ :install_torque_wrapper => true }}
+    it { should contain_package('slurm-torque').with_ensure('present') }
   end
 end

@@ -3,10 +3,12 @@
 class slurm::client (
   $manage_slurm_conf = true,
   $with_devel = false,
+  $install_torque_wrapper = false,
 ) {
 
   validate_bool($manage_slurm_conf)
   validate_bool($with_devel)
+  validate_bool($install_torque_wrapper)
 
   include slurm
   include slurm::user
@@ -16,10 +18,11 @@ class slurm::client (
   anchor { 'slurm::client::end': }
 
   class { 'slurm::install':
-    ensure          => $slurm::slurm_package_ensure,
-    package_require => $slurm::package_require,
-    use_pam         => $slurm::use_pam,
-    with_devel      => $with_devel,
+    ensure                  => $slurm::slurm_package_ensure,
+    package_require         => $slurm::package_require,
+    use_pam                 => $slurm::use_pam,
+    with_devel              => $with_devel,
+    install_torque_wrapper  => $install_torque_wrapper,
   }
 
   class { 'slurm::config':
