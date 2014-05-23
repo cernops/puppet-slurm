@@ -3,7 +3,7 @@
 class slurm::client (
   $manage_slurm_conf = true,
   $with_devel = false,
-  $install_torque_wrapper = false,
+  $install_torque_wrapper = true,
 ) {
 
   validate_bool($manage_slurm_conf)

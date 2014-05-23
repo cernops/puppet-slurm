@@ -21,15 +21,15 @@ describe 'slurm::install' do
     it { should contain_package(p).with_ensure('present') }
   end
 
-  it { should have_package_resource_count(9) }
+  it { should have_package_resource_count(10) }
 
   it { should contain_package('slurm').with_ensure('present').without_require }
   it { should contain_package('slurm-munge').with_ensure('present').without_require }
   it { should contain_package('slurm-plugins').with_ensure('present').without_require }
+  it { should contain_package('slurm-torque').with_ensure('present').without_require }
 
   it { should_not contain_package('slurm-devel') }
   it { should_not contain_package('slurm-pam_slurm') }
-  it { should_not contain_package('slurm-torque') }
 
   context 'when ensure => "2.6.9"' do
     let(:params) {{ :ensure => '2.6.9-1.el6' }}
@@ -37,6 +37,7 @@ describe 'slurm::install' do
     it { should contain_package('slurm').with_ensure('2.6.9-1.el6') }
     it { should contain_package('slurm-munge').with_ensure('2.6.9-1.el6') }
     it { should contain_package('slurm-plugins').with_ensure('2.6.9-1.el6') }
+    it { should contain_package('slurm-torque').with_ensure('2.6.9-1.el6') }
   end
 
   context 'when package_require => "Yumrepo[local]"' do
@@ -45,6 +46,7 @@ describe 'slurm::install' do
     it { should contain_package('slurm').with_require('Yumrepo[local]') }
     it { should contain_package('slurm-munge').with_require('Yumrepo[local]') }
     it { should contain_package('slurm-plugins').with_require('Yumrepo[local]') }
+    it { should contain_package('slurm-torque').with_require('Yumrepo[local]') }
   end
 
   context 'when use_pam => true' do
@@ -57,8 +59,8 @@ describe 'slurm::install' do
     it { should contain_package('slurm-devel').with_ensure('present') }
   end
 
-  context 'when install_torque_wrapper => true' do
-    let(:params) {{ :install_torque_wrapper => true }}
-    it { should contain_package('slurm-torque').with_ensure('present') }
+  context 'when install_torque_wrapper => false' do
+    let(:params) {{ :install_torque_wrapper => false }}
+    it { should_not contain_package('slurm-torque') }
   end
 end

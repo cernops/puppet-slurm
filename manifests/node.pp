@@ -4,7 +4,7 @@ class slurm::node (
   $manage_slurm_conf = true,
   $manage_scripts = false,
   $with_devel = false,
-  $install_torque_wrapper = false,
+  $install_torque_wrapper = true,
   $manage_firewall = true,
   $manage_logrotate = true,
   $tmp_disk = '16000',

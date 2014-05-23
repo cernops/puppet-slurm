@@ -6,7 +6,7 @@ class slurm::controller (
   $state_dir_nfs_device = undef,
   $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
   $with_devel = false,
-  $install_torque_wrapper = false,
+  $install_torque_wrapper = true,
   $manage_firewall = true,
   $manage_logrotate = true,
 ) {

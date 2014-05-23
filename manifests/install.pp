@@ -5,7 +5,7 @@ class slurm::install (
   $package_require = undef,
   $use_pam = false,
   $with_devel = false,
-  $install_torque_wrapper = false,
+  $install_torque_wrapper = true,
 ) {
 
   include slurm
