@@ -7,7 +7,15 @@ class slurm::node (
   $install_torque_wrapper = true,
   $manage_firewall = true,
   $manage_logrotate = true,
+  $node_name = $::hostname,
+  $node_addr = $::ipaddress,
+  $cpus = $::processorcount,
+  $sockets = 'UNSET',
+  $cores_per_socket = 'UNSET',
+  $threads_per_core = 'UNSET',
+  $real_memory = $::real_memory,
   $tmp_disk = '16000',
+  $state = 'UNKNOWN',
 ) {
 
   validate_bool($manage_slurm_conf)
@@ -16,8 +24,6 @@ class slurm::node (
   validate_bool($install_torque_wrapper)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
-
-  $procs = $::physicalprocessorcount*$::corecountpercpu*$::threadcountpercore
 
   include slurm
   include slurm::user

@@ -1,13 +1,13 @@
 <% 
 node = []
-node << "NodeName=#{@hostname}"
-node << "NodeAddr=#{@ipaddress}" if @ipaddress
-node << "Sockets=#{@physicalprocessorcount}" if @physicalprocessorcount
-node << "CoresPerSocket=#{@corecountpercpu}" if @corecountpercpu
-node << "ThreadsPerCore=#{@threadcountpercore}" if @threadcountpercore
-node << "Procs=#{@procs}" if @procs
-node << "RealMemory=#{@real_memory}" if @real_memory
-node << "TmpDisk=#{@tmp_disk}" if @tmp_disk
-node << "State=UNKNOWN"
+node << "NodeName=#{@node_name}"
+node << "NodeAddr=#{@node_addr}" if @node_addr and @node_addr != 'UNSET'
+node << "CPUs=#{@cpus}" if @cpus and @cpus != 'UNSET'
+node << "Sockets=#{@sockets}" if @sockets and @sockets != 'UNSET'
+node << "CoresPerSocket=#{@cores_per_socket}" if @cores_per_socket and @cores_per_socket != 'UNSET'
+node << "ThreadsPerCore=#{@threads_per_core}" if @threads_per_core and @threads_per_core != 'UNSET'
+node << "RealMemory=#{@real_memory}" if @real_memory and @real_memory != 'UNSET'
+node << "TmpDisk=#{@tmp_disk}" if @tmp_disk and @tmp_disk != 'UNSET'
+node << "State=#{@state}"
 -%>
 <%= node.join(" ") %>
