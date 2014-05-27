@@ -15,6 +15,7 @@ class slurm::node (
   $threads_per_core = 'UNSET',
   $real_memory = $::real_memory,
   $tmp_disk = '16000',
+  $feature = 'UNSET',
   $state = 'UNKNOWN',
 ) {
 
