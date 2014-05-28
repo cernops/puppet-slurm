@@ -52,6 +52,18 @@ def cpuinfo_fixture_readlines(filename)
   cpuinfo_fixture_read(filename).split(/\n/)
 end
 
+def meminfo_fixtures(filename)
+  fixtures('meminfo', filename)
+end
+
+def meminfo_fixture_read(filename)
+  File.read(meminfo_fixtures(filename))
+end
+
+def meminfo_fixture_readlines(filename)
+  meminfo_fixture_read(filename).split(/\n/)
+end
+
 class String
   def camel_case
     return self if self !~ /_/ && self =~ /[A-Z]+.*/

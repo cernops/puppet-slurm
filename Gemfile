@@ -12,7 +12,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'beaker', '~> 1.8.0',    :require => false
+  gem 'beaker', '~> 1.11.0',    :require => false
   gem 'beaker-rspec',           :require => false
   gem 'vagrant-wrapper',        :require => false
 end
