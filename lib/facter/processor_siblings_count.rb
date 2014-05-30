@@ -1,4 +1,4 @@
-# Fact: processorsiblingscount
+# Fact: processor_siblings_count
 #
 # Purpose: Return the number of siblings per physical processor
 #
@@ -10,7 +10,7 @@ require 'facter/util/file_read'
 default_siblings_count = 1
 source = '/proc/cpuinfo'
 
-Facter.add('processorsiblingscount') do
+Facter.add('processor_siblings_count') do
   confine :kernel => :linux
 
   if File.exists?(source)
