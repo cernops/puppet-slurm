@@ -21,6 +21,7 @@ describe 'slurm::node' do
       :use_pam                => 'false',
       :with_devel             => 'false',
       :install_torque_wrapper => 'true',
+      :install_tools          => 'false',
     }).that_comes_before('Class[slurm::config::common]')
   end
 

@@ -5,6 +5,7 @@ class slurm::node (
   $manage_scripts = false,
   $with_devel = false,
   $install_torque_wrapper = true,
+  $install_tools = false,
   $manage_firewall = true,
   $manage_logrotate = true,
   $node_name = $::hostname,
@@ -41,6 +42,7 @@ class slurm::node (
     use_pam                 => $slurm::use_pam,
     with_devel              => $with_devel,
     install_torque_wrapper  => $install_torque_wrapper,
+    install_tools           => $install_tools,
   }
 
   class { 'slurm::config':

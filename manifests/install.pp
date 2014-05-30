@@ -6,6 +6,7 @@ class slurm::install (
   $use_pam = false,
   $with_devel = false,
   $install_torque_wrapper = true,
+  $install_tools = false,
 ) {
 
   include slurm
@@ -25,4 +26,8 @@ class slurm::install (
   if $use_pam                 { package { 'slurm-pam_slurm': } }
   if $install_torque_wrapper  { package { 'slurm-torque': } }
 
+  if $install_tools {
+    package { 'slurm-sjstat': }
+    package { 'slurm-perlapi': }
+  }
 }

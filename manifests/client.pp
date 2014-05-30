@@ -4,6 +4,7 @@ class slurm::client (
   $manage_slurm_conf = true,
   $with_devel = false,
   $install_torque_wrapper = true,
+  $install_tools = true,
 ) {
 
   validate_bool($manage_slurm_conf)
@@ -23,6 +24,7 @@ class slurm::client (
     use_pam                 => $slurm::use_pam,
     with_devel              => $with_devel,
     install_torque_wrapper  => $install_torque_wrapper,
+    install_tools           => $install_tools,
   }
 
   class { 'slurm::config':
