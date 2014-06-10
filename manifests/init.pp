@@ -61,6 +61,10 @@ class slurm (
   $slurm_conf_template = 'slurm/slurm.conf/slurm.conf.options.erb',
   $slurm_conf_source = undef,
 
+  # profile.d
+  $slurm_sh_template = 'slurm/profile.d/slurm.sh.erb',
+  $slurm_csh_template = 'slurm/profile.d/slurm.csh.erb',
+
   # Munge
   $munge_key = undef,
 

@@ -34,7 +34,7 @@ class slurm::config (
   file { '/etc/profile.d/slurm.sh':
     ensure  => 'file',
     path    => '/etc/profile.d/slurm.sh',
-    content => template('slurm/profile.d/slurm.sh.erb'),
+    content => template($slurm::slurm_sh_template),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
@@ -43,7 +43,7 @@ class slurm::config (
   file { '/etc/profile.d/slurm.csh':
     ensure  => 'file',
     path    => '/etc/profile.d/slurm.csh',
-    content => template('slurm/profile.d/slurm.csh.erb'),
+    content => template($slurm::slurm_csh_template),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
