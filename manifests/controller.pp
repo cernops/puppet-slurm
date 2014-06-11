@@ -2,6 +2,7 @@
 #
 class slurm::controller (
   $manage_slurm_conf = true,
+  $manage_scripts = true,
   $manage_state_dir_nfs_mount = false,
   $state_dir_nfs_device = undef,
   $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
@@ -13,6 +14,7 @@ class slurm::controller (
 ) {
 
   validate_bool($manage_slurm_conf)
+  validate_bool($manage_scripts)
   validate_bool($manage_state_dir_nfs_mount)
   validate_bool($with_devel)
   validate_bool($install_torque_wrapper)
@@ -39,6 +41,7 @@ class slurm::controller (
 
   class { 'slurm::config':
     manage_slurm_conf => $manage_slurm_conf,
+    manage_scripts    => $manage_scripts,
   }
 
   class { 'slurm::controller::config':

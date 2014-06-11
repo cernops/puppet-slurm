@@ -247,6 +247,16 @@ describe 'slurm::config' do
     })
   end
 
+  context 'when manage_scripts => false' do
+    let(:params) {{ :manage_scripts => false }}
+
+    it { should_not contain_file('epilog') }
+    it { should_not contain_file('health_check_program') }
+    it { should_not contain_file('prolog') }
+    it { should_not contain_file('task_epilog') }
+    it { should_not contain_file('task_prolog') }
+  end
+
   context 'when slurm_conf_override defined' do
     let :pre_condition do
       "class { 'slurm':
@@ -437,5 +447,80 @@ describe 'slurm::config' do
     it { should_not contain_file('/etc/slurm/slurm.conf') }
     it { should_not contain_file('/etc/slurm/plugstack.conf.d') }
     it { should_not contain_file('/etc/slurm/plugstack.conf') }
+  end
+
+  context 'when epilog => /tmp/foo' do
+    let(:pre_condition) { "class { 'slurm': epilog => '/tmp/foo' }" }
+
+    it do
+      should contain_file('epilog').with({
+        :ensure => 'file',
+        :path   => '/tmp/foo',
+        :source => nil,
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
+  end
+
+  context 'when health_check_program => /tmp/nhc' do
+    let(:pre_condition) { "class { 'slurm': health_check_program => '/tmp/nhc' }" }
+
+    it do
+      should contain_file('health_check_program').with({
+        :ensure => 'file',
+        :path   => '/tmp/nhc',
+        :source => nil,
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
+  end
+
+  context 'when prolog => /tmp/bar' do
+    let(:pre_condition) { "class { 'slurm': prolog => '/tmp/bar' }" }
+
+    it do
+      should contain_file('prolog').with({
+        :ensure => 'file',
+        :path   => '/tmp/bar',
+        :source => nil,
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
+  end
+
+  context 'when task_epilog => /tmp/epilog' do
+    let(:pre_condition) { "class { 'slurm': task_epilog => '/tmp/epilog' }" }
+
+    it do
+      should contain_file('task_epilog').with({
+        :ensure => 'file',
+        :path   => '/tmp/epilog',
+        :source => nil,
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
+  end
+
+  context 'when task_prolog => /tmp/foobar' do
+    let(:pre_condition) { "class { 'slurm': task_prolog => '/tmp/foobar' }" }
+
+    it do
+      should contain_file('task_prolog').with({
+        :ensure => 'file',
+        :path   => '/tmp/foobar',
+        :source => nil,
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
   end
 end

@@ -28,6 +28,7 @@ describe 'slurm::controller' do
   it do
     should contain_class('slurm::config').with({
       :manage_slurm_conf  => 'true',
+      :manage_scripts     => 'true',
     }).that_comes_before('Class[slurm::controller::config]')
   end
 
@@ -69,6 +70,7 @@ describe 'slurm::controller' do
   # Test validate_bool parameters
   [
     'manage_slurm_conf',
+    'manage_scripts',
     'manage_state_dir_nfs_mount',
     'with_devel',
     'install_torque_wrapper',

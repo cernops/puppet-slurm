@@ -2,6 +2,7 @@
 #
 class slurm::config (
   $manage_slurm_conf = true,
+  $manage_scripts = true,
 ) {
 
   include slurm
@@ -11,14 +12,11 @@ class slurm::config (
   $conf_dir         = $slurm::conf_dir
   $slurm_conf_path  = $slurm::slurm_conf_path
 
-  File {
-    owner => $slurm::slurm_user,
-    group => $slurm::slurm_user_group,
-  }
-
   file { 'slurm CONFDIR':
     ensure  => 'directory',
     path    => $conf_dir,
+    owner   => $slurm::slurm_user,
+    group   => $slurm::slurm_user_group,
     mode    => '0755',
   }
 
@@ -129,6 +127,63 @@ class slurm::config (
       target  => "${conf_dir}/plugstack.conf",
       owner   => 'root',
       group   => 'root',
+    }
+  }
+
+  if $manage_scripts {
+    if $slurm::epilog {
+      file { 'epilog':
+        ensure  => 'file',
+        path    => $slurm::epilog,
+        source  => $slurm::epilog_source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+      }
+    }
+
+    if $slurm::health_check_program {
+      file { 'health_check_program':
+        ensure  => 'file',
+        path    => $slurm::health_check_program,
+        source  => $slurm::health_check_program_source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+      }
+    }
+
+    if $slurm::prolog {
+      file { 'prolog':
+        ensure  => 'file',
+        path    => $slurm::prolog,
+        source  => $slurm::prolog_source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+      }
+    }
+
+    if $slurm::task_epilog {
+      file { 'task_epilog':
+        ensure  => 'file',
+        path    => $slurm::task_epilog,
+        source  => $slurm::task_epilog_source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+      }
+    }
+
+    if $slurm::task_prolog {
+      file { 'task_prolog':
+        ensure  => 'file',
+        path    => $slurm::task_prolog,
+        source  => $slurm::task_prolog_source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+      }
     }
   }
 

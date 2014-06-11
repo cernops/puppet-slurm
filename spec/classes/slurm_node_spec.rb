@@ -28,12 +28,12 @@ describe 'slurm::node' do
   it do
     should contain_class('slurm::config').with({
       :manage_slurm_conf  => 'true',
+      :manage_scripts     => 'false',
     }).that_comes_before('Class[slurm::node::config]')
   end
 
   it do
     should contain_class('slurm::node::config').with({
-      :manage_scripts   => 'false',
       :manage_logrotate => 'true',
     }).that_comes_before('Class[slurm::service]')
   end

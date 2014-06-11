@@ -2,12 +2,14 @@
 #
 class slurm::client (
   $manage_slurm_conf = true,
+  $manage_scripts = false,
   $with_devel = false,
   $install_torque_wrapper = true,
   $install_tools = true,
 ) {
 
   validate_bool($manage_slurm_conf)
+  validate_bool($manage_scripts)
   validate_bool($with_devel)
   validate_bool($install_torque_wrapper)
 
@@ -29,6 +31,7 @@ class slurm::client (
 
   class { 'slurm::config':
     manage_slurm_conf => $manage_slurm_conf,
+    manage_scripts    => $manage_scripts,
   }
 
   class { 'slurm::service':

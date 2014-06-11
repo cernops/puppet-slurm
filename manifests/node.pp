@@ -47,10 +47,10 @@ class slurm::node (
 
   class { 'slurm::config':
     manage_slurm_conf => $manage_slurm_conf,
+    manage_scripts    => $manage_scripts,
   }
 
   class { 'slurm::node::config':
-    manage_scripts    => $manage_scripts,
     manage_logrotate  => $manage_logrotate,
   }
 

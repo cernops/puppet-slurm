@@ -27,6 +27,7 @@ describe 'slurm::client' do
   it do
     should contain_class('slurm::config').with({
       :manage_slurm_conf  => 'true',
+      :manage_scripts     => 'false',
     }).that_comes_before('Class[slurm::service]')
   end
 
@@ -46,6 +47,7 @@ describe 'slurm::client' do
   # Test validate_bool parameters
   [
     'manage_slurm_conf',
+    'manage_scripts',
     'with_devel',
     'install_torque_wrapper',
   ].each do |param|

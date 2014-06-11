@@ -1,7 +1,6 @@
 # == Class: slurm::node::config
 #
 class slurm::node::config (
-  $manage_scripts = false,
   $manage_logrotate = true,
 ) {
 
@@ -24,51 +23,6 @@ class slurm::node::config (
     limit_type  => 'memlock',
     hard        => 'unlimited',
     soft        => 'unlimited',
-  }
-
-  if $slurm::epilog and $manage_scripts {
-    file { 'epilog':
-      ensure  => 'file',
-      path    => $slurm::epilog,
-      source  => $slurm::epilog_source,
-      mode    => '0754',
-    }
-  }
-
-  if $slurm::health_check_program and $manage_scripts {
-    file { 'health_check_program':
-      ensure  => 'file',
-      path    => $slurm::health_check_program,
-      source  => $slurm::health_check_program_source,
-      mode    => '0754',
-    }
-  }
-
-  if $slurm::prolog and $manage_scripts {
-    file { 'prolog':
-      ensure  => 'file',
-      path    => $slurm::prolog,
-      source  => $slurm::prolog_source,
-      mode    => '0754',
-    }
-  }
-
-  if $slurm::task_epilog and $manage_scripts {
-    file { 'task_epilog':
-      ensure  => 'file',
-      path    => $slurm::task_epilog,
-      source  => $slurm::task_epilog_source,
-      mode    => '0754',
-    }
-  }
-
-  if $slurm::task_prolog and $manage_scripts {
-    file { 'task_prolog':
-      ensure  => 'file',
-      path    => $slurm::task_prolog,
-      source  => $slurm::task_prolog_source,
-      mode    => '0754',
-    }
   }
 
   if $manage_logrotate {
