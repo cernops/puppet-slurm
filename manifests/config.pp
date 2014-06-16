@@ -12,6 +12,14 @@ class slurm::config (
   $conf_dir         = $slurm::conf_dir
   $slurm_conf_path  = $slurm::slurm_conf_path
 
+  if $conf_dir != '/etc/slurm' {
+    file { '/etc/slurm':
+      ensure  => 'link',
+      target  => $conf_dir,
+      before  => File['slurm CONFDIR'],
+    }
+  }
+
   file { 'slurm CONFDIR':
     ensure  => 'directory',
     path    => $conf_dir,
@@ -101,32 +109,6 @@ class slurm::config (
       mode    => '0644',
       content => template('slurm/plugstack.conf.erb'),
       require => File['slurm CONFDIR'],
-    }
-  }
-
-  if $conf_dir != '/etc/slurm' {
-    file { '/etc/slurm/slurm.conf':
-      ensure  => 'link',
-      path    => '/etc/slurm/slurm.conf',
-      target  => $slurm_conf_path,
-      owner   => 'root',
-      group   => 'root',
-    }
-
-    file { '/etc/slurm/plugstack.conf.d':
-      ensure  => 'link',
-      path    => '/etc/slurm/plugstack.conf.d',
-      target  => "${conf_dir}/plugstack.conf.d",
-      owner   => 'root',
-      group   => 'root',
-    }
-
-    file { '/etc/slurm/plugstack.conf':
-      ensure  => 'link',
-      path    => '/etc/slurm/plugstack.conf',
-      target  => "${conf_dir}/plugstack.conf",
-      owner   => 'root',
-      group   => 'root',
     }
   }
 

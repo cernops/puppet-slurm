@@ -7,6 +7,14 @@ describe 'slurm::config' do
   it { should create_class('slurm::config') }
 
   it do
+    should contain_file('/etc/slurm').with({
+      :ensure => 'link',
+      :target => '/home/slurm/conf',
+      :before => 'File[slurm CONFDIR]',
+    })
+  end
+
+  it do
     should contain_file('slurm CONFDIR').with({
       :ensure => 'directory',
       :path   => '/home/slurm/conf',
@@ -207,36 +215,6 @@ describe 'slurm::config' do
       :group    => 'root',
       :mode     => '0644',
       :require  => 'File[slurm CONFDIR]',
-    })
-  end
-
-  it do
-    should contain_file('/etc/slurm/slurm.conf').only_with({
-      :ensure   => 'link',
-      :path     => '/etc/slurm/slurm.conf',
-      :target   => '/home/slurm/conf/slurm.conf',
-      :owner    => 'root',
-      :group    => 'root',
-    })
-  end
-
-  it do
-    should contain_file('/etc/slurm/plugstack.conf.d').only_with({
-      :ensure   => 'link',
-      :path     => '/etc/slurm/plugstack.conf.d',
-      :target   => '/home/slurm/conf/plugstack.conf.d',
-      :owner    => 'root',
-      :group    => 'root',
-    })
-  end
-
-  it do
-    should contain_file('/etc/slurm/plugstack.conf').only_with({
-      :ensure   => 'link',
-      :path     => '/etc/slurm/plugstack.conf',
-      :target   => '/home/slurm/conf/plugstack.conf',
-      :owner    => 'root',
-      :group    => 'root',
     })
   end
 
@@ -444,9 +422,7 @@ describe 'slurm::config' do
 
   context 'when conf_dir => "/etc/slurm"' do
     let(:pre_condition) { "class { 'slurm': conf_dir => '/etc/slurm' }" }
-    it { should_not contain_file('/etc/slurm/slurm.conf') }
-    it { should_not contain_file('/etc/slurm/plugstack.conf.d') }
-    it { should_not contain_file('/etc/slurm/plugstack.conf') }
+    it { should_not contain_file('/etc/slurm') }
   end
 
   context 'when epilog => /tmp/foo' do
