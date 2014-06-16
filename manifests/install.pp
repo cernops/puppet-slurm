@@ -6,6 +6,7 @@ class slurm::install (
   $use_pam = false,
   $with_devel = false,
   $install_torque_wrapper = true,
+  $with_lua = false,
   $install_tools = false,
 ) {
 
@@ -25,6 +26,7 @@ class slurm::install (
   if $with_devel              { package { 'slurm-devel': } }
   if $use_pam                 { package { 'slurm-pam_slurm': } }
   if $install_torque_wrapper  { package { 'slurm-torque': } }
+  if $with_lua                { package { 'slurm-lua': } }
 
   if $install_tools {
     package { 'slurm-sjstat': }

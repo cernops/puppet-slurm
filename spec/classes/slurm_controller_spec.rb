@@ -21,6 +21,7 @@ describe 'slurm::controller' do
       :use_pam                => 'false',
       :with_devel             => 'false',
       :install_torque_wrapper => 'true',
+      :with_lua               => 'true',
       :install_tools          => 'true',
     }).that_comes_before('Class[slurm::config::common]')
   end
@@ -74,6 +75,8 @@ describe 'slurm::controller' do
     'manage_state_dir_nfs_mount',
     'with_devel',
     'install_torque_wrapper',
+    'with_lua',
+    'install_tools',
     'manage_firewall',
     'manage_logrotate',
   ].each do |param|

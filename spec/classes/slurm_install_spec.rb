@@ -30,6 +30,7 @@ describe 'slurm::install' do
 
   it { should_not contain_package('slurm-devel') }
   it { should_not contain_package('slurm-pam_slurm') }
+  it { should_not contain_package('slurm-lua') }
   it { should_not contain_package('slurm-sjstat') }
   it { should_not contain_package('slurm-perlapi') }
 
@@ -70,5 +71,10 @@ describe 'slurm::install' do
     let(:params) {{ :install_tools => true }}
     it { should contain_package('slurm-sjstat') }
     it { should contain_package('slurm-perlapi') }
+  end
+
+  context 'when with_lua => true' do
+    let(:params) {{ :with_lua => true }}
+    it { should contain_package('slurm-lua') }
   end
 end

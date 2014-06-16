@@ -20,6 +20,7 @@ describe 'slurm::client' do
       :use_pam                => 'false',
       :with_devel             => 'false',
       :install_torque_wrapper => 'true',
+      :with_lua               => 'false',
       :install_tools          => 'true',
     }).that_comes_before('Class[slurm::config]')
   end
@@ -50,6 +51,8 @@ describe 'slurm::client' do
     'manage_scripts',
     'with_devel',
     'install_torque_wrapper',
+    'with_lua',
+    'install_tools',
   ].each do |param|
     context "with #{param} => 'foo'" do
       let(:params) {{ param => 'foo' }}

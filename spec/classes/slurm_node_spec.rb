@@ -21,6 +21,7 @@ describe 'slurm::node' do
       :use_pam                => 'false',
       :with_devel             => 'false',
       :install_torque_wrapper => 'true',
+      :with_lua               => 'false',
       :install_tools          => 'false',
     }).that_comes_before('Class[slurm::config::common]')
   end
@@ -70,6 +71,8 @@ describe 'slurm::node' do
     'manage_scripts',
     'with_devel',
     'install_torque_wrapper',
+    'with_lua',
+    'install_tools',
     'manage_firewall',
     'manage_logrotate',
   ].each do |param|

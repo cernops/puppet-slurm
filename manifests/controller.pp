@@ -8,6 +8,7 @@ class slurm::controller (
   $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
   $with_devel = false,
   $install_torque_wrapper = true,
+  $with_lua = true,
   $install_tools = true,
   $manage_firewall = true,
   $manage_logrotate = true,
@@ -18,6 +19,8 @@ class slurm::controller (
   validate_bool($manage_state_dir_nfs_mount)
   validate_bool($with_devel)
   validate_bool($install_torque_wrapper)
+  validate_bool($with_lua)
+  validate_bool($install_tools)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
@@ -36,6 +39,7 @@ class slurm::controller (
     use_pam                 => $slurm::use_pam,
     with_devel              => $with_devel,
     install_torque_wrapper  => $install_torque_wrapper,
+    with_lua                => $with_lua,
     install_tools           => $install_tools,
   }
 
