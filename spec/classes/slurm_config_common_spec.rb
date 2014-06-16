@@ -10,6 +10,7 @@ describe 'slurm::config::common' do
     should contain_file('/etc/slurm').with({
       :ensure => 'link',
       :target => '/home/slurm/conf',
+      :force  => 'true',
       :before => 'File[slurm CONFDIR]',
     })
   end
