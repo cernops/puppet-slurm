@@ -62,14 +62,6 @@ describe 'slurm::slurmdbd::config' do
   end
 
   it do
-    should contain_file('/etc/slurm/slurmdbd.conf').only_with({
-      :ensure   => 'link',
-      :path     => '/etc/slurm/slurmdbd.conf',
-      :target   => '/home/slurm/conf/slurmdbd.conf',
-    })
-  end
-
-  it do
     should contain_logrotate__rule('slurmdbd').with({
       :path          => '/var/log/slurm/slurmdbd.log',
       :compress      => 'true',
@@ -112,10 +104,5 @@ describe 'slurm::slurmdbd::config' do
     let(:params) {{ :manage_database => false }}
     it { should_not contain_class('mysql::server') }
     it { should_not contain_mysql__db('slurmdbd') }
-  end
-
-  context 'when conf_dir => "/etc/slurm"' do
-    let(:pre_condition) { "class { 'slurm': conf_dir => '/etc/slurm' }" }
-    it { should_not contain_file('/etc/slurm/slurmdbd.conf') }
   end
 end

@@ -7,24 +7,6 @@ describe 'slurm::config' do
   it { should create_class('slurm::config') }
 
   it do
-    should contain_file('/etc/slurm').with({
-      :ensure => 'link',
-      :target => '/home/slurm/conf',
-      :before => 'File[slurm CONFDIR]',
-    })
-  end
-
-  it do
-    should contain_file('slurm CONFDIR').with({
-      :ensure => 'directory',
-      :path   => '/home/slurm/conf',
-      :owner  => 'slurm',
-      :group  => 'slurm',
-      :mode   => '0755',
-    })
-  end
-
-  it do
     should contain_file('/etc/sysconfig/slurm').with({
       :ensure  => 'file',
       :path    => '/etc/sysconfig/slurm',
@@ -418,11 +400,6 @@ describe 'slurm::config' do
     it { should_not contain_concat('slurm.conf') }
     it { should_not contain_concat__fragment('slurm.conf-common') }
     it { should_not contain_concat__fragment('slurm.conf-partitions') }
-  end
-
-  context 'when conf_dir => "/etc/slurm"' do
-    let(:pre_condition) { "class { 'slurm': conf_dir => '/etc/slurm' }" }
-    it { should_not contain_file('/etc/slurm') }
   end
 
   context 'when epilog => /tmp/foo' do

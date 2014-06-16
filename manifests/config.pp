@@ -12,22 +12,6 @@ class slurm::config (
   $conf_dir         = $slurm::conf_dir
   $slurm_conf_path  = $slurm::slurm_conf_path
 
-  if $conf_dir != '/etc/slurm' {
-    file { '/etc/slurm':
-      ensure  => 'link',
-      target  => $conf_dir,
-      before  => File['slurm CONFDIR'],
-    }
-  }
-
-  file { 'slurm CONFDIR':
-    ensure  => 'directory',
-    path    => $conf_dir,
-    owner   => $slurm::slurm_user,
-    group   => $slurm::slurm_user_group,
-    mode    => '0755',
-  }
-
   file { '/etc/sysconfig/slurm':
     ensure  => 'file',
     path    => '/etc/sysconfig/slurm',
