@@ -9,14 +9,11 @@ class slurm::controller::config (
 
   include slurm
 
-  File {
-    owner => $slurm::slurm_user,
-    group => $slurm::slurm_user_group,
-  }
-
   file { 'StateSaveLocation':
     ensure  => 'directory',
     path    => $slurm::state_save_location,
+    owner   => $slurm::slurm_user,
+    group   => $slurm::slurm_user_group,
     mode    => '0700',
     require => File[$slurm::shared_state_dir],
   }
@@ -24,6 +21,8 @@ class slurm::controller::config (
   file { 'JobCheckpointDir':
     ensure  => 'directory',
     path    => $slurm::job_checkpoint_dir,
+    owner   => $slurm::slurm_user,
+    group   => $slurm::slurm_user_group,
     mode    => '0700',
     require => File[$slurm::shared_state_dir],
   }
