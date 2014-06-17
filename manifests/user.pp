@@ -28,8 +28,6 @@ class slurm::user {
   # with correct permissions if used as global conf location
   file { $slurm::slurm_user_home:
     ensure  => 'directory',
-    owner   => $slurm::slurm_user,
-    group   => $slurm::slurm_user_group,
     mode    => '0755',
   }
 

@@ -36,8 +36,6 @@ describe 'slurm::user' do
   it do
     should contain_file('/home/slurm').with({
       :ensure => 'directory',
-      :owner  => 'slurm',
-      :group  => 'slurm',
       :mode   => '0755',
     })
   end
