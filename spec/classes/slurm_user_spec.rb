@@ -21,13 +21,24 @@ describe 'slurm::user' do
 
   it do
     should contain_user('slurm').with({
-      :ensure   => 'present',
-      :name     => 'slurm',
-      :uid      => nil,
-      :gid      => 'slurm',
-      :shell    => '/bin/false',
-      :home     => '/home/slurm',
-      :comment  => 'SLURM User',
+      :ensure     => 'present',
+      :name       => 'slurm',
+      :uid        => nil,
+      :gid        => 'slurm',
+      :shell      => '/bin/false',
+      :home       => '/home/slurm',
+      :managehome => 'false',
+      :comment    => 'SLURM User',
+      :before     => 'File[/home/slurm]',
+    })
+  end
+
+  it do
+    should contain_file('/home/slurm').with({
+      :ensure => 'directory',
+      :owner  => 'slurm',
+      :group  => 'slurm',
+      :mode   => '0755',
     })
   end
 

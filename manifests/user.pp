@@ -20,7 +20,17 @@ class slurm::user {
       home        => $slurm::slurm_user_home,
       managehome  => $slurm::slurm_user_managehome,
       comment     => $slurm::slurm_user_comment,
+      before      => File[$slurm::slurm_user_home],
     }
+  }
+
+  # TODO: Find better way to manage user and home directory
+  # with correct permissions if used as global conf location
+  file { $slurm::slurm_user_home:
+    ensure  => 'directory',
+    owner   => $slurm::slurm_user,
+    group   => $slurm::slurm_user_group,
+    mode    => '0755',
   }
 
 }
