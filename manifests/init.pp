@@ -16,7 +16,6 @@ class slurm (
   $slurm_user_uid = 'UNSET',
   $slurm_user_comment = 'SLURM User',
   $slurm_user_home = '/home/slurm',
-  $slurm_user_managehome = false,
   $slurm_user_shell = '/bin/false',
 
   # Cluster config

@@ -11,6 +11,7 @@ describe 'slurm::client' do
   it { should contain_anchor('slurm::client::start').that_comes_before('Class[slurm::user]') }
   it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
   it { should contain_class('slurm::munge').that_comes_before('Class[slurm::install]') }
+  it { should contain_class('slurm::config::common').that_comes_before('Class[slurm::config]') }
   it { should contain_anchor('slurm::client::end') }
 
   it do
@@ -22,7 +23,7 @@ describe 'slurm::client' do
       :install_torque_wrapper => 'true',
       :with_lua               => 'false',
       :install_tools          => 'true',
-    }).that_comes_before('Class[slurm::config]')
+    }).that_comes_before('Class[slurm::config::common]')
   end
 
   it do

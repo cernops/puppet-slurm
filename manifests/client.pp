@@ -19,6 +19,7 @@ class slurm::client (
   include slurm
   include slurm::user
   include slurm::munge
+  include slurm::config::common
 
   anchor { 'slurm::client::start': }
   anchor { 'slurm::client::end': }
@@ -47,6 +48,7 @@ class slurm::client (
   Class['slurm::user']->
   Class['slurm::munge']->
   Class['slurm::install']->
+  Class['slurm::config::common']->
   Class['slurm::config']->
   Class['slurm::service']->
   Anchor['slurm::client::end']
