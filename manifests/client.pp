@@ -16,9 +16,9 @@ class slurm::client (
   validate_bool($with_lua)
   validate_bool($install_tools)
 
+  include ::munge
   include slurm
   include slurm::user
-  include slurm::munge
   include slurm::config::common
 
   anchor { 'slurm::client::start': }
@@ -45,8 +45,8 @@ class slurm::client (
   }
 
   Anchor['slurm::client::start']->
+  Class['::munge']->
   Class['slurm::user']->
-  Class['slurm::munge']->
   Class['slurm::install']->
   Class['slurm::config::common']->
   Class['slurm::config']->

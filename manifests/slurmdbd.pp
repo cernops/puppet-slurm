@@ -24,9 +24,9 @@ class slurm::slurmdbd (
   anchor { 'slurm::slurmdbd::start': }
   anchor { 'slurm::slurmdbd::end': }
 
+  include ::munge
   include slurm
   include slurm::user
-  include slurm::munge
   include slurm::config::common
   include slurm::slurmdbd::service
 
@@ -58,8 +58,8 @@ class slurm::slurmdbd (
   }
 
   Anchor['slurm::slurmdbd::start']->
+  Class['::munge']->
   Class['slurm::user']->
-  Class['slurm::munge']->
   Class['slurm::slurmdbd::install']->
   Class['slurm::config::common']->
   Class['slurm::slurmdbd::config']->

@@ -8,9 +8,9 @@ describe 'slurm::slurmdbd' do
   it { should create_class('slurm::slurmdbd') }
   it { should contain_class('slurm') }
 
-  it { should contain_anchor('slurm::slurmdbd::start').that_comes_before('Class[slurm::user]') }
-  it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
-  it { should contain_class('slurm::munge').that_comes_before('Class[slurm::slurmdbd::install]') }
+  it { should contain_anchor('slurm::slurmdbd::start').that_comes_before('Class[munge]') }
+  it { should contain_class('munge').that_comes_before('Class[slurm::user]') }
+  it { should contain_class('slurm::user').that_comes_before('Class[slurm::slurmdbd::install]') }
   it { should contain_class('slurm::config::common').that_comes_before('Class[slurm::slurmdbd::config]') }
   it { should contain_class('slurm::slurmdbd::config').that_comes_before('Class[slurm::slurmdbd::service]') }
   it { should contain_class('slurm::slurmdbd::service').that_comes_before('Anchor[slurm::slurmdbd::end]') }

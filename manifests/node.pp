@@ -30,9 +30,9 @@ class slurm::node (
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
+  include ::munge
   include slurm
   include slurm::user
-  include slurm::munge
   include slurm::config::common
   if $slurm::use_auks { include slurm::auks }
 
@@ -79,8 +79,8 @@ class slurm::node (
   }
 
   Anchor['slurm::node::start']->
+  Class['::munge']->
   Class['slurm::user']->
-  Class['slurm::munge']->
   Class['slurm::install']->
   Class['slurm::config::common']->
   Class['slurm::config']->

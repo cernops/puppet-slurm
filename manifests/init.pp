@@ -3,7 +3,6 @@
 class slurm (
   # Package ensures
   $package_require = undef,
-  $munge_package_ensure = 'present',
   $slurm_package_ensure = 'present',
   $auks_package_ensure = 'present',
   $package_runtime_dependencies = $slurm::params::package_runtime_dependencies,
@@ -63,9 +62,6 @@ class slurm (
   # profile.d
   $slurm_sh_template = 'slurm/profile.d/slurm.sh.erb',
   $slurm_csh_template = 'slurm/profile.d/slurm.csh.erb',
-
-  # Munge
-  $munge_key = undef,
 
   # auks
   $use_auks = false,

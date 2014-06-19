@@ -8,9 +8,9 @@ describe 'slurm::node' do
   it { should create_class('slurm::node') }
   it { should contain_class('slurm') }
 
-  it { should contain_anchor('slurm::node::start').that_comes_before('Class[slurm::user]') }
-  it { should contain_class('slurm::user').that_comes_before('Class[slurm::munge]') }
-  it { should contain_class('slurm::munge').that_comes_before('Class[slurm::install]') }
+  it { should contain_anchor('slurm::node::start').that_comes_before('Class[munge]') }
+  it { should contain_class('munge').that_comes_before('Class[slurm::user]') }
+  it { should contain_class('slurm::user').that_comes_before('Class[slurm::install]') }
   it { should contain_class('slurm::config::common').that_comes_before('Class[slurm::config]') }
   it { should contain_anchor('slurm::node::end') }
 

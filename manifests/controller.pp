@@ -27,9 +27,9 @@ class slurm::controller (
   anchor { 'slurm::controller::start': }
   anchor { 'slurm::controller::end': }
 
+  include ::munge
   include slurm
   include slurm::user
-  include slurm::munge
   include slurm::config::common
   if $slurm::use_auks { include slurm::auks }
 
@@ -69,8 +69,8 @@ class slurm::controller (
   }
 
   Anchor['slurm::controller::start']->
+  Class['::munge']->
   Class['slurm::user']->
-  Class['slurm::munge']->
   Class['slurm::install']->
   Class['slurm::config::common']->
   Class['slurm::config']->
