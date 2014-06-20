@@ -13,13 +13,15 @@ class slurm::config::common {
     }
   }
 
-  file { 'slurm CONFDIR':
-    ensure  => 'directory',
-    path    => $slurm::conf_dir,
-    owner   => $slurm::slurm_user,
-    group   => $slurm::slurm_user_group,
-    mode    => '0755',
-  }
+  #if $slurm::manage_slurm_conf {
+    file { 'slurm CONFDIR':
+      ensure  => 'directory',
+      path    => $slurm::conf_dir,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+    }
+  #}
 
   file { $slurm::log_dir:
     ensure  => 'directory',

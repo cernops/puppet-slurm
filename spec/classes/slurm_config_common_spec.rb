@@ -5,6 +5,7 @@ describe 'slurm::config::common' do
   let(:pre_condition) { "class { 'slurm': }" }
 
   it { should create_class('slurm::config::common') }
+  it { should contain_class('slurm') }
 
   it do
     should contain_file('/etc/slurm').with({
@@ -19,8 +20,8 @@ describe 'slurm::config::common' do
     should contain_file('slurm CONFDIR').with({
       :ensure => 'directory',
       :path   => '/home/slurm/conf',
-      :owner  => 'slurm',
-      :group  => 'slurm',
+      :owner  => 'root',
+      :group  => 'root',
       :mode   => '0755',
     })
   end
