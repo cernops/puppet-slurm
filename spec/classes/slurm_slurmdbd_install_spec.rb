@@ -8,20 +8,7 @@ describe 'slurm::slurmdbd::install' do
   it { should create_class('slurm::slurmdbd::install') }
   it { should contain_class('slurm') }
 
-  package_runtime_dependencies = [
-    'hwloc',
-    'numactl',
-    'libibmad',
-    'freeipmi',
-    'rrdtool',
-    'gtk2',
-  ]
-
-  package_runtime_dependencies.each do |p|
-    it { should contain_package(p).with_ensure('present') }
-  end
-
-  it { should have_package_resource_count(8) }
+  it { should have_package_resource_count(2) }
 
   it { should contain_package('slurm-slurmdbd').with_ensure('present').without_require }
   it { should contain_package('slurm-sql').with_ensure('present').without_require }

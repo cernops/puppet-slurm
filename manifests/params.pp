@@ -4,14 +4,7 @@ class slurm::params {
 
   case $::osfamily {
     'RedHat': {
-      $package_runtime_dependencies = [
-        'hwloc',
-        'numactl',
-        'libibmad',
-        'freeipmi',
-        'rrdtool',
-        'gtk2',
-      ]
+      # do nothing
     }
 
     default: {

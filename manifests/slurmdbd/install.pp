@@ -7,8 +7,6 @@ class slurm::slurmdbd::install (
 
   include slurm
 
-  ensure_packages($slurm::package_runtime_dependencies)
-
   Package {
     ensure  => $ensure,
     require => $package_require,
