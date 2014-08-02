@@ -73,7 +73,7 @@ class slurm::config (
         order   => '03',
       }
 
-      Concat::Fragment <<| tag == 'slurm_nodelist' |>>
+      Concat::Fragment <<| tag == $slurm::slurm_nodelist_tag |>>
     }
 
     file { 'plugstack.conf.d':

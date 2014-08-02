@@ -58,6 +58,7 @@ class slurm (
   $slurm_conf_override = {},
   $slurm_conf_template = 'slurm/slurm.conf/slurm.conf.options.erb',
   $slurm_conf_source = undef,
+  $slurm_nodelist_tag = 'slurm_nodelist',
 
   # profile.d
   $slurm_sh_template = 'slurm/profile.d/slurm.sh.erb',

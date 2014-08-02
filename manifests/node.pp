@@ -75,7 +75,7 @@ class slurm::node (
     target  => 'slurm.conf',
     content => template('slurm/slurm.conf/slurm.conf.nodelist.erb'),
     order   => '02',
-    tag     => 'slurm_nodelist',
+    tag     => $slurm::slurm_nodelist_tag,
   }
 
   Anchor['slurm::node::start']->
