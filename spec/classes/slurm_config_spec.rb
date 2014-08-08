@@ -201,6 +201,58 @@ describe 'slurm::config' do
   end
 
   it do
+    should contain_file('cgroup.conf').with({
+      :ensure   => 'file',
+      :path     => '/home/slurm/conf/cgroup.conf',
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0644',
+      :require  => 'File[slurm CONFDIR]',
+    })
+  end
+
+  it "should have cgroup.conf with valid contents" do
+    verify_contents(catalogue, 'cgroup.conf', [
+      'CgroupMountpoint=/cgroup',
+      'CgroupAutomount=yes',
+      'CgroupReleaseAgentDir="/home/slurm/conf/cgroup"',
+      'ConstrainCores=no',
+      'TaskAffinity=no',
+      'AllowedRAMSpace=100',
+      'AllowedSwapSpace=0',
+      'ConstrainRAMSpace=no',
+      'ConstrainSwapSpace=no',
+      'MaxRAMPercent=100',
+      'MaxSwapPercent=100',
+      'MinRAMSpace=30',
+      'ConstrainDevices=no',
+      'AllowedDevicesFile=/home/slurm/conf/cgroup_allowed_devices_file.conf',
+    ])
+  end
+
+  it do
+    should contain_file('cgroup_allowed_devices_file.conf').with({
+      :ensure   => 'file',
+      :path     => '/home/slurm/conf/cgroup_allowed_devices_file.conf',
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0644',
+      :require  => 'File[slurm CONFDIR]',
+    })
+  end
+
+  it "should have cgroup_allowed_devices_file.conf with valid contents" do
+    verify_contents(catalogue, 'cgroup_allowed_devices_file.conf', [
+      '/dev/null',
+      '/dev/urandom',
+      '/dev/zero',
+      '/dev/sda*',
+      '/dev/cpu/*/*',
+      '/dev/pts/*',
+    ])
+  end
+
+  it do
     should contain_sysctl('net.core.somaxconn').with({
       :ensure => 'present',
       :value  => '1024',
@@ -400,6 +452,10 @@ describe 'slurm::config' do
     it { should_not contain_concat('slurm.conf') }
     it { should_not contain_concat__fragment('slurm.conf-common') }
     it { should_not contain_concat__fragment('slurm.conf-partitions') }
+    it { should_not contain_file('plugstack.conf.d') }
+    it { should_not contain_file('plugstack.conf') }
+    it { should_not contain_file('cgroup.conf') }
+    it { should_not contain_file('cgroup_allowed_devices_file.conf') }
   end
 
   context 'when epilog => /tmp/foo' do

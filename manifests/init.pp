@@ -60,6 +60,25 @@ class slurm (
   $slurm_conf_source = undef,
   $slurm_nodelist_tag = 'slurm_nodelist',
 
+  # cgroups
+  $cgroup_conf_template = 'slurm/cgroup/cgroup.conf.erb',
+  $cgroup_mountpoint = '/cgroup',
+  $cgroup_automount = true,
+  $cgroup_release_agent_dir = 'UNSET',
+  $cgroup_constrain_cores = false,
+  $cgroup_task_affinity = false,
+  $cgroup_allowed_ram_space = '100',
+  $cgroup_allowed_swap_space = '0',
+  $cgroup_constrain_ram_space = false,
+  $cgroup_constrain_swap_space = false,
+  $cgroup_max_ram_percent = '100',
+  $cgroup_max_swap_percent = '100',
+  $cgroup_min_ram_space = '30',
+  $cgroup_constrain_devices = false,
+  $cgroup_allowed_devices = $::slurm::params::cgroup_allowed_devices,
+  $cgroup_allowed_devices_template = 'slurm/cgroup/cgroup_allowed_devices_file.conf.erb',
+  $cgroup_allowed_devices_file = 'UNSET',
+
   # profile.d
   $slurm_sh_template = 'slurm/profile.d/slurm.sh.erb',
   $slurm_csh_template = 'slurm/profile.d/slurm.csh.erb',
@@ -80,8 +99,25 @@ class slurm (
   validate_bool($manage_slurm_user)
   validate_array($partitionlist)
   validate_hash($slurm_conf_override)
+  validate_bool($cgroup_automount)
+  validate_bool($cgroup_constrain_cores)
+  validate_bool($cgroup_task_affinity)
+  validate_bool($cgroup_constrain_ram_space)
+  validate_bool($cgroup_constrain_swap_space)
+  validate_bool($cgroup_constrain_devices)
+  validate_array($cgroup_allowed_devices)
   validate_bool($use_auks)
   validate_bool($use_pam)
+
+  $cgroup_release_agent_dir_real = $cgroup_release_agent_dir ? {
+    'UNSET' => "${conf_dir}/cgroup",
+    default => $cgroup_release_agent_dir,
+  }
+
+  $cgroup_allowed_devices_file_real = $cgroup_allowed_devices_file ? {
+    'UNSET' => "${conf_dir}/cgroup_allowed_devices_file.conf",
+    default => $cgroup_allowed_devices_file,
+  }
 
   $slurm_conf_defaults = {
     'AccountingStorageHost' => $control_machine,

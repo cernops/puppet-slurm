@@ -94,6 +94,26 @@ class slurm::config (
       content => template('slurm/plugstack.conf.erb'),
       require => File['slurm CONFDIR'],
     }
+
+    file { 'cgroup.conf':
+      ensure  => 'file',
+      path    => "${conf_dir}/cgroup.conf",
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template($::slurm::cgroup_conf_template),
+      require => File['slurm CONFDIR'],
+    }
+
+    file { 'cgroup_allowed_devices_file.conf':
+      ensure  => 'file',
+      path    => $::slurm::cgroup_allowed_devices_file_real,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template($::slurm::cgroup_allowed_devices_template),
+      require => File['slurm CONFDIR'],
+    }
   }
 
   if $manage_scripts {
