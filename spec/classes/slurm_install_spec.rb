@@ -18,6 +18,10 @@ describe 'slurm::install' do
   it { should_not contain_package('slurm-devel') }
   it { should_not contain_package('slurm-pam_slurm') }
   it { should_not contain_package('slurm-lua') }
+  it { should_not contain_package('slurm-blcr') }
+  it { should_not contain_package('blcr') }
+  it { should_not contain_package('blcr-libs') }
+  it { should_not contain_package('blcr-modules') }
   it { should_not contain_package('slurm-sjstat') }
   it { should_not contain_package('slurm-perlapi') }
 
@@ -63,5 +67,18 @@ describe 'slurm::install' do
   context 'when with_lua => true' do
     let(:params) {{ :with_lua => true }}
     it { should contain_package('slurm-lua') }
+  end
+
+  context 'when with_blcr => true' do
+    let(:params) {{ :with_blcr => true }}
+    it { should contain_package('slurm-blcr') }
+  end
+
+  context 'when install_blcr => true' do
+    let(:facts) { default_facts.merge({:kernelrelease => '2.6.32-431.23.3.el6.x86_64'}) }
+    let(:params) {{ :install_blcr => true }}
+    it { should contain_package('blcr') }
+    it { should contain_package('blcr-libs') }
+    it { should contain_package('blcr-modules').with_name('blcr-modules_2.6.32_431.23.3.el6.x86_64') }
   end
 end

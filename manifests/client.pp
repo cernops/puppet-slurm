@@ -6,6 +6,8 @@ class slurm::client (
   $with_devel = false,
   $install_torque_wrapper = true,
   $with_lua = false,
+  $with_blcr = false,
+  $install_blcr = false,
   $install_tools = true,
 ) {
 
@@ -14,6 +16,8 @@ class slurm::client (
   validate_bool($with_devel)
   validate_bool($install_torque_wrapper)
   validate_bool($with_lua)
+  validate_bool($with_blcr)
+  validate_bool($install_blcr)
   validate_bool($install_tools)
 
   include ::munge
@@ -31,6 +35,8 @@ class slurm::client (
     with_devel              => $with_devel,
     install_torque_wrapper  => $install_torque_wrapper,
     with_lua                => $with_lua,
+    with_blcr               => $with_blcr,
+    install_blcr            => $install_blcr,
     install_tools           => $install_tools,
   }
 

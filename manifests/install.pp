@@ -7,6 +7,8 @@ class slurm::install (
   $with_devel = false,
   $install_torque_wrapper = true,
   $with_lua = false,
+  $with_blcr = false,
+  $install_blcr = false,
   $install_tools = false,
 ) {
 
@@ -25,6 +27,17 @@ class slurm::install (
   if $use_pam                 { package { 'slurm-pam_slurm': } }
   if $install_torque_wrapper  { package { 'slurm-torque': } }
   if $with_lua                { package { 'slurm-lua': } }
+  if $with_blcr               { package { 'slurm-blcr': } }
+
+  if $install_blcr {
+    $blcr_modules_kernel = regsubst($::kernelrelease, '-', '_')
+    package { 'blcr': ensure => 'installed' }
+    package { 'blcr-libs': ensure => 'installed' }
+    package { 'blcr-modules':
+      ensure  => 'installed',
+      name    => "blcr-modules_${blcr_modules_kernel}"
+    }
+  }
 
   if $install_tools {
     package { 'slurm-sjstat': }

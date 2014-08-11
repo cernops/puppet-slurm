@@ -22,6 +22,8 @@ describe 'slurm::client' do
       :with_devel             => 'false',
       :install_torque_wrapper => 'true',
       :with_lua               => 'false',
+      :with_blcr              => 'false',
+      :install_blcr           => 'false',
       :install_tools          => 'true',
     }).that_comes_before('Class[slurm::config::common]')
   end
@@ -53,6 +55,8 @@ describe 'slurm::client' do
     'with_devel',
     'install_torque_wrapper',
     'with_lua',
+    'with_blcr',
+    'install_blcr',
     'install_tools',
   ].each do |param|
     context "with #{param} => 'foo'" do

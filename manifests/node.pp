@@ -6,6 +6,8 @@ class slurm::node (
   $with_devel = false,
   $install_torque_wrapper = true,
   $with_lua = false,
+  $with_blcr = false,
+  $install_blcr = false,
   $install_tools = false,
   $manage_firewall = true,
   $manage_logrotate = true,
@@ -26,6 +28,8 @@ class slurm::node (
   validate_bool($with_devel)
   validate_bool($install_torque_wrapper)
   validate_bool($with_lua)
+  validate_bool($with_blcr)
+  validate_bool($install_blcr)
   validate_bool($install_tools)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
@@ -46,6 +50,8 @@ class slurm::node (
     with_devel              => $with_devel,
     install_torque_wrapper  => $install_torque_wrapper,
     with_lua                => $with_lua,
+    with_blcr               => $with_blcr,
+    install_blcr            => $install_blcr,
     install_tools           => $install_tools,
   }
 

@@ -22,6 +22,8 @@ describe 'slurm::controller' do
       :with_devel             => 'false',
       :install_torque_wrapper => 'true',
       :with_lua               => 'true',
+      :with_blcr              => 'false',
+      :install_blcr           => 'false',
       :install_tools          => 'true',
     }).that_comes_before('Class[slurm::config::common]')
   end
@@ -76,6 +78,8 @@ describe 'slurm::controller' do
     'with_devel',
     'install_torque_wrapper',
     'with_lua',
+    'with_blcr',
+    'install_blcr',
     'install_tools',
     'manage_firewall',
     'manage_logrotate',
