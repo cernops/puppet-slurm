@@ -6,6 +6,9 @@ class slurm::controller (
   $manage_state_dir_nfs_mount = false,
   $state_dir_nfs_device = undef,
   $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
+  $manage_job_checkpoint_dir_nfs_mount = false,
+  $job_checkpoint_dir_nfs_device = undef,
+  $job_checkpoint_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
   $with_devel = false,
   $install_torque_wrapper = true,
   $with_lua = true,
@@ -19,6 +22,7 @@ class slurm::controller (
   validate_bool($manage_slurm_conf)
   validate_bool($manage_scripts)
   validate_bool($manage_state_dir_nfs_mount)
+  validate_bool($manage_job_checkpoint_dir_nfs_mount)
   validate_bool($with_devel)
   validate_bool($install_torque_wrapper)
   validate_bool($with_lua)
@@ -55,10 +59,13 @@ class slurm::controller (
   }
 
   class { 'slurm::controller::config':
-    manage_state_dir_nfs_mount  => $manage_state_dir_nfs_mount,
-    state_dir_nfs_device        => $state_dir_nfs_device,
-    state_dir_nfs_options       => $state_dir_nfs_options,
-    manage_logrotate            => $manage_logrotate,
+    manage_state_dir_nfs_mount          => $manage_state_dir_nfs_mount,
+    state_dir_nfs_device                => $state_dir_nfs_device,
+    state_dir_nfs_options               => $state_dir_nfs_options,
+    manage_job_checkpoint_dir_nfs_mount => $manage_job_checkpoint_dir_nfs_mount,
+    job_checkpoint_dir_nfs_device       => $job_checkpoint_dir_nfs_device,
+    job_checkpoint_dir_nfs_options      => $job_checkpoint_dir_nfs_options,
+    manage_logrotate                    => $manage_logrotate,
   }
 
   class { 'slurm::service':

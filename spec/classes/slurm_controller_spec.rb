@@ -37,10 +37,13 @@ describe 'slurm::controller' do
 
   it do
     should contain_class('slurm::controller::config').with({
-      :manage_state_dir_nfs_mount  => 'false',
-      :state_dir_nfs_device        => nil,
-      :state_dir_nfs_options       => 'rw,sync,noexec,nolock,auto',
-      :manage_logrotate            => 'true',
+      :manage_state_dir_nfs_mount           => 'false',
+      :state_dir_nfs_device                 => nil,
+      :state_dir_nfs_options                => 'rw,sync,noexec,nolock,auto',
+      :manage_job_checkpoint_dir_nfs_mount  => 'false',
+      :job_checkpoint_dir_nfs_device        => nil,
+      :job_checkpoint_dir_nfs_options       => 'rw,sync,noexec,nolock,auto',
+      :manage_logrotate                     => 'true',
     }).that_comes_before('Class[slurm::service]')
   end
 
@@ -75,6 +78,7 @@ describe 'slurm::controller' do
     'manage_slurm_conf',
     'manage_scripts',
     'manage_state_dir_nfs_mount',
+    'manage_job_checkpoint_dir_nfs_mount',
     'with_devel',
     'install_torque_wrapper',
     'with_lua',

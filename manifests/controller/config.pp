@@ -4,6 +4,9 @@ class slurm::controller::config (
   $manage_state_dir_nfs_mount = false,
   $state_dir_nfs_device = undef,
   $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
+  $manage_job_checkpoint_dir_nfs_mount = false,
+  $job_checkpoint_dir_nfs_device = undef,
+  $job_checkpoint_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
   $manage_logrotate = true,
 ) {
 
@@ -36,6 +39,18 @@ class slurm::controller::config (
       fstype  => 'nfs',
       options => $state_dir_nfs_options,
       require => File['StateSaveLocation'],
+    }
+  }
+
+  if $manage_job_checkpoint_dir_nfs_mount {
+    mount { 'JobCheckpointDir':
+      ensure  => 'mounted',
+      name    => $slurm::job_checkpoint_dir,
+      atboot  => true,
+      device  => $job_checkpoint_dir_nfs_device,
+      fstype  => 'nfs',
+      options => $job_checkpoint_dir_nfs_options,
+      require => File['JobCheckpointDir'],
     }
   }
 
