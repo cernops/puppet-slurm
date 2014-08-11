@@ -21,6 +21,7 @@ describe 'slurm::install' do
   it { should_not contain_package('slurm-blcr') }
   it { should_not contain_package('blcr') }
   it { should_not contain_package('blcr-libs') }
+  it { should_not contain_package('blcr-devel') }
   it { should_not contain_package('blcr-modules') }
   it { should_not contain_package('slurm-sjstat') }
   it { should_not contain_package('slurm-perlapi') }
@@ -79,6 +80,7 @@ describe 'slurm::install' do
     let(:params) {{ :install_blcr => true }}
     it { should contain_package('blcr') }
     it { should contain_package('blcr-libs') }
+    it { should contain_package('blcr-devel') }
     it { should contain_package('blcr-modules').with_name('blcr-modules_2.6.32_431.23.3.el6.x86_64') }
   end
 end

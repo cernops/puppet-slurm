@@ -29,10 +29,12 @@ class slurm::install (
   if $with_lua                { package { 'slurm-lua': } }
   if $with_blcr               { package { 'slurm-blcr': } }
 
+  # TODO: Move to blcr module
   if $install_blcr {
     $blcr_modules_kernel = regsubst($::kernelrelease, '-', '_')
     package { 'blcr': ensure => 'installed' }
     package { 'blcr-libs': ensure => 'installed' }
+    package { 'blcr-devel': ensure => 'installed' }
     package { 'blcr-modules':
       ensure  => 'installed',
       name    => "blcr-modules_${blcr_modules_kernel}"

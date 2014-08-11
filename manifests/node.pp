@@ -9,6 +9,9 @@ class slurm::node (
   $with_blcr = false,
   $install_blcr = false,
   $install_tools = false,
+  $manage_blcr_service = false,
+  $blcr_service_ensure = 'running',
+  $blcr_service_enable = true,
   $manage_firewall = true,
   $manage_logrotate = true,
   $node_name = $::hostname,
@@ -31,6 +34,7 @@ class slurm::node (
   validate_bool($with_blcr)
   validate_bool($install_blcr)
   validate_bool($install_tools)
+  validate_bool($manage_blcr_service)
   validate_bool($manage_firewall)
   validate_bool($manage_logrotate)
 
@@ -65,8 +69,11 @@ class slurm::node (
   }
 
   class { 'slurm::service':
-    ensure  => 'running',
-    enable  => true,
+    ensure      => 'running',
+    enable      => true,
+    manage_blcr => $manage_blcr_service,
+    blcr_ensure => $blcr_service_ensure,
+    blcr_enable => $blcr_service_enable,
   }
 
   if $manage_firewall {

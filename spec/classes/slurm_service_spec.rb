@@ -17,6 +17,8 @@ describe 'slurm::service' do
     })
   end
 
+  it { should_not contain_service('blcr') }
+
   context 'when ensure => stopped' do
     let(:params) {{ :ensure => 'stopped' }}
     it { should contain_service('slurm').with_ensure('stopped') }
@@ -25,5 +27,18 @@ describe 'slurm::service' do
   context 'when enable => false' do
     let(:params) {{ :enable => false }}
     it { should contain_service('slurm').with_enable('false') }
+  end
+
+  context 'when manage_blcr => true' do
+    let(:params) {{ :manage_blcr => true }}
+
+    it do
+      should contain_service('blcr').with({
+        :ensure     => 'running',
+        :enable     => 'true',
+        :hasstatus  => 'true',
+        :hasrestart => 'true',
+      })
+    end
   end
 end

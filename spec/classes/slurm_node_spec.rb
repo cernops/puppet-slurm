@@ -43,8 +43,11 @@ describe 'slurm::node' do
 
   it do
     should contain_class('slurm::service').with({
-      :ensure => 'running',
-      :enable => 'true',
+      :ensure       => 'running',
+      :enable       => 'true',
+      :manage_blcr  => 'false',
+      :blcr_ensure  => 'running',
+      :blcr_enable  => 'true',
     }).that_comes_before('Anchor[slurm::node::end]')
   end
 
@@ -77,6 +80,7 @@ describe 'slurm::node' do
     'with_blcr',
     'install_blcr',
     'install_tools',
+    'manage_blcr_service',
     'manage_firewall',
     'manage_logrotate',
   ].each do |param|
