@@ -3,7 +3,7 @@ require 'beaker-rspec'
 dir = File.expand_path(File.dirname(__FILE__))
 Dir["#{dir}/acceptance/support/*.rb"].sort.each {|f| require f}
 
-puppet_package_version = ENV['PUPPET_BEAKER_package_version'] || '3.5.1-1'
+puppet_package_version = ENV['PUPPET_BEAKER_package_version'] || '3.6.2-1'
 
 hosts.each do |host|
   # Start dnsmasq
@@ -34,7 +34,7 @@ RSpec.configure do |c|
   c.slurm_yumrepo_baseurl = ENV['SLURM_BEAKER_yumrepo_baseurl']
 
   c.add_setting :slurm_package_version
-  c.slurm_package_version = ENV['SLURM_BEAKER_package_version'] || '14.03.3-2.el6'
+  c.slurm_package_version = ENV['SLURM_BEAKER_package_version'] || '14.03.6-1.el6'
 
   # Configure all nodes in nodeset
   c.before :suite do
