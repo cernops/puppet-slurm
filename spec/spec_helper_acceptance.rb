@@ -50,8 +50,8 @@ RSpec.configure do |c|
 
     # Install module and dependencies
     hosts.each do |host|
-      copy_root_module_to(host, :module_name => 'slurm')
-      copy_root_module_to(host, :source => File.join(proj_root, 'tests/site_slurm'), :module_name => 'site_slurm')
+      copy_module_to(host, :module_name => 'slurm')
+      copy_module_to(host, :source => File.join(proj_root, 'tests/site_slurm'), :module_name => 'site_slurm', :ignore_list => [])
     end
     on hosts, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'puppetlabs-concat'), { :acceptable_exit_codes => [0,1] }

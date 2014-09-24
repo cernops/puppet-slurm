@@ -6,8 +6,6 @@ shared_examples_for "slurm::config::common" do |node|
   describe file('/home/slurm/conf'), :node => node do
     it { should be_directory }
     it { should be_mode 755 }
-    it { should be_owned_by 'slurm' }
-    it { should be_grouped_into 'slurm' }
   end
 
   [
