@@ -41,7 +41,6 @@ class slurm::node (
   include ::munge
   include slurm
   include slurm::user
-  include slurm::config::common
   if $slurm::use_auks { include slurm::auks }
 
   anchor { 'slurm::node::start': }
@@ -95,7 +94,6 @@ class slurm::node (
   Class['::munge']->
   Class['slurm::user']->
   Class['slurm::install']->
-  Class['slurm::config::common']->
   Class['slurm::config']->
   Class['slurm::node::config']->
   Class['slurm::service']->

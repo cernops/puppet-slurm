@@ -8,6 +8,45 @@ describe 'slurm::node::config' do
   it { should create_class('slurm::node::config') }
   it { should contain_class('slurm') }
 
+
+  it do
+    should contain_file('/etc/slurm').with({
+      :ensure => 'link',
+      :target => '/home/slurm/conf',
+      :force  => 'true',
+      #:before => 'File[slurm CONFDIR]',
+    })
+  end
+
+  it { should_not contain_file('slurm CONFDIR') }
+
+  it do
+    should contain_file('/var/log/slurm').with({
+      :ensure => 'directory',
+      :owner  => 'root',
+      :group  => 'root',
+      :mode   => '0700',
+    })
+  end
+
+  it do
+    should contain_file('/var/run/slurm').with({
+      :ensure => 'directory',
+      :owner  => 'root',
+      :group  => 'root',
+      :mode   => '0700',
+    })
+  end
+
+  it do
+    should contain_file('/var/lib/slurm').with({
+      :ensure => 'directory',
+      :owner  => 'root',
+      :group  => 'root',
+      :mode   => '0700',
+    })
+  end
+
   it do
     should contain_file('SlurmdSpoolDir').with({
       :ensure => 'directory',
@@ -41,7 +80,7 @@ describe 'slurm::node::config' do
       :size          => '10M',
       :create        => 'true',
       :create_mode   => '0640',
-      :create_owner  => 'slurm',
+      :create_owner  => 'root',
       :create_group  => 'root',
       :postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
     })

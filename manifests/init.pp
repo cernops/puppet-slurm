@@ -96,18 +96,13 @@ class slurm (
 ) inherits slurm::params {
 
   # Parameter validations
-  validate_bool($manage_slurm_user)
-  validate_array($partitionlist)
+  validate_bool($manage_slurm_user, $use_auks, $use_pam)
+  validate_bool($cgroup_automount, $cgroup_constrain_cores, $cgroup_task_affinity, $cgroup_constrain_ram_space)
+  validate_bool($cgroup_constrain_swap_space, $cgroup_constrain_devices)
+
+  validate_array($partitionlist, $cgroup_allowed_devices)
+
   validate_hash($slurm_conf_override)
-  validate_bool($cgroup_automount)
-  validate_bool($cgroup_constrain_cores)
-  validate_bool($cgroup_task_affinity)
-  validate_bool($cgroup_constrain_ram_space)
-  validate_bool($cgroup_constrain_swap_space)
-  validate_bool($cgroup_constrain_devices)
-  validate_array($cgroup_allowed_devices)
-  validate_bool($use_auks)
-  validate_bool($use_pam)
 
   $cgroup_release_agent_dir_real = $cgroup_release_agent_dir ? {
     'UNSET' => "${conf_dir}/cgroup",

@@ -6,6 +6,46 @@ class slurm::node::config (
 
   include slurm
 
+  if $slurm::conf_dir != '/etc/slurm' {
+    file { '/etc/slurm':
+      ensure  => 'link',
+      target  => $slurm::conf_dir,
+      force   => true,
+      #before  => File['slurm CONFDIR'],
+    }
+  }
+
+  if $slurm::node::manage_slurm_conf {
+    file { 'slurm CONFDIR':
+      ensure  => 'directory',
+      path    => $slurm::conf_dir,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+    }
+  }
+
+  file { $slurm::log_dir:
+    ensure  => 'directory',
+    owner   => $slurm::slurmd_user,
+    group   => $slurm::slurmd_user_group,
+    mode    => '0700',
+  }
+
+  file { $slurm::pid_dir:
+    ensure  => 'directory',
+    owner   => $slurm::slurmd_user,
+    group   => $slurm::slurmd_user_group,
+    mode    => '0700',
+  }
+
+  file { $slurm::shared_state_dir:
+    ensure  => 'directory',
+    owner   => $slurm::slurmd_user,
+    group   => $slurm::slurmd_user_group,
+    mode    => '0700',
+  }
+
   file { 'SlurmdSpoolDir':
     ensure  => 'directory',
     path    => $slurm::slurmd_spool_dir,
@@ -36,7 +76,7 @@ class slurm::node::config (
       size          => '10M',
       create        => true,
       create_mode   => '0640',
-      create_owner  => $slurm::slurm_user,
+      create_owner  => $slurm::slurmd_user,
       create_group  => 'root',
       postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
     }
