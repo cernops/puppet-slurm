@@ -48,7 +48,6 @@ class slurm::config (
         group   => 'root',
         mode    => '0644',
         source  => $slurm::slurm_conf_source,
-        require => File['slurm CONFDIR'],
       }
     } else {
       concat { 'slurm.conf':
@@ -58,7 +57,6 @@ class slurm::config (
         group           => 'root',
         mode            => '0644',
         ensure_newline  => true,
-        require         => File['slurm CONFDIR'],
       }
 
       concat::fragment { 'slurm.conf-common':

@@ -33,9 +33,8 @@ describe 'slurm::node class:' do
     it_behaves_like "slurm::user", node
     it_behaves_like "munge", node
     it_behaves_like "slurm::install", node
-    it_behaves_like "slurm::config::common", node
-    it_behaves_like "slurm::config", node
     it_behaves_like "slurm::node::config", node
+    it_behaves_like "slurm::config", node
     it_behaves_like "slurm::service - running", node
   end
 end

@@ -94,8 +94,8 @@ class slurm::node (
   Class['::munge']->
   Class['slurm::user']->
   Class['slurm::install']->
-  Class['slurm::config']->
   Class['slurm::node::config']->
+  Class['slurm::config']->
   Class['slurm::service']->
   Anchor['slurm::node::end']
 

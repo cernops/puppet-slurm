@@ -11,7 +11,6 @@ class slurm::node::config (
       ensure  => 'link',
       target  => $slurm::conf_dir,
       force   => true,
-      #before  => File['slurm CONFDIR'],
     }
   }
 

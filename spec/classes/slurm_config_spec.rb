@@ -67,7 +67,6 @@ describe 'slurm::config' do
       :group          => 'root',
       :mode           => '0644',
       :ensure_newline => 'true',
-      :require        => 'File[slurm CONFDIR]',
     })
   end
 
@@ -438,7 +437,6 @@ describe 'slurm::config' do
         :group    => 'root',
         :mode     => '0644',
         :source   => 'puppet:///modules/site_slurm/slurm.conf',
-        :require  => 'File[slurm CONFDIR]',
       })
     end
 

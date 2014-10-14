@@ -24,20 +24,20 @@ describe 'slurm::node' do
       :with_blcr              => 'false',
       :install_blcr           => 'false',
       :install_tools          => 'false',
-    }).that_comes_before('Class[slurm::config]')
+    }).that_comes_before('Class[slurm::node::config]')
   end
 
   it do
     should contain_class('slurm::config').with({
       :manage_slurm_conf  => 'true',
       :manage_scripts     => 'false',
-    }).that_comes_before('Class[slurm::node::config]')
+    }).that_comes_before('Class[slurm::service]')
   end
 
   it do
     should contain_class('slurm::node::config').with({
       :manage_logrotate => 'true',
-    }).that_comes_before('Class[slurm::service]')
+    }).that_comes_before('Class[slurm::config]')
   end
 
   it do
