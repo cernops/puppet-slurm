@@ -57,7 +57,7 @@ RSpec.configure do |c|
     on hosts, puppet('module', 'install', 'puppetlabs-concat'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'puppetlabs-firewall'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'puppetlabs-mysql'), { :acceptable_exit_codes => [0,1] }
-    on hosts, puppet('module', 'install', 'domcleal-augeasproviders'), { :acceptable_exit_codes => [0,1] }
+    on hosts, puppet('module', 'install', 'herculesteam-augeasproviders_sysctl'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'rodjek-logrotate'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'stahnma-epel'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'puppetlabs-puppetdb'), { :acceptable_exit_codes => [0,1] }

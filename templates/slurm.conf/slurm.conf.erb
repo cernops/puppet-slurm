@@ -1,0 +1,14 @@
+#
+# File managed by Puppet!
+#
+# See the slurm.conf man page for more information.
+#
+
+<% @slurm_conf.keys.sort.each do |key| -%>
+<% unless @slurm_conf[key] == :undef or ! @slurm_conf[key] -%>
+<%= key %>=<%= @slurm_conf[key] %>
+<% end -%>
+<% end -%>
+
+Include <%= @node_conf_path %>
+Include <%= @partition_conf_path %>

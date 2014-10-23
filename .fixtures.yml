@@ -11,10 +11,11 @@ fixtures:
       ref: 1.0.2
     mysql:
       repo: git://github.com/puppetlabs/puppetlabs-mysql.git
-      ref: 2.2.3
-    augeasproviders:
-      repo: git://github.com/hercules-team/augeasproviders.git
-      ref: v1.0.2
+      ref: 2.3.1
+    augeasproviders_core:
+      repo: git://github.com/hercules-team/augeasproviders_core.git
+    augeasproviders_sysctl:
+      repo: git://github.com/hercules-team/augeasproviders_sysctl.git
     logrotate:
       repo: git://github.com/rodjek/puppet-logrotate.git
       ref: 1.1.1
@@ -27,6 +28,9 @@ fixtures:
     munge:
       repo: git://github.com/treydock/puppet-munge.git
       ref: 0.0.2
+    blcr:
+      repo: git://github.com/treydock/puppet-module-blcr.git
+      ref: 1.0.1
   symlinks:
     slurm: "#{source_dir}"
     site_slurm: "#{File.join(source_dir, 'tests', 'site_slurm')}"

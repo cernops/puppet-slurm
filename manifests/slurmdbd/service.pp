@@ -1,5 +1,4 @@
-# == Class: slurm::slurmdbd::service
-#
+# Private class
 class slurm::slurmdbd::service {
 
   service { 'slurmdbd':

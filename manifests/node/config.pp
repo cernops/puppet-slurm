@@ -1,29 +1,6 @@
 # == Class: slurm::node::config
 #
-class slurm::node::config (
-  $manage_logrotate = true,
-) {
-
-  include slurm
-
-  if $slurm::conf_dir != '/etc/slurm' {
-    file { '/etc/slurm':
-      ensure  => 'link',
-      target  => $slurm::conf_dir,
-      force   => true,
-      #before  => File['slurm CONFDIR'],
-    }
-  }
-
-  if $slurm::node::manage_slurm_conf {
-    file { 'slurm CONFDIR':
-      ensure  => 'directory',
-      path    => $slurm::conf_dir,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
-    }
-  }
+class slurm::node::config {
 
   file { $slurm::log_dir:
     ensure  => 'directory',
@@ -62,7 +39,7 @@ class slurm::node::config (
     soft        => 'unlimited',
   }
 
-  if $manage_logrotate {
+  if $slurm::manage_logrotate {
     #Refer to: http://slurm.schedmd.com/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmd':
       path          => $slurm::slurmd_log_file,
