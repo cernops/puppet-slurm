@@ -180,7 +180,7 @@ class slurm (
   $slurm_conf_path                  = "${conf_dir}/slurm.conf"
   $node_conf_path                   = "${conf_dir}/nodes.conf"
   $partition_conf_path              = "${conf_dir}/partitions.conf"
-  $slurmdbd_conf_path               = "${slurm::conf_dir}/slurmdbd.conf"
+  $slurmdbd_conf_path               = "${conf_dir}/slurmdbd.conf"
   $cgroup_release_agent_dir_real    = pick($cgroup_release_agent_dir, "${conf_dir}/cgroup")
   $cgroup_allowed_devices_file_real = pick($cgroup_allowed_devices_file, "${conf_dir}/cgroup_allowed_devices_file.conf")
 

@@ -1,5 +1,4 @@
-# == Class: slurm::node
-#
+# Private class
 class slurm::node {
 
   include ::munge
