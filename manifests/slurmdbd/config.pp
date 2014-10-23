@@ -3,45 +3,45 @@ class slurm::slurmdbd::config {
 
   if ! $slurm::controller {
     file { $slurm::log_dir:
-      ensure  => 'directory',
-      owner   => $slurm::slurm_user,
-      group   => $slurm::slurm_user_group,
-      mode    => '0700',
+      ensure => 'directory',
+      owner  => $slurm::slurm_user,
+      group  => $slurm::slurm_user_group,
+      mode   => '0700',
     }
 
     file { $slurm::pid_dir:
-      ensure  => 'directory',
-      owner   => $slurm::slurm_user,
-      group   => $slurm::slurm_user_group,
-      mode    => '0700',
+      ensure => 'directory',
+      owner  => $slurm::slurm_user,
+      group  => $slurm::slurm_user_group,
+      mode   => '0700',
     }
 
     file { $slurm::shared_state_dir:
-      ensure  => 'directory',
-      owner   => $slurm::slurm_user,
-      group   => $slurm::slurm_user_group,
-      mode    => '0700',
+      ensure => 'directory',
+      owner  => $slurm::slurm_user,
+      group  => $slurm::slurm_user_group,
+      mode   => '0700',
     }
   }
 
   if $slurm::manage_database {
     if $slurm::use_remote_database {
       @@mysql::db { "slurmdbd_${::fqdn}":
-        user      => $slurm::slurmdbd_storage_user,
-        password  => $slurm::slurmdbd_storage_pass,
-        dbname    => $slurm::slurmdbd_storage_loc,
-        host      => $::fqdn,
-        grant     => ['ALL'],
-        tag       => $::domain,
+        user     => $slurm::slurmdbd_storage_user,
+        password => $slurm::slurmdbd_storage_pass,
+        dbname   => $slurm::slurmdbd_storage_loc,
+        host     => $::fqdn,
+        grant    => ['ALL'],
+        tag      => $::domain,
       }
     } else {
       include mysql::server
 
       mysql::db { $slurm::slurmdbd_storage_loc:
-        user      => $slurm::slurmdbd_storage_user,
-        password  => $slurm::slurmdbd_storage_pass,
-        host      => $slurm::slurmdbd_storage_host,
-        grant     => ['ALL'],
+        user     => $slurm::slurmdbd_storage_user,
+        password => $slurm::slurmdbd_storage_pass,
+        host     => $slurm::slurmdbd_storage_host,
+        grant    => ['ALL'],
       }
     }
   }

@@ -3,40 +3,40 @@
 class slurm::node::config {
 
   file { $slurm::log_dir:
-    ensure  => 'directory',
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0700',
+    ensure => 'directory',
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0700',
   }
 
   file { $slurm::pid_dir:
-    ensure  => 'directory',
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0700',
+    ensure => 'directory',
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0700',
   }
 
   file { $slurm::shared_state_dir:
-    ensure  => 'directory',
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0700',
+    ensure => 'directory',
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0700',
   }
 
   file { 'SlurmdSpoolDir':
-    ensure  => 'directory',
-    path    => $slurm::slurmd_spool_dir,
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0755',
+    ensure => 'directory',
+    path   => $slurm::slurmd_spool_dir,
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0755',
   }
 
   limits::limits { 'unlimited_memlock':
-    ensure      => 'present',
-    user        => '*',
-    limit_type  => 'memlock',
-    hard        => 'unlimited',
-    soft        => 'unlimited',
+    ensure     => 'present',
+    user       => '*',
+    limit_type => 'memlock',
+    hard       => 'unlimited',
+    soft       => 'unlimited',
   }
 
   if $slurm::manage_logrotate {

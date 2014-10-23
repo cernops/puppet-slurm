@@ -35,20 +35,20 @@ class slurm::common::setup {
     }
 
     file { '/etc/slurm':
-      ensure  => 'link',
-      target  => $slurm::conf_dir,
-      force   => true,
-      before  => $etc_slurm_before,
+      ensure => 'link',
+      target => $slurm::conf_dir,
+      force  => true,
+      before => $etc_slurm_before,
     }
   }
 
   if $slurm::manage_slurm_conf {
     file { 'slurm CONFDIR':
-      ensure  => 'directory',
-      path    => $slurm::conf_dir,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
+      ensure => 'directory',
+      path   => $slurm::conf_dir,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
     }
   }
 

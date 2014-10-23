@@ -22,9 +22,9 @@ class slurm::slurmdbd {
 
   if $slurm::manage_firewall {
     firewall {'100 allow access to slurmdbd':
-      proto   => 'tcp',
-      dport   => $slurm::slurmdbd_port,
-      action  => 'accept'
+      proto  => 'tcp',
+      dport  => $slurm::slurmdbd_port,
+      action => 'accept'
     }
   }
 

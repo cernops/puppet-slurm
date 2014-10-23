@@ -39,9 +39,9 @@ class slurm::controller {
 
   if $slurm::manage_firewall {
     firewall { '100 allow access to slurmctld':
-      proto   => 'tcp',
-      dport   => $slurm::slurmctld_port,
-      action  => 'accept'
+      proto  => 'tcp',
+      dport  => $slurm::slurmctld_port,
+      action => 'accept'
     }
   }
 
