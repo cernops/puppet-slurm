@@ -71,6 +71,7 @@ class slurm (
   $partitionlist          = $slurm::params::partitionlist,
   $slurm_conf_template    = 'slurm/slurm.conf/slurm.conf.erb',
   $partitionlist_template = 'slurm/slurm.conf/slurm-partitions.conf.erb',
+  $node_template          = 'slurm/slurm.conf/node.conf.erb',
   $slurm_nodelist_tag     = 'slurm_nodelist',
 
   # slurm.conf - node

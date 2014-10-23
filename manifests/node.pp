@@ -38,11 +38,15 @@ class slurm::node {
     Anchor['slurm::node::end']
   }
 
-  @@concat::fragment { "slurm.conf-node-${::hostname}":
-    target  => 'slurm-nodes.conf',
-    content => template('slurm/slurm.conf/slurm-node.conf.erb'),
-    order   => '02',
-    tag     => $slurm::slurm_nodelist_tag,
+  $node_fragment_content = template($slurm::node_template)
+  $node_fragment_data    = {
+    "${slurm::node_name}" => [ $node_fragment_content ],
+  }
+
+  @@datacat_fragment { "slurm.conf-node-${::hostname}":
+    target => 'slurm-nodes.conf',
+    data   => $node_fragment_data,
+    tag    => $slurm::slurm_nodelist_tag,
   }
 
   if $slurm::manage_firewall {

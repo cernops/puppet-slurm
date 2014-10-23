@@ -54,9 +54,9 @@ RSpec.configure do |c|
       copy_module_to(host, :source => File.join(proj_root, 'tests/site_slurm'), :module_name => 'site_slurm', :ignore_list => [])
     end
     on hosts, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
-    on hosts, puppet('module', 'install', 'puppetlabs-concat'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'puppetlabs-firewall'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'puppetlabs-mysql'), { :acceptable_exit_codes => [0,1] }
+    on hosts, puppet('module', 'install', 'richardc-datacat'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'herculesteam-augeasproviders_sysctl'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'rodjek-logrotate'), { :acceptable_exit_codes => [0,1] }
     on hosts, puppet('module', 'install', 'stahnma-epel'), { :acceptable_exit_codes => [0,1] }

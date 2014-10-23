@@ -20,16 +20,16 @@ class slurm::common::config {
       mode    => '0644',
     }
 
-    concat { 'slurm-nodes.conf':
-      ensure         => 'present',
-      path           => $slurm::node_conf_path,
-      owner          => 'root',
-      group          => 'root',
-      mode           => '0644',
-      ensure_newline => true,
+    datacat { 'slurm-nodes.conf':
+      ensure   => 'present',
+      path     => $slurm::node_conf_path,
+      template => 'slurm/slurm.conf/nodes.conf.erb',
+      owner    => 'root',
+      group    => 'root',
+      mode     => '0644',
     }
 
-    Concat::Fragment <<| tag == $slurm::slurm_nodelist_tag |>>
+    Datacat_fragment <<| tag == $slurm::slurm_nodelist_tag |>>
 
     file { 'plugstack.conf.d':
       ensure => 'directory',

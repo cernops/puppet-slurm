@@ -111,13 +111,13 @@ shared_examples_for 'slurm::common::config' do
   end
 
   it do
-    should contain_concat('slurm-nodes.conf').with({
+    should contain_datacat('slurm-nodes.conf').with({
       :ensure         => 'present',
       :path           => '/home/slurm/conf/nodes.conf',
+      :template       => 'slurm/slurm.conf/nodes.conf.erb',
       :owner          => 'root',
       :group          => 'root',
       :mode           => '0644',
-      :ensure_newline => 'true',
     })
   end
 
