@@ -5,7 +5,7 @@
 ulimit -l unlimited
 ulimit -n 8192
 
-CONFDIR="<%= @conf_dir %>"
-SLURMCTLD_OPTIONS="-f <%= @slurm_conf_path %>"
-SLURMD_OPTIONS="-f <%= @slurm_conf_path %> -M"
-export SLURM_CONF="<%= @slurm_conf_path %>"
+CONFDIR="<%= scope.lookupvar('slurm::conf_dir') %>"
+SLURMCTLD_OPTIONS="-f <%= scope.lookupvar('slurm::slurm_conf_path') %>"
+SLURMD_OPTIONS="-f <%= scope.lookupvar('slurm::slurm_conf_path') %> -M"
+export SLURM_CONF="<%= scope.lookupvar('slurm::slurm_conf_path') %>"

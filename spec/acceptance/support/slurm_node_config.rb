@@ -1,13 +1,4 @@
 shared_examples_for "slurm::node::config" do |node|
-  describe file('/etc/slurm'), :node => node do
-    it { should be_linked_to '/home/slurm/conf' }
-  end
-
-  describe file('/home/slurm/conf'), :node => node do
-    it { should be_directory }
-    it { should be_mode 755 }
-  end
-
   [
     '/var/log/slurm',
     '/var/run/slurm',

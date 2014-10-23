@@ -1,16 +1,26 @@
-# == Class: slurm::controller::config
-#
-class slurm::controller::config (
-  $manage_state_dir_nfs_mount = false,
-  $state_dir_nfs_device = undef,
-  $state_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
-  $manage_job_checkpoint_dir_nfs_mount = false,
-  $job_checkpoint_dir_nfs_device = undef,
-  $job_checkpoint_dir_nfs_options = 'rw,sync,noexec,nolock,auto',
-  $manage_logrotate = true,
-) {
+# Private class
+class slurm::controller::config {
 
-  include slurm
+  file { $slurm::log_dir:
+    ensure => 'directory',
+    owner  => $slurm::slurm_user,
+    group  => $slurm::slurm_user_group,
+    mode   => '0700',
+  }
+
+  file { $slurm::pid_dir:
+    ensure => 'directory',
+    owner  => $slurm::slurm_user,
+    group  => $slurm::slurm_user_group,
+    mode   => '0700',
+  }
+
+  file { $slurm::shared_state_dir:
+    ensure => 'directory',
+    owner  => $slurm::slurm_user,
+    group  => $slurm::slurm_user_group,
+    mode   => '0700',
+  }
 
   file { 'StateSaveLocation':
     ensure  => 'directory',
@@ -30,31 +40,31 @@ class slurm::controller::config (
     require => File[$slurm::shared_state_dir],
   }
 
-  if $manage_state_dir_nfs_mount {
+  if $slurm::manage_state_dir_nfs_mount {
     mount { 'StateSaveLocation':
       ensure  => 'mounted',
       name    => $slurm::state_save_location,
       atboot  => true,
-      device  => $state_dir_nfs_device,
+      device  => $slurm::state_dir_nfs_device,
       fstype  => 'nfs',
-      options => $state_dir_nfs_options,
+      options => $slurm::state_dir_nfs_options,
       require => File['StateSaveLocation'],
     }
   }
 
-  if $manage_job_checkpoint_dir_nfs_mount {
+  if $slurm::manage_job_checkpoint_dir_nfs_mount {
     mount { 'JobCheckpointDir':
       ensure  => 'mounted',
       name    => $slurm::job_checkpoint_dir,
       atboot  => true,
-      device  => $job_checkpoint_dir_nfs_device,
+      device  => $slurm::job_checkpoint_dir_nfs_device,
       fstype  => 'nfs',
-      options => $job_checkpoint_dir_nfs_options,
+      options => $slurm::job_checkpoint_dir_nfs_options,
       require => File['JobCheckpointDir'],
     }
   }
 
-  if $manage_logrotate {
+  if $slurm::manage_logrotate {
     #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmctld':
       path          => $slurm::slurmctld_log_file,

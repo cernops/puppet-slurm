@@ -39,6 +39,5 @@ Example of running beaker tests using an internal repository, and leaving VMs ru
 ## TODO
 
 * Manage slurm.conf JobComp* config options
-* Move common parameters from "role" specific classes into Class[slurm]
 * master - require NFS or somehow ensure NFS present before applying mount resource
 * Update documentation

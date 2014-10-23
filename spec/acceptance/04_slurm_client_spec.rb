@@ -16,25 +16,26 @@ describe 'slurm::client class:' do
         baseurl   => '#{RSpec.configuration.slurm_yumrepo_baseurl}',
       }
       class { 'slurm':
+        node                  => false,
+        client                => true,
         package_require       => 'Yumrepo[slurm]',
-        slurm_package_ensure  => '#{RSpec.configuration.slurm_package_version}',
+        version               => '#{RSpec.configuration.slurm_package_version}',
         control_machine       => 'slurm-controller',
         partitionlist         => [
           {'PartitionName' => 'general', 'Default' => 'YES', 'Nodes' => 'slurm-node1'},
         ],
       }
-      class { 'slurm::client': }
       EOS
 
       apply_manifest_on(node, pp, :catch_failures => true)
       apply_manifest_on(node, pp, :catch_changes => true)
     end
 
-    it_behaves_like "slurm::user", node
     it_behaves_like "munge", node
-    it_behaves_like "slurm::install", node
-    it_behaves_like "slurm::config::common", node
-    it_behaves_like "slurm::config", node
+    it_behaves_like "slurm::common::user", node
+    it_behaves_like "slurm::common::install", node
+    it_behaves_like "slurm::common::setup", node
+    it_behaves_like "slurm::common::config", node
     it_behaves_like "slurm::service - stopped", node
   end
 end

@@ -1,67 +1,44 @@
-# == Class: slurm::node::config
-#
-class slurm::node::config (
-  $manage_logrotate = true,
-) {
-
-  include slurm
-
-  if $slurm::conf_dir != '/etc/slurm' {
-    file { '/etc/slurm':
-      ensure  => 'link',
-      target  => $slurm::conf_dir,
-      force   => true,
-    }
-  }
-
-  if $slurm::node::manage_slurm_conf {
-    file { 'slurm CONFDIR':
-      ensure  => 'directory',
-      path    => $slurm::conf_dir,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
-    }
-  }
+# Private class
+class slurm::node::config {
 
   file { $slurm::log_dir:
-    ensure  => 'directory',
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0700',
+    ensure => 'directory',
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0700',
   }
 
   file { $slurm::pid_dir:
-    ensure  => 'directory',
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0700',
+    ensure => 'directory',
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0700',
   }
 
   file { $slurm::shared_state_dir:
-    ensure  => 'directory',
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0700',
+    ensure => 'directory',
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0700',
   }
 
   file { 'SlurmdSpoolDir':
-    ensure  => 'directory',
-    path    => $slurm::slurmd_spool_dir,
-    owner   => $slurm::slurmd_user,
-    group   => $slurm::slurmd_user_group,
-    mode    => '0755',
+    ensure => 'directory',
+    path   => $slurm::slurmd_spool_dir,
+    owner  => $slurm::slurmd_user,
+    group  => $slurm::slurmd_user_group,
+    mode   => '0755',
   }
 
   limits::limits { 'unlimited_memlock':
-    ensure      => 'present',
-    user        => '*',
-    limit_type  => 'memlock',
-    hard        => 'unlimited',
-    soft        => 'unlimited',
+    ensure     => 'present',
+    user       => '*',
+    limit_type => 'memlock',
+    hard       => 'unlimited',
+    soft       => 'unlimited',
   }
 
-  if $manage_logrotate {
+  if $slurm::manage_logrotate {
     #Refer to: http://slurm.schedmd.com/slurm.conf.html#lbAJ
     logrotate::rule { 'slurmd':
       path          => $slurm::slurmd_log_file,
