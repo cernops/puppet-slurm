@@ -3,6 +3,7 @@
 class slurm::client {
 
   include ::munge
+  include slurm::common::user
   include slurm::common::install
   include slurm::common::setup
   include slurm::common::config
@@ -13,6 +14,7 @@ class slurm::client {
 
   Anchor['slurm::client::start']->
   Class['::munge']->
+  Class['slurm::common::user']->
   Class['slurm::common::install']->
   Class['slurm::common::setup']->
   Class['slurm::common::config']->

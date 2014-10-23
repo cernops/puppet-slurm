@@ -3,6 +3,7 @@
 class slurm::node {
 
   include ::munge
+  include slurm::common::user
   include slurm::common::install
   include slurm::node::config
   include slurm::common::setup
@@ -18,6 +19,7 @@ class slurm::node {
     Anchor['slurm::node::start']->
     Class['::munge']->
     Class['::blcr']->
+    Class['slurm::common::user']->
     Class['slurm::common::install']->
     Class['slurm::node::config']->
     Class['slurm::common::setup']->
@@ -27,6 +29,7 @@ class slurm::node {
   } else {
     Anchor['slurm::node::start']->
     Class['::munge']->
+    Class['slurm::common::user']->
     Class['slurm::common::install']->
     Class['slurm::node::config']->
     Class['slurm::common::setup']->
@@ -36,7 +39,7 @@ class slurm::node {
   }
 
   @@concat::fragment { "slurm.conf-node-${::hostname}":
-    target  => 'slurm.conf',
+    target  => 'slurm-nodes.conf',
     content => template('slurm/slurm.conf/slurm-node.conf.erb'),
     order   => '02',
     tag     => $slurm::slurm_nodelist_tag,

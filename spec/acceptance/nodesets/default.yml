@@ -20,6 +20,15 @@ HOSTS:
     box_url: http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-nocm.box
     hypervisor: vagrant
     ip: 192.168.1.3
+  slurm-node2:
+    roles:
+      - agent
+      - slurm_node
+    platform: el-6-x86_64
+    box: centos-65-x64-virtualbox-nocm
+    box_url: http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-nocm.box
+    hypervisor: vagrant
+    ip: 192.168.1.4
   slurm-client:
     roles:
       - agent
@@ -28,7 +37,7 @@ HOSTS:
     box: centos-65-x64-virtualbox-nocm
     box_url: http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-nocm.box
     hypervisor: vagrant
-    ip: 192.168.1.4
+    ip: 192.168.1.5
 CONFIG:
   log_level: debug
   type: foss

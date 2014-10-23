@@ -1,6 +1,10 @@
 # Private class
 class slurm::params {
 
+  $slurm_conf_override    = {}
+  $partitionlist          = []
+  $slurmdbd_conf_override = {}
+
   $cgroup_allowed_devices = [
     '/dev/null',
     '/dev/urandom',

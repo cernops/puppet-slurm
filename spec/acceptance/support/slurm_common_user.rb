@@ -1,4 +1,4 @@
-shared_examples_for "slurm::user" do |node|
+shared_examples_for "slurm::common::user" do |node|
   describe group('slurm'), :node => node do
     it { should exist }
   end

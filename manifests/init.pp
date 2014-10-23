@@ -66,6 +66,13 @@ class slurm (
   $pid_dir                = '/var/run/slurm',
   $shared_state_dir       = '/var/lib/slurm',
 
+  # slurm.conf - overrides
+  $slurm_conf_override    = $slurm::params::slurm_conf_override,
+  $partitionlist          = $slurm::params::partitionlist,
+  $slurm_conf_template    = 'slurm/slurm.conf/slurm.conf.erb',
+  $partitionlist_template = 'slurm/slurm.conf/slurm-partitions.conf.erb',
+  $slurm_nodelist_tag     = 'slurm_nodelist',
+
   # slurm.conf - node
   $node_name        = $::hostname,
   $node_addr        = $::ipaddress,
@@ -93,7 +100,7 @@ class slurm (
   $slurmdbd_storage_port  = '3306',
   $slurmdbd_storage_type  = 'accounting_storage/mysql',
   $slurmdbd_storage_user  = 'slurmdbd',
-  $slurmdbd_conf_override = {},
+  $slurmdbd_conf_override = $slurm::params::slurmdbd_conf_override,
 
   # slurm.conf - epilog/prolog
   $epilog                       = undef,
@@ -106,13 +113,6 @@ class slurm (
   $task_epilog_source           = undef,
   $task_prolog                  = undef,
   $task_prolog_source           = undef,
-
-  # slurm.conf - overrides
-  $slurm_conf_override    = {},
-  $partitionlist          = [],
-  $partitionlist_template = 'slurm/slurm.conf/slurm-partitions.conf.erb',
-  $slurm_conf_template    = 'slurm/slurm.conf/slurm.conf.erb',
-  $slurm_nodelist_tag     = 'slurm_nodelist',
 
   # cgroups
   $cgroup_conf_template             = 'slurm/cgroup/cgroup.conf.erb',
@@ -129,7 +129,7 @@ class slurm (
   $cgroup_max_swap_percent          = '100',
   $cgroup_min_ram_space             = '30',
   $cgroup_constrain_devices         = false,
-  $cgroup_allowed_devices           = $::slurm::params::cgroup_allowed_devices,
+  $cgroup_allowed_devices           = $slurm::params::cgroup_allowed_devices,
   $cgroup_allowed_devices_template  = 'slurm/cgroup/cgroup_allowed_devices_file.conf.erb',
   $cgroup_allowed_devices_file      = undef,
 
