@@ -1,5 +1,4 @@
-# == Class: slurm::node::config
-#
+# Private class
 class slurm::node::config {
 
   file { $slurm::log_dir:

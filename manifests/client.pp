@@ -1,5 +1,4 @@
-# == Class: slurm::client
-#
+# Private class
 class slurm::client {
 
   include ::munge
