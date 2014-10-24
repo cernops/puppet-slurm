@@ -39,7 +39,7 @@ class slurm::node {
 
   $node_fragment_content = template($slurm::node_template)
   $node_fragment_data    = {
-    "${slurm::node_name}" => [ $node_fragment_content ],
+    "${slurm::node_name}" => $node_fragment_content,
   }
 
   @@datacat_fragment { "slurm.conf-node-${::hostname}":
