@@ -21,11 +21,11 @@ class slurm::common::user {
     }
   }
 
-  # TODO: Find better way to manage user and home directory
-  # with correct permissions if used as global conf location
-  file { $slurm::slurm_user_home:
-    ensure => 'directory',
-    mode   => '0755',
+  if $slurm::manage_slurm_user or $slurm::manage_slurm_conf {
+    file { $slurm::slurm_user_home:
+      ensure => 'directory',
+      mode   => '0755',
+    }
   }
 
 }
