@@ -6,8 +6,12 @@
 
 <% slurm_conf = scope.lookupvar('slurm::slurm_conf') -%>
 <% slurm_conf.keys.sort.each do |key| -%>
-<% unless slurm_conf[key] == :undef or ! slurm_conf[key] -%>
-<%= key %>=<%= slurm_conf[key] %>
+<% value = slurm_conf[key] -%>
+<% next if value == :undef or ! value or value == 'UNSET' -%>
+<% if value.is_a?(Array) -%>
+<%= key %>=<%= value.join(',') %>
+<% else -%>
+<%= key %>=<%= value %>
 <% end -%>
 <% end -%>
 

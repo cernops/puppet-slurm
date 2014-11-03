@@ -213,9 +213,13 @@ shared_examples_for 'slurm::common::config' do
     let :params do
        default_params.merge({
         :slurm_conf_override => {
-          'PreemptMode'   => 'SUSPEND,GANG',
-          'PreemptType'   => 'preempt/partition_prio',
-          'ProctrackType' => 'proctrack/linuxproc',
+          'PreemptMode'         => 'SUSPEND,GANG',
+          'PreemptType'         => 'preempt/partition_prio',
+          'ProctrackType'       => 'proctrack/linuxproc',
+          'SchedulerParameters' => [
+            'bf_continue',
+            'defer',
+          ]
         }
       })
     end
@@ -225,6 +229,7 @@ shared_examples_for 'slurm::common::config' do
         'PreemptMode=SUSPEND,GANG',
         'PreemptType=preempt/partition_prio',
         'ProctrackType=proctrack/linuxproc',
+        'SchedulerParameters=bf_continue,defer',
       ])
     end
   end
