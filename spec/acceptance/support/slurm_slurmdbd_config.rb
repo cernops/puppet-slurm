@@ -1,7 +1,7 @@
 shared_examples_for "slurm::slurmdbd::config" do |node|
   #TODO: Test MySQL resources
 
-  describe file('/home/slurm/conf/slurmdbd.conf'), :node => node do
+  describe file('/etc/slurm/slurmdbd.conf'), :node => node do
     it { should be_file }
     it { should be_mode 600 }
     it { should be_owned_by 'slurm' }

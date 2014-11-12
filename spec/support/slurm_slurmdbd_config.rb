@@ -40,7 +40,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
   it do
     should contain_file('slurmdbd.conf').with({
       :ensure => 'file',
-      :path   => '/home/slurm/conf/slurmdbd.conf',
+      :path   => '/etc/slurm/slurmdbd.conf',
       :owner  => 'slurm',
       :group  => 'slurm',
       :mode   => '0600',
