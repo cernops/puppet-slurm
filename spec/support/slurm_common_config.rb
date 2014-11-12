@@ -2,7 +2,7 @@ shared_examples_for 'slurm::common::config' do
   it do
     should contain_file('slurm.conf').with({
       :ensure         => 'present',
-      :path           => '/home/slurm/conf/slurm.conf',
+      :path           => '/etc/slurm/slurm.conf',
       :owner          => 'root',
       :group          => 'root',
       :mode           => '0644',
@@ -54,7 +54,7 @@ shared_examples_for 'slurm::common::config' do
       "MinJobAge=300",
       "MpiDefault=none",
       "OverTimeLimit=0",
-      "PlugStackConfig=/home/slurm/conf/plugstack.conf",
+      "PlugStackConfig=/etc/slurm/plugstack.conf",
       "PluginDir=/usr/lib64/slurm",
       "PreemptMode=OFF",
       "PreemptType=preempt/none",
@@ -92,15 +92,15 @@ shared_examples_for 'slurm::common::config' do
       "UsePAM=0",
       "VSizeFactor=0",
       "WaitTime=0",
-      "Include /home/slurm/conf/nodes.conf",
-      "Include /home/slurm/conf/partitions.conf",
+      "Include /etc/slurm/nodes.conf",
+      "Include /etc/slurm/partitions.conf",
     ])
   end
 
   it do
     should contain_file('slurm-partitions.conf').with({
       :ensure         => 'present',
-      :path           => '/home/slurm/conf/partitions.conf',
+      :path           => '/etc/slurm/partitions.conf',
       :owner          => 'root',
       :group          => 'root',
       :mode           => '0644',
@@ -114,7 +114,7 @@ shared_examples_for 'slurm::common::config' do
   it do
     should contain_datacat('slurm-nodes.conf').with({
       :ensure         => 'present',
-      :path           => '/home/slurm/conf/nodes.conf',
+      :path           => '/etc/slurm/nodes.conf',
       :template       => 'slurm/slurm.conf/nodes.conf.erb',
       :owner          => 'root',
       :group          => 'root',
@@ -125,7 +125,7 @@ shared_examples_for 'slurm::common::config' do
   it do
     should contain_file('plugstack.conf.d').with({
       :ensure   => "directory",
-      :path     => "/home/slurm/conf/plugstack.conf.d",
+      :path     => "/etc/slurm/plugstack.conf.d",
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0755',
@@ -135,7 +135,7 @@ shared_examples_for 'slurm::common::config' do
   it do
     should contain_file('plugstack.conf').with({
       :ensure   => 'file',
-      :path     => '/home/slurm/conf/plugstack.conf',
+      :path     => '/etc/slurm/plugstack.conf',
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0644',
@@ -145,7 +145,7 @@ shared_examples_for 'slurm::common::config' do
   it do
     should contain_file('slurm-cgroup.conf').with({
       :ensure   => 'file',
-      :path     => '/home/slurm/conf/cgroup.conf',
+      :path     => '/etc/slurm/cgroup.conf',
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0644',
@@ -156,7 +156,7 @@ shared_examples_for 'slurm::common::config' do
     verify_contents(catalogue, 'slurm-cgroup.conf', [
       'CgroupMountpoint=/cgroup',
       'CgroupAutomount=yes',
-      'CgroupReleaseAgentDir="/home/slurm/conf/cgroup"',
+      'CgroupReleaseAgentDir="/etc/slurm/cgroup"',
       'ConstrainCores=no',
       'TaskAffinity=no',
       'AllowedRAMSpace=100',
@@ -167,14 +167,14 @@ shared_examples_for 'slurm::common::config' do
       'MaxSwapPercent=100',
       'MinRAMSpace=30',
       'ConstrainDevices=no',
-      'AllowedDevicesFile=/home/slurm/conf/cgroup_allowed_devices_file.conf',
+      'AllowedDevicesFile=/etc/slurm/cgroup_allowed_devices_file.conf',
     ])
   end
 
   it do
     should contain_file('cgroup_allowed_devices_file.conf').with({
       :ensure   => 'file',
-      :path     => '/home/slurm/conf/cgroup_allowed_devices_file.conf',
+      :path     => '/etc/slurm/cgroup_allowed_devices_file.conf',
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0644',

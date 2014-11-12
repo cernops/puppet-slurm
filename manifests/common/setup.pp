@@ -28,28 +28,12 @@ class slurm::common::setup {
     mode    => '0644',
   }
 
-  if $slurm::conf_dir != '/etc/slurm' {
-    $etc_slurm_before = $slurm::manage_slurm_conf ? {
-      true  => File['slurm CONFDIR'],
-      false => undef,
-    }
-
-    file { '/etc/slurm':
-      ensure => 'link',
-      target => $slurm::conf_dir,
-      force  => true,
-      before => $etc_slurm_before,
-    }
-  }
-
-  if $slurm::manage_slurm_conf {
-    file { 'slurm CONFDIR':
-      ensure => 'directory',
-      path   => $slurm::conf_dir,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-    }
+  file { 'slurm CONFDIR':
+    ensure => 'directory',
+    path   => $slurm::conf_dir,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 
 }

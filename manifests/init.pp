@@ -61,7 +61,7 @@ class slurm (
   $control_machine    = 'slurm',
 
   # Managed directories
-  $conf_dir               = '/home/slurm/conf',
+  $conf_dir               = '/etc/slurm',
   $log_dir                = '/var/log/slurm',
   $pid_dir                = '/var/run/slurm',
   $shared_state_dir       = '/var/lib/slurm',
