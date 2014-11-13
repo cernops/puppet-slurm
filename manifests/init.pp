@@ -134,6 +134,8 @@ class slurm (
   $cgroup_allowed_devices           = $slurm::params::cgroup_allowed_devices,
   $cgroup_allowed_devices_template  = 'slurm/cgroup/cgroup_allowed_devices_file.conf.erb',
   $cgroup_allowed_devices_file      = undef,
+  $manage_cgroup_release_agents     = true,
+  $cgroup_release_common_source     = undef,
 
   # profile.d
   $slurm_sh_template  = 'slurm/profile.d/slurm.sh.erb',
@@ -152,7 +154,7 @@ class slurm (
   validate_bool($manage_state_dir_nfs_mount, $manage_job_checkpoint_dir_nfs_mount)
   validate_bool($manage_database, $use_remote_database)
   validate_bool($cgroup_automount, $cgroup_constrain_cores, $cgroup_task_affinity, $cgroup_constrain_ram_space)
-  validate_bool($cgroup_constrain_swap_space, $cgroup_constrain_devices)
+  validate_bool($cgroup_constrain_swap_space, $cgroup_constrain_devices, $manage_cgroup_release_agents)
 
   validate_array($partitionlist, $cgroup_allowed_devices)
 
@@ -178,12 +180,13 @@ class slurm (
     fail("Module ${module_name}: Does not support both slurmdbd and client being enabled on the same host.")
   }
 
-  $slurm_conf_path                  = "${conf_dir}/slurm.conf"
-  $node_conf_path                   = "${conf_dir}/nodes.conf"
-  $partition_conf_path              = "${conf_dir}/partitions.conf"
-  $slurmdbd_conf_path               = "${conf_dir}/slurmdbd.conf"
-  $cgroup_release_agent_dir_real    = pick($cgroup_release_agent_dir, "${conf_dir}/cgroup")
-  $cgroup_allowed_devices_file_real = pick($cgroup_allowed_devices_file, "${conf_dir}/cgroup_allowed_devices_file.conf")
+  $slurm_conf_path                    = "${conf_dir}/slurm.conf"
+  $node_conf_path                     = "${conf_dir}/nodes.conf"
+  $partition_conf_path                = "${conf_dir}/partitions.conf"
+  $slurmdbd_conf_path                 = "${conf_dir}/slurmdbd.conf"
+  $cgroup_release_agent_dir_real      = pick($cgroup_release_agent_dir, "${conf_dir}/cgroup")
+  $cgroup_allowed_devices_file_real   = pick($cgroup_allowed_devices_file, "${conf_dir}/cgroup_allowed_devices_file.conf")
+  $cgroup_release_common_source_real  = pick($cgroup_release_common_source, "file://${conf_dir}/cgroup.release_common.example")
 
   $slurm_conf_local_defaults = {
     'AccountingStorageHost' => $control_machine,

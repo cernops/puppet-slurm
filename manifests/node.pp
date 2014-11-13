@@ -6,6 +6,7 @@ class slurm::node {
   include slurm::common::install
   include slurm::node::config
   include slurm::common::setup
+  include slurm::node::cgroups
   include slurm::common::config
   include slurm::node::service
 
@@ -22,6 +23,7 @@ class slurm::node {
     Class['slurm::common::install']->
     Class['slurm::node::config']->
     Class['slurm::common::setup']->
+    Class['slurm::node::cgroups']->
     Class['slurm::common::config']->
     Class['slurm::node::service']->
     Anchor['slurm::node::end']
@@ -32,6 +34,7 @@ class slurm::node {
     Class['slurm::common::install']->
     Class['slurm::node::config']->
     Class['slurm::common::setup']->
+    Class['slurm::node::cgroups']->
     Class['slurm::common::config']->
     Class['slurm::node::service']->
     Anchor['slurm::node::end']
