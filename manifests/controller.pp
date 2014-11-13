@@ -4,9 +4,9 @@ class slurm::controller {
   include ::munge
   include slurm::common::user
   include slurm::common::install
-  include slurm::controller::config
   include slurm::common::setup
   include slurm::common::config
+  include slurm::controller::config
   include slurm::controller::service
 
   anchor { 'slurm::controller::start': }
@@ -20,9 +20,9 @@ class slurm::controller {
     Class['::blcr']->
     Class['slurm::common::user']->
     Class['slurm::common::install']->
-    Class['slurm::controller::config']->
     Class['slurm::common::setup']->
     Class['slurm::common::config']->
+    Class['slurm::controller::config']->
     Class['slurm::controller::service']->
     Anchor['slurm::controller::end']
   } else {
@@ -30,9 +30,9 @@ class slurm::controller {
     Class['::munge']->
     Class['slurm::common::user']->
     Class['slurm::common::install']->
-    Class['slurm::controller::config']->
     Class['slurm::common::setup']->
     Class['slurm::common::config']->
+    Class['slurm::controller::config']->
     Class['slurm::controller::service']->
     Anchor['slurm::controller::end']
   }
