@@ -17,7 +17,6 @@ class slurm::common::user {
       home       => $slurm::slurm_user_home,
       managehome => $slurm::slurm_user_managehome,
       comment    => $slurm::slurm_user_comment,
-      before     => File[$slurm::slurm_user_home]
     }
   }
 
