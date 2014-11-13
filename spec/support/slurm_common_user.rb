@@ -17,7 +17,6 @@ shared_examples_for 'slurm::common::user' do
       :home       => '/home/slurm',
       :managehome => 'true',
       :comment    => 'SLURM User',
-      :before     => 'File[/home/slurm]',
     })
   end
 
