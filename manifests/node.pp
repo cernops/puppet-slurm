@@ -4,10 +4,9 @@ class slurm::node {
   include ::munge
   include slurm::common::user
   include slurm::common::install
-  include slurm::node::config
   include slurm::common::setup
-  include slurm::node::cgroups
   include slurm::common::config
+  include slurm::node::config
   include slurm::node::service
 
   anchor { 'slurm::node::start': }
@@ -21,10 +20,9 @@ class slurm::node {
     Class['::blcr']->
     Class['slurm::common::user']->
     Class['slurm::common::install']->
-    Class['slurm::node::config']->
     Class['slurm::common::setup']->
-    Class['slurm::node::cgroups']->
     Class['slurm::common::config']->
+    Class['slurm::node::config']->
     Class['slurm::node::service']->
     Anchor['slurm::node::end']
   } else {
@@ -32,10 +30,9 @@ class slurm::node {
     Class['::munge']->
     Class['slurm::common::user']->
     Class['slurm::common::install']->
-    Class['slurm::node::config']->
     Class['slurm::common::setup']->
-    Class['slurm::node::cgroups']->
     Class['slurm::common::config']->
+    Class['slurm::node::config']->
     Class['slurm::node::service']->
     Anchor['slurm::node::end']
   }
