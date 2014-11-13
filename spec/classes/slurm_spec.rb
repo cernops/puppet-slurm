@@ -75,6 +75,7 @@ describe 'slurm' do
     'manage_job_checkpoint_dir_nfs_mount',
     'manage_slurm_user',
     'install_pam',
+    'manage_cgroup_release_agents',
   ].each do |param|
     context "with #{param} => 'foo'" do
       let(:params) {{ param => 'foo' }}

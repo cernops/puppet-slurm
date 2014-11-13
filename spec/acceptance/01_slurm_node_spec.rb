@@ -36,9 +36,10 @@ describe 'node' do
       it_behaves_like "munge", node
       it_behaves_like "slurm::common::user", node
       it_behaves_like "slurm::common::install", node
-      it_behaves_like "slurm::common::setup", node
-      it_behaves_like "slurm::common::config", node
       it_behaves_like "slurm::node::config", node
+      it_behaves_like "slurm::common::setup", node
+      it_behaves_like "slurm::node::cgroups", node
+      it_behaves_like "slurm::common::config", node
       it_behaves_like "slurm::service - running", node
     end
   end
