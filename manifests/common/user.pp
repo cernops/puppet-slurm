@@ -15,16 +15,9 @@ class slurm::common::user {
       gid        => $slurm::slurm_user_group,
       shell      => $slurm::slurm_user_shell,
       home       => $slurm::slurm_user_home,
-      managehome => false,
+      managehome => $slurm::slurm_user_managehome,
       comment    => $slurm::slurm_user_comment,
       before     => File[$slurm::slurm_user_home]
-    }
-  }
-
-  if $slurm::manage_slurm_user or $slurm::manage_slurm_conf {
-    file { $slurm::slurm_user_home:
-      ensure => 'directory',
-      mode   => '0755',
     }
   }
 

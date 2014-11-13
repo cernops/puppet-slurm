@@ -15,16 +15,9 @@ shared_examples_for 'slurm::common::user' do
       :gid        => 'slurm',
       :shell      => '/bin/false',
       :home       => '/home/slurm',
-      :managehome => 'false',
+      :managehome => 'true',
       :comment    => 'SLURM User',
       :before     => 'File[/home/slurm]',
-    })
-  end
-
-  it do
-    should contain_file('/home/slurm').with({
-      :ensure => 'directory',
-      :mode   => '0755',
     })
   end
 
