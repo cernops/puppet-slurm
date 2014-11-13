@@ -4,8 +4,8 @@ shared_examples_for "slurm::common::config" do |node|
     it { should be_mode 644 }
     it { should be_owned_by 'root' }
     it { should be_grouped_into 'root' }
-    its(:content) { should match /^Include \/home\/slurm\/conf\/nodes.conf$/ }
-    its(:content) { should match /^Include \/home\/slurm\/conf\/partitions.conf$/ }
+    its(:content) { should match /^Include \/etc\/slurm\/nodes.conf$/ }
+    its(:content) { should match /^Include \/etc\/slurm\/partitions.conf$/ }
   end
 
   describe file('/etc/slurm/nodes.conf'), :node => node do
