@@ -22,16 +22,17 @@ class slurm (
   $slurmdbd_service_enable  = true,
 
   # User/group management - controller/slurmdbd
-  $manage_slurm_user  = true,
-  $slurm_user_group   = 'slurm',
-  $slurm_group_gid    = undef,
-  $slurm_user         = 'slurm',
-  $slurm_user_uid     = undef,
-  $slurm_user_comment = 'SLURM User',
-  $slurm_user_home    = '/home/slurm',
-  $slurm_user_shell   = '/bin/false',
-  $slurmd_user        = 'root',
-  $slurmd_user_group  = 'root',
+  $manage_slurm_user      = true,
+  $slurm_user_group       = 'slurm',
+  $slurm_group_gid        = undef,
+  $slurm_user             = 'slurm',
+  $slurm_user_uid         = undef,
+  $slurm_user_comment     = 'SLURM User',
+  $slurm_user_home        = '/home/slurm',
+  $slurm_user_managehome  = true,
+  $slurm_user_shell       = '/bin/false',
+  $slurmd_user            = 'root',
+  $slurmd_user_group      = 'root',
 
   # External modules
   $include_blcr = false,
