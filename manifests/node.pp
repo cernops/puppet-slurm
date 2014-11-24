@@ -37,6 +37,18 @@ class slurm::node {
     Anchor['slurm::node::end']
   }
 
+  Class['slurm::common::install']~>
+  Class['slurm::node::service']
+
+  Class['slurm::common::setup']~>
+  Class['slurm::node::service']
+
+  Class['slurm::common::config']~>
+  Class['slurm::node::service']
+
+  Class['slurm::node::config']~>
+  Class['slurm::node::service']
+
   $node_fragment_content = template($slurm::node_template)
   $node_fragment_data    = {
     "${slurm::node_name}" => $node_fragment_content,
