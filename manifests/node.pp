@@ -22,7 +22,7 @@ class slurm::node {
     Class['slurm::common::install']->
     Class['slurm::common::setup']->
     Class['slurm::common::config']->
-    Class['slurm::node::config']->
+    Class['slurm::node::config']~>
     Class['slurm::node::service']->
     Anchor['slurm::node::end']
   } else {
@@ -32,7 +32,7 @@ class slurm::node {
     Class['slurm::common::install']->
     Class['slurm::common::setup']->
     Class['slurm::common::config']->
-    Class['slurm::node::config']->
+    Class['slurm::node::config']~>
     Class['slurm::node::service']->
     Anchor['slurm::node::end']
   }
@@ -44,9 +44,6 @@ class slurm::node {
   Class['slurm::node::service']
 
   Class['slurm::common::config']~>
-  Class['slurm::node::service']
-
-  Class['slurm::node::config']~>
   Class['slurm::node::service']
 
   $node_fragment_content = template($slurm::node_template)

@@ -6,9 +6,13 @@ shared_examples_for 'slurm::node' do
   it { should contain_class('slurm::common::install').that_comes_before('Class[slurm::common::setup]') }
   it { should contain_class('slurm::common::setup').that_comes_before('Class[slurm::common::config]') }
   it { should contain_class('slurm::common::config').that_comes_before('Class[slurm::node::config]') }
-  it { should contain_class('slurm::node::config').that_comes_before('Class[slurm::node::service]') }
+  it { should contain_class('slurm::node::config').that_notifies('Class[slurm::node::service]') }
   it { should contain_class('slurm::node::service').that_comes_before('Anchor[slurm::node::end]') }
   it { should contain_anchor('slurm::node::end') }
+
+  it { should contain_class('slurm::common::install').that_notifies('Class[slurm::node::service]') }
+  it { should contain_class('slurm::common::setup').that_notifies('Class[slurm::node::service]') }
+  it { should contain_class('slurm::common::config').that_notifies('Class[slurm::node::service]') }
 
   it_behaves_like 'slurm::common::user'
   it_behaves_like 'slurm::common::install'
@@ -27,7 +31,7 @@ shared_examples_for 'slurm::node' do
     it { should contain_class('slurm::common::install').that_comes_before('Class[slurm::common::setup]') }
     it { should contain_class('slurm::common::setup').that_comes_before('Class[slurm::common::config]') }
     it { should contain_class('slurm::common::config').that_comes_before('Class[slurm::node::config]') }
-    it { should contain_class('slurm::node::config').that_comes_before('Class[slurm::node::service]') }
+    it { should contain_class('slurm::node::config').that_notifies('Class[slurm::node::service]') }
     it { should contain_class('slurm::node::service').that_comes_before('Anchor[slurm::node::end]') }
     it { should contain_anchor('slurm::node::end') }
   end
