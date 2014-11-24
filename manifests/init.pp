@@ -83,6 +83,7 @@ class slurm (
   $threads_per_core = 'UNSET',
   $real_memory      = $::real_memory,
   $tmp_disk         = '16000',
+  $node_weight      = 'UNSET',
   $feature          = 'UNSET',
   $state            = 'UNKNOWN',
   $slurmd_log_file  = '/var/log/slurm/slurmd.log',

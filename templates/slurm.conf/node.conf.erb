@@ -7,6 +7,7 @@ cores_per_socket = scope.lookupvar('slurm::cores_per_socket') || 'UNSET'
 threads_per_core = scope.lookupvar('slurm::threads_per_core') || 'UNSET'
 real_memory = scope.lookupvar('slurm::real_memory') || 'UNSET'
 tmp_disk = scope.lookupvar('slurm::tmp_disk') || 'UNSET'
+weight = scope.lookupvar('slurm::node_weight') || 'UNSET'
 feature = scope.lookupvar('slurm::feature') || 'UNSET'
 state = scope.lookupvar('slurm::state')
 node = []
@@ -18,6 +19,7 @@ node << "CoresPerSocket=#{cores_per_socket}" if cores_per_socket != 'UNSET'
 node << "ThreadsPerCore=#{threads_per_core}" if threads_per_core != 'UNSET'
 node << "RealMemory=#{real_memory}" if real_memory != 'UNSET'
 node << "TmpDisk=#{tmp_disk}" if tmp_disk != 'UNSET'
+node << "Weight=#{weight}" if weight != 'UNSET'
 node << "Feature=#{feature}" if feature != 'UNSET'
 node << "State=#{state}"
 -%>
