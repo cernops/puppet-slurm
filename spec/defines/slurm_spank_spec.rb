@@ -60,6 +60,12 @@ describe 'slurm::spank' do
     end
   end
 
+  context 'when slurm::package_require => Yumrepo[local]' do
+    let(:pre_condition) { "class { 'slurm': package_require => 'Yumrepo[local]' }" }
+
+    it { should contain_package('SLURM SPANK x11 package').with_require('Yumrepo[local]') }
+  end
+
   context 'when restart_slurmd => false' do
     let(:params) {{ :restart_slurmd => false }}
 

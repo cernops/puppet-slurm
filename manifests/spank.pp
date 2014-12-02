@@ -25,10 +25,11 @@ define slurm::spank (
 
   if $manage_package {
     package { "SLURM SPANK ${title} package":
-      ensure => 'installed',
-      name   => $package_name,
-      before => File["SLURM SPANK ${title} config"],
-      notify => $notify,
+      ensure  => 'installed',
+      name    => $package_name,
+      before  => File["SLURM SPANK ${title} config"],
+      notify  => $notify,
+      require => $slurm::package_require,
     }
   }
 
