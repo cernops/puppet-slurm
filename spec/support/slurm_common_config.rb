@@ -124,8 +124,10 @@ shared_examples_for 'slurm::common::config' do
 
   it do
     should contain_file('plugstack.conf.d').with({
-      :ensure   => "directory",
-      :path     => "/etc/slurm/plugstack.conf.d",
+      :ensure   => 'directory',
+      :path     => '/etc/slurm/plugstack.conf.d',
+      :recurse  => 'true',
+      :purge    => 'true',
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0755',
@@ -140,6 +142,12 @@ shared_examples_for 'slurm::common::config' do
       :group    => 'root',
       :mode     => '0644',
     })
+  end
+
+  it do
+    verify_exact_file_contents(catalogue, 'plugstack.conf', [
+      "include /etc/slurm/plugstack.conf.d/*.conf",
+    ])
   end
 
   it do

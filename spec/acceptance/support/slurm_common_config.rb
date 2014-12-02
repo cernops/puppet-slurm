@@ -36,7 +36,7 @@ shared_examples_for "slurm::common::config" do |node|
     it { should be_mode 644 }
     it { should be_owned_by 'root' }
     it { should be_grouped_into 'root' }
-    # TODO: Test contents
+    its(:content) { should match /^include \/etc\/slurm\/plugstack.conf.d\/\*\.conf$/ }
   end
 
   describe linux_kernel_parameter('net.core.somaxconn'), :node => node do 

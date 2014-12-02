@@ -67,6 +67,12 @@ class slurm (
   $pid_dir                = '/var/run/slurm',
   $shared_state_dir       = '/var/lib/slurm',
 
+  # SPANK
+  $plugstack_conf         = undef,
+  $plugstack_conf_d       = undef,
+  $purge_plugstack_conf_d = true,
+  $spank_plugins          = $slurm::params::spank_plugins,
+
   # slurm.conf - overrides
   $slurm_conf_override    = $slurm::params::slurm_conf_override,
   $partitionlist          = $slurm::params::partitionlist,
@@ -156,10 +162,11 @@ class slurm (
   validate_bool($manage_database, $use_remote_database)
   validate_bool($cgroup_automount, $cgroup_constrain_cores, $cgroup_task_affinity, $cgroup_constrain_ram_space)
   validate_bool($cgroup_constrain_swap_space, $cgroup_constrain_devices, $manage_cgroup_release_agents)
+  validate_bool($purge_plugstack_conf_d)
 
   validate_array($partitionlist, $cgroup_allowed_devices)
 
-  validate_hash($slurm_conf_override, $slurmdbd_conf_override)
+  validate_hash($slurm_conf_override, $slurmdbd_conf_override, $spank_plugins)
 
   if $node and $controller {
     fail("Module ${module_name}: Does not support both node and controller being enabled on the same host.")
@@ -185,6 +192,9 @@ class slurm (
   $node_conf_path                     = "${conf_dir}/nodes.conf"
   $partition_conf_path                = "${conf_dir}/partitions.conf"
   $slurmdbd_conf_path                 = "${conf_dir}/slurmdbd.conf"
+  $plugstack_conf_path                = pick($plugstack_conf, "${conf_dir}/plugstack.conf")
+  $plugstack_conf_d_path              = pick($plugstack_conf_d, "${conf_dir}/plugstack.conf.d")
+  $cgroup_conf_path                   = "${conf_dir}/cgroup.conf"
   $cgroup_release_agent_dir_real      = pick($cgroup_release_agent_dir, "${conf_dir}/cgroup")
   $cgroup_allowed_devices_file_real   = pick($cgroup_allowed_devices_file, "${conf_dir}/cgroup_allowed_devices_file.conf")
   $cgroup_release_common_source_real  = pick($cgroup_release_common_source, "file://${conf_dir}/cgroup.release_common.example")
@@ -199,7 +209,7 @@ class slurm (
     'Epilog' => $epilog,
     'HealthCheckProgram' => $health_check_program,
     'JobCheckpointDir' => $job_checkpoint_dir,
-    'PlugStackConfig' => "${conf_dir}/plugstack.conf",
+    'PlugStackConfig' => $plugstack_conf_path,
     'Prolog' => $prolog,
     'SlurmUser' => $slurm_user,
     'SlurmctldLogFile' => $slurmctld_log_file,

@@ -1,0 +1,13 @@
+#
+# File managed by Puppet!
+#
+<%
+values = []
+values << (@required ? "required" : "optional")
+values << @plugin
+@arguments.keys.sort.each do |k|
+  values << "#{k}=#{@arguments[k]}"
+end
+-%>
+
+<%= values.join(" ") %>

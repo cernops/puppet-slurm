@@ -76,6 +76,7 @@ describe 'slurm' do
     'manage_slurm_user',
     'install_pam',
     'manage_cgroup_release_agents',
+    'purge_plugstack_conf_d',
   ].each do |param|
     context "with #{param} => 'foo'" do
       let(:params) {{ param => 'foo' }}
@@ -101,6 +102,7 @@ describe 'slurm' do
   [
     'slurm_conf_override',
     'slurmdbd_conf_override',
+    'spank_plugins',
   ].each do |p|
     context "when #{p} => 'foo'" do
       let(:params) {{ p => 'foo' }}

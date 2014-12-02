@@ -32,25 +32,27 @@ class slurm::common::config {
     Datacat_fragment <<| tag == $slurm::slurm_nodelist_tag |>>
 
     file { 'plugstack.conf.d':
-      ensure => 'directory',
-      path   => "${slurm::conf_dir}/plugstack.conf.d",
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
+      ensure  => 'directory',
+      path    => $slurm::plugstack_conf_d_path,
+      recurse => true,
+      purge   => $slurm::purge_plugstack_conf_d,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
     }
 
     file { 'plugstack.conf':
       ensure  => 'file',
-      path    => "${slurm::conf_dir}/plugstack.conf",
+      path    => $slurm::plugstack_conf_path,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template('slurm/plugstack.conf.erb'),
+      content => template('slurm/spank/plugstack.conf.erb'),
     }
 
     file { 'slurm-cgroup.conf':
       ensure  => 'file',
-      path    => "${slurm::conf_dir}/cgroup.conf",
+      path    => $slurm::cgroup_conf_path,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',

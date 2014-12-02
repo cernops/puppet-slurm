@@ -1,11 +1,12 @@
 shared_examples_for 'slurm::node::service' do
   it do
-    should contain_service('slurm').with({
+    should contain_service('slurmd').with({
       :ensure     => 'running',
       :enable     => 'true',
+      :name       => 'slurm',
       :hasstatus  => 'false',
       :hasrestart => 'true',
-      :pattern    => '/usr/sbin/slurm(d|ctld) -f',
+      :pattern    => '/usr/sbin/slurmd -f',
     })
   end
 end

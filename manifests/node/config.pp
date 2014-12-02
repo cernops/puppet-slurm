@@ -1,6 +1,8 @@
 # Private class
 class slurm::node::config {
 
+  create_resources('slurm::spank', $slurm::spank_plugins)
+
   if $slurm::manage_cgroup_release_agents {
     file { $slurm::cgroup_release_agent_dir_real:
       ensure => 'directory',

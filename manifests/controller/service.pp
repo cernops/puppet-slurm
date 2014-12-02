@@ -1,12 +1,13 @@
 # Private class
 class slurm::controller::service {
 
-  service { 'slurm':
+  service { 'slurmctld':
     ensure     => $slurm::slurm_service_ensure,
     enable     => $slurm::slurm_service_enable,
+    name       => 'slurm',
     hasstatus  => false,
     hasrestart => true,
-    pattern    => '/usr/sbin/slurm(d|ctld) -f',
+    pattern    => '/usr/sbin/slurmctld -f',
   }
 
 }

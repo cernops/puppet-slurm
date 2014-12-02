@@ -1,4 +1,13 @@
 shared_examples_for 'slurm::node::config' do
+  it { should have_slurm__spank_resource_count(0) }
+
+  context 'with spank_plugins defined' do
+    let(:params) {{ :spank_plugins => {'x11' => {}} }}
+
+    it { should have_slurm__spank_resource_count(1) }
+    it { should contain_slurm__spank('x11') }
+  end
+
   it do
     should contain_file('/etc/slurm/cgroup').with({
       :ensure => 'directory',

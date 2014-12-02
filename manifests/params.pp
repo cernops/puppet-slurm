@@ -1,6 +1,8 @@
 # Private class
 class slurm::params {
 
+  $spank_plugins          = {}
+
   $slurm_conf_override    = {}
   $partitionlist          = []
   $slurmdbd_conf_override = {}
