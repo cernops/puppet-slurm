@@ -9,6 +9,7 @@ class slurm (
 
   # Packages
   $package_require        = undef,
+  $release                = '14.03',
   $version                = 'present',
   $install_torque_wrapper = true,
   $install_lua            = false,
@@ -199,6 +200,16 @@ class slurm (
   $cgroup_allowed_devices_file_real   = pick($cgroup_allowed_devices_file, "${conf_dir}/cgroup_allowed_devices_file.conf")
   $cgroup_release_common_source_real  = pick($cgroup_release_common_source, "file://${conf_dir}/cgroup.release_common.example")
 
+  case $release {
+    '14.03': {
+      $slurm_conf_release_defaults    = $slurm::params::slurm_conf_defaults['14.03']
+      $slurmdbd_conf_release_defaults = $slurm::params::slurmdbd_conf_defaults['14.03']
+    }
+    default: {
+      fail("Module ${module_name} only supports release 14.03, ${release} given.")
+    }
+  }
+
   $slurm_conf_local_defaults = {
     'AccountingStorageHost' => $control_machine,
     'AccountingStoragePort' => $slurmdbd_port,
@@ -226,7 +237,7 @@ class slurm (
     'TaskProlog' => $task_prolog,
   }
 
-  $slurm_conf_defaults  = merge($slurm::params::slurm_conf_defaults, $slurm_conf_local_defaults)
+  $slurm_conf_defaults  = merge($slurm_conf_release_defaults, $slurm_conf_local_defaults)
   $slurm_conf           = merge($slurm_conf_defaults, $slurm_conf_override)
 
   $slurmdbd_conf_local_defaults = {
@@ -243,7 +254,7 @@ class slurm (
     'StorageUser' => $slurmdbd_storage_user,
   }
 
-  $slurmdbd_conf_defaults = merge($slurm::params::slurmdbd_conf_defaults, $slurmdbd_conf_local_defaults)
+  $slurmdbd_conf_defaults = merge($slurmdbd_conf_release_defaults, $slurmdbd_conf_local_defaults)
   $slurmdbd_conf          = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
 
   anchor { 'slurm::start': }
