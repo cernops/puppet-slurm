@@ -9,29 +9,22 @@ describe 'slurm::spank' do
   it { should contain_class('slurm') }
 
   it do
-    should contain_package('SLURM SPANK x11 package').with({
+    should contain_package('SLURM SPANK x11 package').only_with({
       :ensure => 'installed',
       :name   => 'slurm-spank-x11',
       :before => 'File[SLURM SPANK x11 config]',
-      :notify => 'Service[slurmd]',
     })
   end
 
   it do
-    should contain_file('SLURM SPANK x11 config').with({
-      :ensure => 'file',
-      :path   => '/etc/slurm/plugstack.conf.d/x11.conf',
-      :owner  => 'root',
-      :group  => 'root',
-      :mode   => '0644',
-      :notify => 'Service[slurmd]',
+    should contain_file('SLURM SPANK x11 config').only_with({
+      :ensure   => 'file',
+      :path     => '/etc/slurm/plugstack.conf.d/x11.conf',
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0644',
+      :content  => /^optional x11.so$/,
     })
-  end
-
-  it do
-    verify_contents(catalogue, 'SLURM SPANK x11 config', [
-      'optional x11.so',
-    ])
   end
 
   context 'when required => true' do
@@ -66,11 +59,11 @@ describe 'slurm::spank' do
     it { should contain_package('SLURM SPANK x11 package').with_require('Yumrepo[local]') }
   end
 
-  context 'when restart_slurmd => false' do
-    let(:params) {{ :restart_slurmd => false }}
+  context 'when restart_slurmd => true' do
+    let(:params) {{ :restart_slurmd => true }}
 
-    it { should contain_package('SLURM SPANK x11 package').without_notify }
-    it { should contain_file('SLURM SPANK x11 config').without_notify }
+    it { should contain_package('SLURM SPANK x11 package').with_notify('Service[slurmd]') }
+    it { should contain_file('SLURM SPANK x11 config').with_notify('Service[slurmd]') }
   end
 
   describe "auks example" do

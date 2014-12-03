@@ -7,7 +7,7 @@ define slurm::spank (
   $config_path = undef,
   $manage_package = true,
   $package_name = "slurm-spank-${title}",
-  $restart_slurmd = true,
+  $restart_slurmd = false,
 ) {
 
   include slurm
