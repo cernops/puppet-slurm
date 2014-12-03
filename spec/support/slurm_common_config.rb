@@ -207,16 +207,6 @@ shared_examples_for 'slurm::common::config' do
     })
   end
 
-  context 'when manage_scripts => false' do
-    let(:params) {{ :manage_scripts => false }}
-
-    it { should_not contain_file('epilog') }
-    it { should_not contain_file('health_check_program') }
-    it { should_not contain_file('prolog') }
-    it { should_not contain_file('task_epilog') }
-    it { should_not contain_file('task_prolog') }
-  end
-
   context 'when slurm_conf_override defined' do
     let :params do
        default_params.merge({
@@ -311,111 +301,6 @@ shared_examples_for 'slurm::common::config' do
         "PartitionName=DEFAULT Nodes=c[0-9] State=UP",
         "PartitionName=ib Nodes=c[0101-0102] Priority=6 MaxTime=12:00:00 State=UP",
       ])
-    end
-  end
-
-  context 'when epilog => /tmp/foo' do
-    let(:params) { default_params.merge({ :epilog => '/tmp/foo' }) }
-
-    it "should set the Epilog option" do
-      verify_contents(catalogue, 'slurm.conf', [
-        'Epilog=/tmp/foo',
-      ])
-    end
-
-    it do
-      should contain_file('epilog').with({
-        :ensure => 'file',
-        :path   => '/tmp/foo',
-        :source => nil,
-        :owner  => 'root',
-        :group  => 'root',
-        :mode   => '0755',
-      })
-    end
-  end
-
-  context 'when health_check_program => /tmp/nhc' do
-    let(:params) { default_params.merge({ :health_check_program => '/tmp/nhc' }) }
-
-    it "should set the HealthCheckProgram option" do
-      verify_contents(catalogue, 'slurm.conf', [
-        'HealthCheckProgram=/tmp/nhc',
-      ])
-    end
-
-    it do
-      should contain_file('health_check_program').with({
-        :ensure => 'file',
-        :path   => '/tmp/nhc',
-        :source => nil,
-        :owner  => 'root',
-        :group  => 'root',
-        :mode   => '0755',
-      })
-    end
-  end
-
-  context 'when prolog => /tmp/bar' do
-    let(:params) { default_params.merge({ :prolog => '/tmp/bar' }) }
-
-    it "should set the Prolog option" do
-      verify_contents(catalogue, 'slurm.conf', [
-        'Prolog=/tmp/bar',
-      ])
-    end
-
-    it do
-      should contain_file('prolog').with({
-        :ensure => 'file',
-        :path   => '/tmp/bar',
-        :source => nil,
-        :owner  => 'root',
-        :group  => 'root',
-        :mode   => '0755',
-      })
-    end
-  end
-
-  context 'when task_epilog => /tmp/epilog' do
-    let(:params) { default_params.merge({ :task_epilog => '/tmp/epilog' }) }
-
-    it "should set the TaskEpilog option" do
-      verify_contents(catalogue, 'slurm.conf', [
-        'TaskEpilog=/tmp/epilog',
-      ])
-    end
-
-    it do
-      should contain_file('task_epilog').with({
-        :ensure => 'file',
-        :path   => '/tmp/epilog',
-        :source => nil,
-        :owner  => 'root',
-        :group  => 'root',
-        :mode   => '0755',
-      })
-    end
-  end
-
-  context 'when task_prolog => /tmp/foobar' do
-    let(:params) { default_params.merge({ :task_prolog => '/tmp/foobar' }) }
-
-    it "should set the TaskProlog option" do
-      verify_contents(catalogue, 'slurm.conf', [
-        'TaskProlog=/tmp/foobar',
-      ])
-    end
-
-    it do
-      should contain_file('task_prolog').with({
-        :ensure => 'file',
-        :path   => '/tmp/foobar',
-        :source => nil,
-        :owner  => 'root',
-        :group  => 'root',
-        :mode   => '0755',
-      })
     end
   end
 

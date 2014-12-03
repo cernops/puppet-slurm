@@ -43,6 +43,52 @@ class slurm::node::config {
     }
   }
 
+  if $slurm::manage_scripts {
+    if $slurm::epilog {
+      file { 'epilog':
+        ensure => 'file',
+        path   => $slurm::epilog,
+        source => $slurm::epilog_source,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
+    }
+
+    if $slurm::prolog {
+      file { 'prolog':
+        ensure => 'file',
+        path   => $slurm::prolog,
+        source => $slurm::prolog_source,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
+    }
+
+    if $slurm::task_epilog {
+      file { 'task_epilog':
+        ensure => 'file',
+        path   => $slurm::task_epilog,
+        source => $slurm::task_epilog_source,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
+    }
+
+    if $slurm::task_prolog {
+      file { 'task_prolog':
+        ensure => 'file',
+        path   => $slurm::task_prolog,
+        source => $slurm::task_prolog_source,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
+    }
+  }
+
   file { $slurm::log_dir:
     ensure => 'directory',
     owner  => $slurm::slurmd_user,
