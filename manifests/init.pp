@@ -78,8 +78,11 @@ class slurm (
   $slurm_conf_override    = $slurm::params::slurm_conf_override,
   $partitionlist          = $slurm::params::partitionlist,
   $slurm_conf_template    = 'slurm/slurm.conf/slurm.conf.erb',
+  $slurm_conf_source      = undef,
   $partitionlist_template = 'slurm/slurm.conf/slurm-partitions.conf.erb',
+  $partitionlist_source   = undef,
   $node_template          = 'slurm/slurm.conf/node.conf.erb',
+  $node_source            = undef,
   $slurm_nodelist_tag     = 'slurm_nodelist',
 
   # slurm.conf - node
@@ -126,6 +129,7 @@ class slurm (
 
   # cgroups
   $cgroup_conf_template             = 'slurm/cgroup/cgroup.conf.erb',
+  $cgroup_conf_source               = undef,
   $cgroup_mountpoint                = '/cgroup',
   $cgroup_automount                 = true,
   $cgroup_release_agent_dir         = undef,
@@ -256,6 +260,24 @@ class slurm (
 
   $slurmdbd_conf_defaults = merge($slurmdbd_conf_release_defaults, $slurmdbd_conf_local_defaults)
   $slurmdbd_conf          = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
+
+  if $slurm_conf_source {
+    $slurm_conf_content = undef
+  } else {
+    $slurm_conf_content = template($slurm_conf_template)
+  }
+
+  if $partitionlist_source {
+    $partitionlist_content = undef
+  } else {
+    $partitionlist_content = template($partitionlist_template)
+  }
+
+  if $cgroup_conf_source {
+    $cgroup_conf_content = undef
+  } else {
+    $cgroup_conf_content = template($cgroup_conf_template)
+  }
 
   anchor { 'slurm::start': }
   anchor { 'slurm::end': }

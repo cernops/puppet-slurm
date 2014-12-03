@@ -314,4 +314,32 @@ shared_examples_for 'slurm::common::config' do
     it { should_not contain_file('slurm-cgroup.conf') }
     it { should_not contain_file('cgroup_allowed_devices_file.conf') }
   end
+
+  context 'when slurm_conf_source => "file:///path/slurm.conf"' do
+    let(:params) { default_params.merge({ :slurm_conf_source => 'file:///path/slurm.conf'}) }
+
+    it { should contain_file('slurm.conf').without_content }
+    it { should contain_file('slurm.conf').with_source('file:///path/slurm.conf') }
+  end
+
+  context 'when partitionlist_source => "file:///path/partitions.conf"' do
+    let(:params) { default_params.merge({ :partitionlist_source => 'file:///path/partitions.conf'}) }
+
+    it { should contain_file('slurm-partitions.conf').without_content }
+    it { should contain_file('slurm-partitions.conf').with_source('file:///path/partitions.conf') }
+  end
+
+  context 'when node_source => "file:///path/nodes.conf"' do
+    let(:params) { default_params.merge({ :node_source => 'file:///path/nodes.conf'}) }
+
+    it { should_not contain_datacat('slurm-nodes.conf') }
+    it { should contain_file('slurm-nodes.conf').with_source('file:///path/nodes.conf') }
+  end
+
+  context 'when cgroup_conf_source => "file:///path/cgroup.conf"' do
+    let(:params) { default_params.merge({ :cgroup_conf_source => 'file:///path/cgroup.conf'}) }
+
+    it { should contain_file('slurm-cgroup.conf').without_content }
+    it { should contain_file('slurm-cgroup.conf').with_source('file:///path/cgroup.conf') }
+  end
 end

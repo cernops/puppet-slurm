@@ -5,7 +5,8 @@ class slurm::common::config {
     file { 'slurm.conf':
       ensure  => 'present',
       path    => $slurm::slurm_conf_path,
-      content => template($slurm::slurm_conf_template),
+      content => $slurm::slurm_conf_content,
+      source  => $slurm::slurm_conf_source,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
@@ -14,22 +15,34 @@ class slurm::common::config {
     file { 'slurm-partitions.conf':
       ensure  => 'present',
       path    => $slurm::partition_conf_path,
-      content => template($slurm::partitionlist_template),
+      content => $slurm::partitionlist_content,
+      source  => $slurm::partitionlist_source,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
     }
 
-    datacat { 'slurm-nodes.conf':
-      ensure   => 'present',
-      path     => $slurm::node_conf_path,
-      template => 'slurm/slurm.conf/nodes.conf.erb',
-      owner    => 'root',
-      group    => 'root',
-      mode     => '0644',
-    }
+    if $slurm::node_source {
+      file { 'slurm-nodes.conf':
+        ensure => 'present',
+        path   => $slurm::node_conf_path,
+        source => $slurm::node_source,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
+      }
+    } else {
+      datacat { 'slurm-nodes.conf':
+        ensure   => 'present',
+        path     => $slurm::node_conf_path,
+        template => 'slurm/slurm.conf/nodes.conf.erb',
+        owner    => 'root',
+        group    => 'root',
+        mode     => '0644',
+      }
 
-    Datacat_fragment <<| tag == $slurm::slurm_nodelist_tag |>>
+      Datacat_fragment <<| tag == $slurm::slurm_nodelist_tag |>>
+    }
 
     file { 'plugstack.conf.d':
       ensure  => 'directory',
@@ -56,7 +69,8 @@ class slurm::common::config {
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template($slurm::cgroup_conf_template),
+      content => $slurm::cgroup_conf_content,
+      source  => $slurm::cgroup_conf_source,
     }
 
     file { 'cgroup_allowed_devices_file.conf':
