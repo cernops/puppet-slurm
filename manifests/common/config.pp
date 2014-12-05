@@ -1,6 +1,8 @@
 # Private class
 class slurm::common::config {
 
+  create_resources('slurm::spank', $slurm::spank_plugins)
+
   if $slurm::manage_slurm_conf {
     file { 'slurm.conf':
       ensure  => 'present',
