@@ -2,8 +2,12 @@
 # File managed by Puppet!
 #
 
-ulimit -l unlimited
-ulimit -n 8192
+<% ulimits = scope.lookupvar('slurm::service_ulimits') -%>
+<% if ulimits -%>
+<% ulimits.each do |ulimit| -%>
+ulimit <%= ulimit %>
+<% end -%>
+<% end -%>
 
 CONFDIR="<%= scope.lookupvar('slurm::conf_dir') %>"
 SLURMCTLD_OPTIONS="-f <%= scope.lookupvar('slurm::slurm_conf_path') %>"

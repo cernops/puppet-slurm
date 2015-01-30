@@ -21,6 +21,7 @@ class slurm (
   $slurm_service_enable     = true,
   $slurmdbd_service_ensure  = 'running',
   $slurmdbd_service_enable  = true,
+  $service_ulimits          = $slurm::params::service_ulimits,
 
   # User/group management - controller/slurmdbd
   $manage_slurm_user      = true,
@@ -169,7 +170,7 @@ class slurm (
   validate_bool($cgroup_constrain_swap_space, $cgroup_constrain_devices, $manage_cgroup_release_agents)
   validate_bool($purge_plugstack_conf_d)
 
-  validate_array($partitionlist, $cgroup_allowed_devices)
+  validate_array($service_ulimits, $partitionlist, $cgroup_allowed_devices)
 
   validate_hash($slurm_conf_override, $slurmdbd_conf_override, $spank_plugins)
 

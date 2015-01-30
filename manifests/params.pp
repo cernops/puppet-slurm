@@ -7,6 +7,11 @@ class slurm::params {
   $partitionlist          = []
   $slurmdbd_conf_override = {}
 
+  $service_ulimits        = [
+    '-l unlimited',
+    '-n 8192',
+  ]
+
   $cgroup_allowed_devices = [
     '/dev/null',
     '/dev/urandom',
