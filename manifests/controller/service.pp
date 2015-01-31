@@ -7,7 +7,7 @@ class slurm::controller::service {
     name       => 'slurm',
     hasstatus  => false,
     hasrestart => true,
-    pattern    => '/usr/sbin/slurmctld -f',
+    pattern    => "slurmctld -f ${slurm::slurm_conf_path}",
   }
 
 }

@@ -6,7 +6,7 @@ shared_examples_for 'slurm::node::service' do
       :name       => 'slurm',
       :hasstatus  => 'false',
       :hasrestart => 'true',
-      :pattern    => '/usr/sbin/slurmd -f',
+      :pattern    => 'slurmd -f /etc/slurm/slurm.conf',
     })
   end
 end
