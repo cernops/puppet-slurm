@@ -210,8 +210,12 @@ class slurm (
       $slurm_conf_release_defaults    = $slurm::params::slurm_conf_defaults['14.03']
       $slurmdbd_conf_release_defaults = $slurm::params::slurmdbd_conf_defaults['14.03']
     }
+    '14.11': {
+      $slurm_conf_release_defaults    = $slurm::params::slurm_conf_defaults['14.11']
+      $slurmdbd_conf_release_defaults = $slurm::params::slurmdbd_conf_defaults['14.11']
+    }
     default: {
-      fail("Module ${module_name} only supports release 14.03, ${release} given.")
+      fail("Module ${module_name} only supports release 14.03 and 14.11, ${release} given.")
     }
   }
 
