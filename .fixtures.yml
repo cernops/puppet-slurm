@@ -19,16 +19,13 @@ fixtures:
       ref: 1.1.1
     epel:
       repo: git://github.com/stahnma/puppet-module-epel.git
-      ref: 0.0.6
     limits:
       repo: git://github.com/saz/puppet-limits.git
       ref: v2.0.1
     munge:
       repo: git://github.com/treydock/puppet-munge.git
-      ref: 0.0.2
     blcr:
       repo: git://github.com/treydock/puppet-module-blcr.git
-      ref: 1.0.1
   symlinks:
     slurm: "#{source_dir}"
     site_slurm: "#{File.join(source_dir, 'tests', 'site_slurm')}"

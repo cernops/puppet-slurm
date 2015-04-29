@@ -1,16 +1,8 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-facts'
 require 'lib/module_spec_helper'
 
-begin
-  require 'simplecov'
-  require 'coveralls'
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  SimpleCov.start do
-    add_filter '/spec/'
-  end
-rescue Exception => e
-  warn "Coveralls disabled"
-end
+include RspecPuppetFacts
 
 dir = File.expand_path(File.dirname(__FILE__))
 
@@ -47,17 +39,4 @@ class String
     return self if self !~ /_/ && self =~ /[A-Z]+.*/
     split('_').map{|e| e.capitalize}.join
   end
-end
-
-def default_facts
-  {
-    :osfamily => 'RedHat',
-    :concat_basedir => '/tmp',
-    :fqdn => 'slurm.example.com',
-    :hostname => 'slurm',
-    :physicalprocessorcount => '2',
-    :corecountpercpu => '4',
-    :threadcountpercore => '1',
-    :real_memory => '32000',
-  }
 end

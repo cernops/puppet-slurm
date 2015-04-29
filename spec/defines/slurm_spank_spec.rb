@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe 'slurm::spank' do
-  let(:facts) { default_facts }
+  let(:facts) do
+    on_supported_os['centos-6-x86_64']
+  end
   let(:title) { "x11" }
   let(:params) {{ }}
 

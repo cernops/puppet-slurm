@@ -1,7 +1,21 @@
 require 'spec_helper'
 
 describe 'slurm' do
-  let(:facts) { default_facts }
+=begin
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
+
+      it { should compile.with_all_deps }
+    end
+  end
+=end
+
+  let(:facts) do
+    on_supported_os['centos-6-x86_64']
+  end
   let(:params) {{ }}
 
   it { should create_class('slurm') }
@@ -9,7 +23,6 @@ describe 'slurm' do
 
   context 'default' do
     let(:default_params) {{ }}
-    let(:params) { default_params }
 
     it { should contain_anchor('slurm::start').that_comes_before('Class[slurm::node]') }
     it { should contain_class('slurm::node').that_comes_before('Anchor[slurm::end]') }

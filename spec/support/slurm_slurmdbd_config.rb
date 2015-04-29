@@ -59,7 +59,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
       "ArchiveSteps=no",
       "ArchiveSuspend=no",
       "AuthType=auth/munge",
-      "DbdHost=slurm",
+      "DbdHost=#{facts[:hostname]}",
       "DbdPort=6819",
       "DebugLevel=info",
       "LogFile=/var/log/slurm/slurmdbd.log",
