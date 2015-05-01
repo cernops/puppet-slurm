@@ -16,12 +16,10 @@ fixtures:
       repo: git://github.com/hercules-team/augeasproviders_sysctl.git
     logrotate:
       repo: git://github.com/rodjek/puppet-logrotate.git
-      ref: 1.1.1
     epel:
       repo: git://github.com/stahnma/puppet-module-epel.git
     limits:
       repo: git://github.com/saz/puppet-limits.git
-      ref: v2.0.1
     munge:
       repo: git://github.com/treydock/puppet-munge.git
     blcr:

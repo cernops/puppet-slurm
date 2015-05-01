@@ -65,7 +65,7 @@ class slurm::slurmdbd::config {
       copytruncate  => false,
       delaycompress => false,
       ifempty       => false,
-      rotate        => 10,
+      rotate        => '10',
       sharedscripts => true,
       size          => '10M',
       create        => true,

@@ -5,7 +5,7 @@ shared_examples_for 'slurm::node::config' do
       :owner  => 'root',
       :group  => 'root',
       :mode   => '0755',
-      :before => 'File[/etc/slurm/cgroup/release_common]'
+      :before => ['File[/etc/slurm/cgroup/release_common]']
     })
   end
 
@@ -16,7 +16,7 @@ shared_examples_for 'slurm::node::config' do
       :group  => 'root',
       :mode   => '0755',
       :source => 'file:///etc/slurm/cgroup.release_common.example',
-      :before => 'File[/etc/slurm/cgroup/release_blkio]'
+      :before => ['File[/etc/slurm/cgroup/release_blkio]']
     })
   end
 
@@ -24,7 +24,7 @@ shared_examples_for 'slurm::node::config' do
     should contain_file('/etc/slurm/cgroup/release_blkio').with({
       :ensure => 'link',
       :target => 'release_common',
-      :before => 'File[/etc/slurm/cgroup/release_cpuacct]'
+      :before => ['File[/etc/slurm/cgroup/release_cpuacct]']
     })
   end
 
@@ -32,7 +32,7 @@ shared_examples_for 'slurm::node::config' do
     should contain_file('/etc/slurm/cgroup/release_blkio').with({
       :ensure => 'link',
       :target => 'release_common',
-      :before => 'File[/etc/slurm/cgroup/release_cpuacct]'
+      :before => ['File[/etc/slurm/cgroup/release_cpuacct]']
     })
   end
 
@@ -40,7 +40,7 @@ shared_examples_for 'slurm::node::config' do
     should contain_file('/etc/slurm/cgroup/release_cpuacct').with({
       :ensure => 'link',
       :target => 'release_common',
-      :before => 'File[/etc/slurm/cgroup/release_cpuset]'
+      :before => ['File[/etc/slurm/cgroup/release_cpuset]']
     })
   end
 
@@ -48,7 +48,7 @@ shared_examples_for 'slurm::node::config' do
     should contain_file('/etc/slurm/cgroup/release_cpuset').with({
       :ensure => 'link',
       :target => 'release_common',
-      :before => 'File[/etc/slurm/cgroup/release_freezer]'
+      :before => ['File[/etc/slurm/cgroup/release_freezer]']
     })
   end
 
@@ -56,7 +56,7 @@ shared_examples_for 'slurm::node::config' do
     should contain_file('/etc/slurm/cgroup/release_freezer').with({
       :ensure => 'link',
       :target => 'release_common',
-      :before => 'File[/etc/slurm/cgroup/release_memory]'
+      :before => ['File[/etc/slurm/cgroup/release_memory]']
     })
   end
 
@@ -64,7 +64,7 @@ shared_examples_for 'slurm::node::config' do
     should contain_file('/etc/slurm/cgroup/release_memory').with({
       :ensure => 'link',
       :target => 'release_common',
-      :before => 'File[/etc/slurm/cgroup/release_devices]'
+      :before => ['File[/etc/slurm/cgroup/release_devices]']
     })
   end
 
