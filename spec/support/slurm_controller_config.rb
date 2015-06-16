@@ -138,4 +138,14 @@ shared_examples_for 'slurm::controller::config' do
       it { should contain_mount('JobCheckpointDir').with_options('foo,bar') }
     end
   end
+
+  context 'when use_syslog => true' do
+    let(:params) { default_params.merge({:use_syslog => true}) }
+
+    it do
+      should contain_logrotate__rule('slurmctld').with({
+        :postrotate => '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true',
+      })
+    end
+  end
 end

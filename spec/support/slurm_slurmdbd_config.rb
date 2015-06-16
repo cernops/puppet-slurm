@@ -129,4 +129,19 @@ shared_examples_for 'slurm::slurmdbd::config' do
     it { should_not contain_class('mysql::server') }
     it { should_not contain_mysql__db('slurmdbd') }
   end
+
+  context 'when use_syslog => true' do
+    let(:params) { default_params.merge({:use_syslog => true}) }
+
+    it do
+      should contain_file('slurmdbd.conf') \
+        .without_content(/^LogFile.*$/) \
+    end
+
+    it do
+      should contain_logrotate__rule('slurmdbd').with({
+        :postrotate => '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true',
+      })
+    end
+  end
 end

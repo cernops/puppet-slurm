@@ -80,7 +80,7 @@ class slurm::controller::config {
       create_mode   => '0640',
       create_owner  => $slurm::slurm_user,
       create_group  => 'root',
-      postrotate    => '/etc/init.d/slurm reconfig >/dev/null 2>&1',
+      postrotate    => $slurm::_logrotate_slurm_postrotate,
     }
   }
 

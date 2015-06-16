@@ -216,6 +216,16 @@ shared_examples_for 'slurm::common::config' do
     })
   end
 
+  context 'when use_syslog => true' do
+    let(:params) { default_params.merge({:use_syslog => true}) }
+
+    it do
+      should contain_file('slurm.conf') \
+        .without_content(/^SlurmctldLogFile.*$/) \
+        .without_content(/^SlurmdLogFile.*$/)
+    end
+  end
+
   context 'when slurm_conf_override defined' do
     let :params do
        default_params.merge({

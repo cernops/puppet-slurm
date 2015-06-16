@@ -40,10 +40,13 @@ class slurm (
   $include_blcr = false,
 
   # Behavior overrides
-  $manage_slurm_conf  = true,
-  $manage_scripts     = true,
-  $manage_firewall    = true,
-  $manage_logrotate   = true,
+  $manage_slurm_conf             = true,
+  $manage_scripts                = true,
+  $manage_firewall               = true,
+  $manage_logrotate              = true,
+  $logrotate_slurm_postrotate    = undef,
+  $logrotate_slurmdbd_postrotate = undef,
+  $use_syslog                    = false,
 
   # Behavior overrides - controller
   $manage_state_dir_nfs_mount           = false,
@@ -162,7 +165,7 @@ class slurm (
 
   # Parameter validations
   validate_bool($node, $controller, $slurmdbd, $client)
-  validate_bool($manage_slurm_user, $manage_slurm_conf, $manage_scripts, $manage_firewall, $manage_logrotate)
+  validate_bool($manage_slurm_user, $manage_slurm_conf, $manage_scripts, $manage_firewall, $manage_logrotate, $use_syslog)
   validate_bool($install_pam, $install_torque_wrapper, $install_lua, $install_blcr)
   validate_bool($manage_state_dir_nfs_mount, $manage_job_checkpoint_dir_nfs_mount)
   validate_bool($manage_database, $use_remote_database)
@@ -219,6 +222,20 @@ class slurm (
     }
   }
 
+  if $use_syslog {
+    $_slurmctld_log_file = 'UNSET'
+    $_slurmdbd_log_file = 'UNSET'
+    $_slurmd_log_file = 'UNSET'
+    $_logrotate_slurm_postrotate = pick($logrotate_slurm_postrotate, $slurm::params::logrotate_syslog_postrotate)
+    $_logrotate_slurmdbd_postrotate = pick($logrotate_slurmdbd_postrotate, $slurm::params::logrotate_syslog_postrotate)
+  } else {
+    $_slurmctld_log_file = $slurmctld_log_file
+    $_slurmdbd_log_file = $slurmdbd_log_file
+    $_slurmd_log_file = $slurmd_log_file
+    $_logrotate_slurm_postrotate = pick($logrotate_slurm_postrotate, $slurm::params::logrotate_slurm_postrotate)
+    $_logrotate_slurmdbd_postrotate = pick($logrotate_slurmdbd_postrotate, $slurm::params::logrotate_slurmdbd_postrotate)
+  }
+
   $slurm_conf_local_defaults = {
     'AccountingStorageHost' => $control_machine,
     'AccountingStoragePort' => $slurmdbd_port,
@@ -232,10 +249,10 @@ class slurm (
     'PlugStackConfig' => $plugstack_conf_path,
     'Prolog' => $prolog,
     'SlurmUser' => $slurm_user,
-    'SlurmctldLogFile' => $slurmctld_log_file,
+    'SlurmctldLogFile' => $_slurmctld_log_file,
     'SlurmctldPidFile' => "${pid_dir}/slurmctld.pid",
     'SlurmctldPort' => $slurmctld_port,
-    'SlurmdLogFile' => $slurmd_log_file,
+    'SlurmdLogFile' => $_slurmd_log_file,
     'SlurmdPidFile' => "${pid_dir}/slurmd.pid",
     'SlurmdPort' => $slurmd_port,
     'SlurmdSpoolDir' => $slurmd_spool_dir,
@@ -252,7 +269,7 @@ class slurm (
   $slurmdbd_conf_local_defaults = {
     'DbdHost' => $::hostname,
     'DbdPort' => $slurmdbd_port,
-    'LogFile' => $slurmdbd_log_file,
+    'LogFile' => $_slurmdbd_log_file,
     'PidFile' => "${pid_dir}/slurmdbd.pid",
     'SlurmUser' => $slurm_user,
     'StorageHost' => $slurmdbd_storage_host,

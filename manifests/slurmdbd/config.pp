@@ -72,7 +72,7 @@ class slurm::slurmdbd::config {
       create_mode   => '0640',
       create_owner  => $slurm::slurm_user,
       create_group  => 'root',
-      postrotate    => '/etc/init.d/slurmdbd reconfig >/dev/null 2>&1',
+      postrotate    => $slurm::_logrotate_slurmdbd_postrotate,
     }
   }
 
