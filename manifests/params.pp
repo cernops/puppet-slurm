@@ -183,7 +183,7 @@ class slurm::params {
       'MailProg' => '/bin/mail',
       'MaxArraySize' => '1001',
       'MaxJobCount' => '10000',
-      'MaxJobId' => '4294901760',
+      'MaxJobId' => '2147418112',
       'MaxMemPerCPU' => '0',
       'MaxMemPerNode' => '0',
       'MaxStepCount' => '40000',
