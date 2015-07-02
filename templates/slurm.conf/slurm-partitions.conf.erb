@@ -6,27 +6,7 @@
 <% 
 scope.lookupvar('slurm::partitionlist').each do |part|
   partition = []
-  [
-    'PartitionName',
-    'Nodes',
-    'AllocNodes',
-    'Default',
-    'Priority',
-    'PreemptMode',
-    'Shared',
-    'MaxNodes',
-    'MinNodes',
-    'DefaultTime',
-    'MaxTime',
-    'DefMemPerCPU',
-    'MaxMemPerCPU',
-    'DefMemPerNode',
-    'MaxMemPerNode',
-    'AllowGroups',
-    'AllowQOS',
-    'DisableRootJobs',
-    'State',
-  ].each do |key|
+  scope.lookupvar('slurm::partition_keys').each do |key|
     partition << "#{key}=#{part[key]}" if part[key]
   end
 -%>
