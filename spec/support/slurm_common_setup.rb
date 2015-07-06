@@ -49,7 +49,7 @@ shared_examples_for "slurm::common::setup" do
 
   it do
     verify_contents(catalogue, '/etc/profile.d/slurm.csh', [
-      'setenv SLURM_CONF="/etc/slurm/slurm.conf"',
+      'setenv SLURM_CONF "/etc/slurm/slurm.conf"',
     ])
   end
 
