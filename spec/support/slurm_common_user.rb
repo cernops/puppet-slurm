@@ -1,9 +1,10 @@
 shared_examples_for 'slurm::common::user' do
   it do
     should contain_group('slurm').with({
-      :ensure => 'present',
-      :name   => 'slurm',
-      :gid    => nil,
+      :ensure     => 'present',
+      :name       => 'slurm',
+      :gid        => nil,
+      :forcelocal => 'true',
     })
   end
 
@@ -17,6 +18,7 @@ shared_examples_for 'slurm::common::user' do
       :home       => '/home/slurm',
       :managehome => 'true',
       :comment    => 'SLURM User',
+      :forcelocal => 'true',
     })
   end
 

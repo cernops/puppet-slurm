@@ -3,9 +3,10 @@ class slurm::common::user {
 
   if $slurm::manage_slurm_user {
     group { 'slurm':
-      ensure => present,
-      name   => $slurm::slurm_user_group,
-      gid    => $slurm::slurm_group_gid,
+      ensure     => present,
+      name       => $slurm::slurm_user_group,
+      gid        => $slurm::slurm_group_gid,
+      forcelocal => true,
     }
 
     user { 'slurm':
@@ -17,6 +18,7 @@ class slurm::common::user {
       home       => $slurm::slurm_user_home,
       managehome => $slurm::slurm_user_managehome,
       comment    => $slurm::slurm_user_comment,
+      forcelocal => true,
     }
   }
 
