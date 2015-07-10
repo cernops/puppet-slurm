@@ -139,7 +139,7 @@ shared_examples_for 'slurm::common::config' do
       :purge    => 'true',
       :owner    => 'root',
       :group    => 'root',
-      :mode     => '0755',
+      :mode     => '0644',
     })
   end
 

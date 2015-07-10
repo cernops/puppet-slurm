@@ -53,7 +53,7 @@ class slurm::common::config {
       purge   => $slurm::purge_plugstack_conf_d,
       owner   => 'root',
       group   => 'root',
-      mode    => '0755',
+      mode    => '0644',
     }
 
     file { 'plugstack.conf':
