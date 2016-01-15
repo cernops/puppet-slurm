@@ -327,6 +327,7 @@ class slurm::params {
       'QOS',
       'AllowQOS',
       'DisableRootJobs',
+      'TRESBillingWeights',
       'State',
     ],
   }

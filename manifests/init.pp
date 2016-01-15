@@ -225,7 +225,7 @@ class slurm (
       $partition_keys                 = $slurm::params::partition_keys['15.08']
     }
     default: {
-      fail("Module ${module_name} only supports release 14.03 and 14.11, ${release} given.")
+      fail("Module ${module_name} only supports release 14.03, 14.11 and 15.08, ${release} given.")
     }
   }
 
