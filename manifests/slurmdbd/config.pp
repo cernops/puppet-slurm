@@ -1,29 +1,6 @@
 # Private class
 class slurm::slurmdbd::config {
 
-  if ! $slurm::controller {
-    file { $slurm::log_dir:
-      ensure => 'directory',
-      owner  => $slurm::slurm_user,
-      group  => $slurm::slurm_user_group,
-      mode   => '0700',
-    }
-
-    file { $slurm::pid_dir:
-      ensure => 'directory',
-      owner  => $slurm::slurm_user,
-      group  => $slurm::slurm_user_group,
-      mode   => '0700',
-    }
-
-    file { $slurm::shared_state_dir:
-      ensure => 'directory',
-      owner  => $slurm::slurm_user,
-      group  => $slurm::slurm_user_group,
-      mode   => '0700',
-    }
-  }
-
   if $slurm::manage_database {
     if $slurm::use_remote_database {
       @@mysql::db { "slurmdbd_${::fqdn}":
@@ -57,7 +34,7 @@ class slurm::slurmdbd::config {
   }
 
   if $slurm::manage_logrotate {
-    #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
+    #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
     logrotate::rule { 'slurmdbd':
       path          => $slurm::slurmdbd_log_file,
       compress      => true,

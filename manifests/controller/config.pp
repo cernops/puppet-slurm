@@ -1,27 +1,6 @@
 # Private class
 class slurm::controller::config {
 
-  file { $slurm::log_dir:
-    ensure => 'directory',
-    owner  => $slurm::slurm_user,
-    group  => $slurm::slurm_user_group,
-    mode   => '0700',
-  }
-
-  file { $slurm::pid_dir:
-    ensure => 'directory',
-    owner  => $slurm::slurm_user,
-    group  => $slurm::slurm_user_group,
-    mode   => '0700',
-  }
-
-  file { $slurm::shared_state_dir:
-    ensure => 'directory',
-    owner  => $slurm::slurm_user,
-    group  => $slurm::slurm_user_group,
-    mode   => '0700',
-  }
-
   file { 'StateSaveLocation':
     ensure  => 'directory',
     path    => $slurm::state_save_location,
@@ -65,7 +44,7 @@ class slurm::controller::config {
   }
 
   if $slurm::manage_logrotate {
-    #Refer to: https://computing.llnl.gov/linux/slurm/slurm.conf.html#lbAJ
+    #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
     logrotate::rule { 'slurmctld':
       path          => $slurm::slurmctld_log_file,
       compress      => true,

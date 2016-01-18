@@ -120,14 +120,18 @@ class slurm (
   $slurmdbd_conf_override = $slurm::params::slurmdbd_conf_override,
 
   # slurm.conf - epilog/prolog
+  $manage_epilog                = true,
   $epilog                       = undef,
   $epilog_source                = undef,
   $health_check_program         = undef,
   $health_check_program_source  = undef,
+  $manage_prolog                = true,
   $prolog                       = undef,
   $prolog_source                = undef,
+  $manage_task_epilog           = true,
   $task_epilog                  = undef,
   $task_epilog_source           = undef,
+  $manage_task_prolog           = true,
   $task_prolog                  = undef,
   $task_prolog_source           = undef,
 
@@ -169,6 +173,12 @@ class slurm (
   validate_bool($install_pam, $install_torque_wrapper, $install_lua, $install_blcr)
   validate_bool($manage_state_dir_nfs_mount, $manage_job_checkpoint_dir_nfs_mount)
   validate_bool($manage_database, $use_remote_database)
+  validate_bool(
+    $manage_epilog,
+    $manage_prolog,
+    $manage_task_epilog,
+    $manage_task_prolog
+  )
   validate_bool($cgroup_automount, $cgroup_constrain_cores, $cgroup_task_affinity, $cgroup_constrain_ram_space)
   validate_bool($cgroup_constrain_swap_space, $cgroup_constrain_devices, $manage_cgroup_release_agents)
   validate_bool($purge_plugstack_conf_d)

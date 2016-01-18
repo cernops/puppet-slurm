@@ -42,29 +42,57 @@ class slurm::node::config {
   }
 
   if $slurm::manage_scripts {
-    if $slurm::epilog {
-      file { 'epilog':
-        ensure => 'file',
-        path   => $slurm::epilog,
-        source => $slurm::epilog_source,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0755',
+    if $slurm::manage_epilog and $slurm::epilog {
+      if '*' in $slurm::epilog {
+        file { 'epilog':
+          ensure       => 'directory',
+          path         => dirname($slurm::epilog),
+          source       => $slurm::epilog_source,
+          owner        => 'root',
+          group        => 'root',
+          mode         => '0755',
+          recurse      => true,
+          recurselimit => 1,
+          purge        => true,
+        }
+      } else {
+        file { 'epilog':
+          ensure => 'file',
+          path   => $slurm::epilog,
+          source => $slurm::epilog_source,
+          owner  => 'root',
+          group  => 'root',
+          mode   => '0755',
+        }
       }
     }
 
-    if $slurm::prolog {
-      file { 'prolog':
-        ensure => 'file',
-        path   => $slurm::prolog,
-        source => $slurm::prolog_source,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0755',
+    if $slurm::manage_prolog and $slurm::prolog {
+      if '*' in $slurm::prolog {
+        file { 'prolog':
+          ensure       => 'directory',
+          path         => dirname($slurm::prolog),
+          source       => $slurm::prolog_source,
+          owner        => 'root',
+          group        => 'root',
+          mode         => '0755',
+          recurse      => true,
+          recurselimit => 1,
+          purge        => true,
+        }
+      } else {
+        file { 'prolog':
+          ensure => 'file',
+          path   => $slurm::prolog,
+          source => $slurm::prolog_source,
+          owner  => 'root',
+          group  => 'root',
+          mode   => '0755',
+        }
       }
     }
 
-    if $slurm::task_epilog {
+    if $slurm::manage_task_epilog and $slurm::task_epilog {
       file { 'task_epilog':
         ensure => 'file',
         path   => $slurm::task_epilog,
@@ -75,7 +103,7 @@ class slurm::node::config {
       }
     }
 
-    if $slurm::task_prolog {
+    if $slurm::manage_task_prolog and $slurm::task_prolog {
       file { 'task_prolog':
         ensure => 'file',
         path   => $slurm::task_prolog,
@@ -85,27 +113,6 @@ class slurm::node::config {
         mode   => '0755',
       }
     }
-  }
-
-  file { $slurm::log_dir:
-    ensure => 'directory',
-    owner  => $slurm::slurmd_user,
-    group  => $slurm::slurmd_user_group,
-    mode   => '0700',
-  }
-
-  file { $slurm::pid_dir:
-    ensure => 'directory',
-    owner  => $slurm::slurmd_user,
-    group  => $slurm::slurmd_user_group,
-    mode   => '0700',
-  }
-
-  file { $slurm::shared_state_dir:
-    ensure => 'directory',
-    owner  => $slurm::slurmd_user,
-    group  => $slurm::slurmd_user_group,
-    mode   => '0700',
   }
 
   file { 'SlurmdSpoolDir':
@@ -125,7 +132,7 @@ class slurm::node::config {
   }
 
   if $slurm::manage_logrotate {
-    #Refer to: http://slurm.schedmd.com/slurm.conf.html#lbAJ
+    #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
     logrotate::rule { 'slurmd':
       path          => $slurm::slurmd_log_file,
       compress      => true,

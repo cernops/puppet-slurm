@@ -117,6 +117,30 @@ shared_examples_for 'slurm::node::config' do
     end
   end
 
+  context 'when epilog => /tmp/foo.d/*' do
+    let(:params) { default_params.merge({ :epilog => '/tmp/foo.d/*' }) }
+
+    it "should set the Epilog option" do
+      verify_contents(catalogue, 'slurm.conf', [
+        'Epilog=/tmp/foo.d/*',
+      ])
+    end
+
+    it do
+      should contain_file('epilog').with({
+        :ensure       => 'directory',
+        :path         => '/tmp/foo.d',
+        :source       => nil,
+        :owner        => 'root',
+        :group        => 'root',
+        :mode         => '0755',
+        :recurse      => 'true',
+        :recurselimit => '1',
+        :purge        => 'true',
+      })
+    end
+  end
+
   context 'when health_check_program => /usr/sbin/nhc' do
     let(:params) { default_params.merge({ :health_check_program => '/usr/sbin/nhc' }) }
 
@@ -144,6 +168,30 @@ shared_examples_for 'slurm::node::config' do
         :owner  => 'root',
         :group  => 'root',
         :mode   => '0755',
+      })
+    end
+  end
+
+  context 'when prolog => /tmp/bar.d/*' do
+    let(:params) { default_params.merge({ :prolog => '/tmp/bar.d/*' }) }
+
+    it "should set the Prolog option" do
+      verify_contents(catalogue, 'slurm.conf', [
+        'Prolog=/tmp/bar.d/*',
+      ])
+    end
+
+    it do
+      should contain_file('prolog').with({
+        :ensure       => 'directory',
+        :path         => '/tmp/bar.d',
+        :source       => nil,
+        :owner        => 'root',
+        :group        => 'root',
+        :mode         => '0755',
+        :recurse      => 'true',
+        :recurselimit => '1',
+        :purge        => 'true',
       })
     end
   end
