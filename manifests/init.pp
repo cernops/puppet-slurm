@@ -300,19 +300,43 @@ class slurm (
   $slurmdbd_conf_defaults = merge($slurmdbd_conf_release_defaults, $slurmdbd_conf_local_defaults)
   $slurmdbd_conf          = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
 
-  if $slurm_conf_source {
+  if $slurm_conf_source == 'UNSET' {
+    $_slurm_conf_source = undef
+  } else {
+    $_slurm_conf_source = $slurm_conf_source
+  }
+
+  if $partitionlist_source == 'UNSET' {
+    $_partitionlist_source = undef
+  } else {
+    $_partitionlist_source = $partitionlist_source
+  }
+
+  if $node_source == 'UNSET' {
+    $_node_source = undef
+  } else {
+    $_node_source = $node_source
+  }
+
+  if $cgroup_conf_source == 'UNSET' {
+    $_cgroup_conf_source = undef
+  } else {
+    $_cgroup_conf_source = $cgroup_conf_source
+  }
+
+  if $_slurm_conf_source {
     $slurm_conf_content = undef
   } else {
     $slurm_conf_content = template($slurm_conf_template)
   }
 
-  if $partitionlist_source {
+  if $_partitionlist_source {
     $partitionlist_content = undef
   } else {
     $partitionlist_content = template($partitionlist_template)
   }
 
-  if $cgroup_conf_source {
+  if $_cgroup_conf_source {
     $cgroup_conf_content = undef
   } else {
     $cgroup_conf_content = template($cgroup_conf_template)

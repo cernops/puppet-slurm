@@ -8,7 +8,7 @@ class slurm::common::config {
       ensure  => 'present',
       path    => $slurm::slurm_conf_path,
       content => $slurm::slurm_conf_content,
-      source  => $slurm::slurm_conf_source,
+      source  => $slurm::_slurm_conf_source,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
@@ -18,17 +18,17 @@ class slurm::common::config {
       ensure  => 'present',
       path    => $slurm::partition_conf_path,
       content => $slurm::partitionlist_content,
-      source  => $slurm::partitionlist_source,
+      source  => $slurm::_partitionlist_source,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
     }
 
-    if $slurm::node_source {
+    if $slurm::_node_source {
       file { 'slurm-nodes.conf':
         ensure => 'present',
         path   => $slurm::node_conf_path,
-        source => $slurm::node_source,
+        source => $slurm::_node_source,
         owner  => 'root',
         group  => 'root',
         mode   => '0644',
@@ -72,7 +72,7 @@ class slurm::common::config {
       group   => 'root',
       mode    => '0644',
       content => $slurm::cgroup_conf_content,
-      source  => $slurm::cgroup_conf_source,
+      source  => $slurm::_cgroup_conf_source,
     }
 
     file { 'cgroup_allowed_devices_file.conf':
