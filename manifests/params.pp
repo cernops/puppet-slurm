@@ -309,6 +309,7 @@ class slurm::params {
     ],
     '15.08' => [
       'PartitionName',
+      'Alternate',
       'Nodes',
       'AllocNodes',
       'Default',
