@@ -22,4 +22,7 @@ class slurm::install {
   # Graphical information about partitions (queues), resources etc:
   # - smap The smap command will be built only if the ncurses development library is installed.
   # - sview The sview command will be built only if gtk+-2.0 is installed.
+
+  # List of dependencies to yum install if we want these flags:
+  # yum install -y openssl openssl-devel pam-devel numactl numactl-devel hwloc hwloc-devel lua lua-devel readline-devel ncurses-devel mariadb-devel
 }
