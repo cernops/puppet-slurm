@@ -1,0 +1,2 @@
+class slurm::workernode::install {
+}
