@@ -3,4 +3,8 @@
 #
 #
 
-class slurm::auks {}
+class slurm::auks (
+
+) {
+  
+}

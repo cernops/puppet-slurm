@@ -5,7 +5,7 @@
 
 class slurm::headnode (
   $packages = [],
-){
+) {
 
   ensure_packages($packages)
 

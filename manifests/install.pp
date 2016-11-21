@@ -1,4 +1,11 @@
-class slurm::install {
+#
+# slurm/install.pp
+#
+#
+
+class slurm::install (
+  $packages = [],
+) {
   # Here we either install packages or build from source
 
   # Interesting compile flags (https://slurm.schedmd.com/quickstart_admin.html)
@@ -25,4 +32,7 @@ class slurm::install {
 
   # List of dependencies to yum install if we want these flags:
   # yum install -y openssl openssl-devel pam-devel numactl numactl-devel hwloc hwloc-devel lua lua-devel readline-devel ncurses-devel mariadb-devel
+
+  ensure_packages($packages)
+
 }

@@ -1,2 +1,10 @@
-class slurm::params {
+#
+# slurm/params.pp
+#
+#
+
+class slurm::params (
+
+) {
+
 }

@@ -5,7 +5,7 @@
 
 class slurm::workernode (
   $packages = [],
-){
+) {
 
   ensure_packages($packages)
 
