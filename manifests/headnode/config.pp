@@ -1,28 +1,44 @@
 #
-# slurm/headnode.pp
-#
+# slurm/headnode/config.pp
+#   create folders/logfiles for SLURM specific to headnode
 #
 
 class slurm::headnode::config (
-  $slurmctl_folder = '/var/spool/slurmctld',
+  $slurmctld_folder = '/var/spool/slurmctld',
+  $slurmctld_log    = '/var/log/slurmctld.log',
+  $slurmJobacct_log = '/var/log/slurm_jobacct.log',
+  $slurmJobcomp_log = '/var/log/slurm_jobcomp.log',
 ){
-  # We need to create folders/logfiles for slurm according to what we put in the slurm.conf file.
-  #
-  # E.g. puppetize this, or if we build our own package, we could put it in the spec.
-  # mkdir /var/spool/slurmctld
-  # chown slurm: /var/spool/slurmctld
-  # chmod 755 /var/spool/slurmctld
-  # touch /var/log/slurmctld.log
-  # chown slurm: /var/log/slurmctld.log
-  # touch /var/log/slurm_jobacct.log /var/log/slurm_jobcomp.log
-  # chown slurm: /var/log/slurm_jobacct.log /var/log/slurm_jobcomp.log
 
-  file{ 'slurmctl folder':
+  file{ 'slurmctld folder':
     ensure => directory,
-    path   => $slurmctl_folder,
+    path   => $slurmctld_folder,
     group  => 'slurm',
-    mode   => '1664',
+    mode   => '1755',
     owner  => 'slurm',
   }
 
+  file{ 'slurmctld log':
+    ensure => file,
+    path   => $slurmctld_log,
+    group  => 'slurm',
+    mode   => '0600',
+    owner  => 'slurm',
+  }
+
+  file{ 'slurm job accounting log':
+    ensure => file,
+    path   => $slurmJobacct_log,
+    group  => 'slurm',
+    mode   => '0600',
+    owner  => 'slurm',
+  }
+
+  file{ 'slurm completed job log':
+    ensure => file,
+    path   => $slurmJobcomp_log,
+    group  => 'slurm',
+    mode   => '0600',
+    owner  => 'slurm',
+  }
 }

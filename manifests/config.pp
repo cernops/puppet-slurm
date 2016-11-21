@@ -1,6 +1,7 @@
 #
 # slurm/config.pp
-#   creates the basic folders and user/group for SLURM
+#   creates the basic folders and user/group for SLURM common to headnodes and
+#   workernodes
 #
 
 class slurm::config (
@@ -13,7 +14,7 @@ class slurm::config (
     ensure => directory,
     path   => $slurm_homefolder,
     group  => 'slurm',
-    mode   => '1664',
+    mode   => '1755',
     owner  => 'slurm',
   }
   group{ 'slurm':
@@ -30,8 +31,4 @@ class slurm::config (
     system  => true,
     uid     => $slurm_uid,
   }
-
-
-
-
 }
