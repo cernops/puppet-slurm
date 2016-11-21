@@ -1,2 +1,6 @@
-class slurm::auks {
-}
+#
+# slurm/auks.pp
+#
+#
+
+class slurm::auks {}
