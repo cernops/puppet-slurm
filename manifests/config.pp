@@ -46,7 +46,7 @@ class slurm::config (
     path    => "${homefolder}/credentials/slurm.key",
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '0644',
+    mode    => '0600',
     require => File['credentials folder'],
   }
   teigi::secret{ 'slurm public key':
@@ -54,7 +54,7 @@ class slurm::config (
     path    => "${homefolder}/credentials/slurm.cert",
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '0600',
+    mode    => '0644',
     require => File['credentials folder'],
   }
 }
