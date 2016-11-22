@@ -124,7 +124,7 @@ SelectTypeParameters=CR_CPU_Memory
 # LOGGING AND ACCOUNTING
 #AccountingStorageEnforce=0
 AccountingStorageHost=<%= @db_host %>
-#AccountingStorageLoc=
+AccountingStorageLoc=<%= @accounting_db %>
 AccountingStoragePass=%TEIGI__slurmdbpass__%
 AccountingStoragePort=<%= @db_port %>
 AccountingStorageType=accounting_storage/slurmdbd
@@ -133,7 +133,7 @@ AccountingStoreJobComment=YES
 ClusterName=<%= @clustername %>
 #DebugFlags=
 JobCompHost=<%= @db_host %>
-#JobCompLoc=
+JobCompLoc=<%= @job_db %>
 JobCompPass=%TEIGI__slurmdbpass__%
 JobCompPort=<%= @db_port %>
 JobCompType=jobcomp/slurmdbd
