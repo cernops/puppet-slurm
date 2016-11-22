@@ -5,7 +5,6 @@
 
 class slurm::workernode {
 
-  class{'::slurm::firewall':}
   class{'::slurm::auks':}
   class{'::slurm::setup':}->
   class{'::slurm::workernode::setup':}->

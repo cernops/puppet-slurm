@@ -5,7 +5,7 @@
 
 class slurm::headnode {
 
-  class{'::slurm::firewall':}
+  class{'::slurm::headnode::firewall':}
   class{'::slurm::auks':}
   class{'::slurm::setup':}->
   class{'::slurm::headnode::setup':}->

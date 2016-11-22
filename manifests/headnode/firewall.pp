@@ -1,9 +1,9 @@
 #
-# slurm/firewall.pp
+# slurm/headnode/firewall.pp
 #   Common firewall rules for the headnode and workernode
 #
 
-class slurm::firewall (
+class slurm::headnode::firewall (
   $slurmctld_port = '6817',
   $slurmd_port    = '6818',
   $scheduler_port = '7321',
