@@ -123,21 +123,21 @@ SelectTypeParameters=CR_CPU_Memory
 
 # LOGGING AND ACCOUNTING
 #AccountingStorageEnforce=0
-AccountingStorageHost=todo
+AccountingStorageHost=<%= @db_host %>
 #AccountingStorageLoc=
-AccountingStoragePass=todo
-AccountingStoragePort=todo
+AccountingStoragePass=%TEIGI__slurmdbpass__%
+AccountingStoragePort=<%= @db_port %>
 AccountingStorageType=accounting_storage/slurmdbd
-AccountingStorageUser=todo
+AccountingStorageUser=<%= @db_user %>
 AccountingStoreJobComment=YES
-ClusterName=batch
+ClusterName=<%= @clustername %>
 #DebugFlags=
-JobCompHost=todo
+JobCompHost=<%= @db_host %>
 #JobCompLoc=
-JobCompPass=todo
-JobCompPort=todo
+JobCompPass=%TEIGI__slurmdbpass__%
+JobCompPort=<%= @db_port %>
 JobCompType=jobcomp/slurmdbd
-JobCompUser=todo
+JobCompUser=<%= @db_user %>
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300
 JobAcctGatherType=jobacct_gather/linux
