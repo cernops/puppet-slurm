@@ -1,6 +1,6 @@
 #
 # slurm/setup.pp
-#   creates the basic folders, user/group and security for SLURM, common to
+#   Creates the basic folders, user/group and security for SLURM, common to
 #   headnodes and workernodes
 #
 

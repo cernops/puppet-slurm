@@ -1,6 +1,6 @@
 #
 # slurm/install.pp
-#
+#   Install the dependencies and then compile SLURM from soruce
 #
 
 class slurm::install (

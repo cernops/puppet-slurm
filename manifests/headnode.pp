@@ -1,6 +1,6 @@
 #
 # slurm/headnode.pp
-#
+#   Puts SLURM on headnode
 #
 
 class slurm::headnode {

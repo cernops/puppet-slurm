@@ -6,5 +6,5 @@
 class slurm {
 
   include ::slurm::params
-  
+
 }

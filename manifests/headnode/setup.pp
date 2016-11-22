@@ -1,6 +1,6 @@
 #
 # slurm/headnode/setup.pp
-#   create folders/logfiles for SLURM specific to headnode
+#   Create folders/logfiles specific to headnode
 #
 
 class slurm::headnode::setup (

@@ -1,6 +1,6 @@
 #
 # slurm/config.pp
-#
+#   Creates the commun configuration file
 #
 
 class slurm::config (
@@ -12,6 +12,11 @@ class slurm::config (
   $slurmd_port    = '6818',
   $slurmuser      = 'slurm',
   $scheduler_port = '7321',
+  $db_host        = '',
+  $db_port        = '',
+  $db_user        = '',
+  $clustername    = 'batch',
+  $db_host        = '',
   $slurmctld_log  = '/var/log/slurmctld.log',
   $slurmd_log     = '/var/log/slurmd.log',
   $partitionname  = 'batch-testing'

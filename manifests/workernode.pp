@@ -1,6 +1,6 @@
 #
 # slurm/workernode.pp
-#
+#   Puts SLURM on workernode
 #
 
 class slurm::workernode {
