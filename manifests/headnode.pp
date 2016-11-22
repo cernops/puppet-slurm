@@ -11,6 +11,5 @@ class slurm::headnode {
   class{'::slurm::headnode::setup':}->
   class{'::slurm::config':}->
   class{'::slurm::headnode::config':}->
-  class{'::slurm::install':}->
-  class{'::slurm::slurmdb':}
+  class{'::slurm::install':}
 }
