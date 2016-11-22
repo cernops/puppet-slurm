@@ -1,44 +1,27 @@
 #
-# slurm/headnode/config.pp
-#   create folders/logfiles for SLURM specific to headnode
+# slurm/config.pp
+#
 #
 
 class slurm::headnode::config (
-  $slurmctld_folder = '/var/spool/slurmctld',
-  $slurmctld_log    = '/var/log/slurmctld.log',
-  $slurmJobacct_log = '/var/log/slurm_jobacct.log',
-  $slurmJobcomp_log = '/var/log/slurm_jobcomp.log',
-){
 
-  file{ 'slurmctld folder':
-    ensure => directory,
-    path   => $slurmctld_folder,
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
+) {
+
+  service{'slurmctld':
+    ensure    => running,
+    subscribe => File['common configuration file'],
   }
 
-  file{ 'slurmctld log':
-    ensure => file,
-    path   => $slurmctld_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
+  file{ 'slurmdb configuration file':
+    ensure  => file,
+    path    => '/etc/slurm/slurmdbd.conf',
+    content => template('slurm/slurmdbd.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
   }
-
-  file{ 'slurm job accounting log':
-    ensure => file,
-    path   => $slurmJobacct_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
-  }
-
-  file{ 'slurm completed job log':
-    ensure => file,
-    path   => $slurmJobcomp_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
+  service{'slurmdbd':
+    ensure    => running,
+    subscribe => File['slurmdb configuration file'],
   }
 }

@@ -3,11 +3,11 @@
 #
 #
 
-class slurm::workernode (
-  $packages = [],
-) {
+class slurm::workernode {
 
-  ensure_packages($packages)
-
-  include ::slurm::workernode::config
+  class{'::slurm::firewall':}
+  class{'::slurm::auks':}
+  class{'::slurm::config':}->
+  class{'::slurm::workernode::config':}->
+  class{'::slurm::install':}
 }

@@ -1,26 +1,12 @@
 #
-# slurm/headnode/config.pp
-#   create folders/logfiles for SLURM specific to workernode
+# slurm/config.pp
+#
 #
 
-class slurm::workernode::config (
-    $slurmd_folder = '/var/spool/slurmd',
-    $slurmd_log    = '/var/log/slurmd.log',
-) {
+class slurm::workernode::config {
 
-  file{ 'slurmd folder':
-    ensure => directory,
-    path   => $slurmd_folder,
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
-  }
-
-  file{ 'slurmd log':
-    ensure => file,
-    path   => $slurmd_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
+  service{'slurmd':
+    ensure    => running,
+    subscribe => File['common configuration file'],
   }
 }

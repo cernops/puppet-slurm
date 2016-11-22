@@ -4,7 +4,24 @@
 #
 
 class slurm::install (
-  $packages = [],
+  $packages = [
+    openssl,
+    openssl-devel,
+    pam-devel,
+    numactl,
+    numactl-devel,
+    hwloc,
+    hwloc-devel,
+    lua,
+    lua-devel,
+    mariadb-devel,
+    mariadb-server,
+    readline-devel,
+    rpm-build,
+    rrdtool-devel,
+    ncurses-devel,
+    man2html,
+  ],
 ) {
   # Here we either install packages or build from source
 
