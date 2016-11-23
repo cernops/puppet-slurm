@@ -12,9 +12,7 @@ class slurm::config (
   $maxjobcount           = '5000',
   $plugin_dir            = '/usr/lib64/slurm',
   $plugstackconf_file    = '/etc/slurm/plugstack.conf',
-  $slurmctldpid_file     = '/var/run/slurmctld.pid',
   $slurmctld_port        = '6817',
-  $slurmdpid_file        = '/var/run/slurmd.pid',
   $slurmd_port           = '6818',
   $slurmdspool_dir       = '/var/spool/slurmd',
   $slurmuser             = 'slurm',
@@ -30,7 +28,7 @@ class slurm::config (
   $jobcomp_db_user       = 'slurm',
   $slurmctld_log         = '/var/log/slurmctld.log',
   $slurmd_log            = '/var/log/slurmd.log',
-  $workernodes           = {fqdn => worker[1-10], cpu => 32, memory => 128000},
+  $workernodes           = [{'fqdn' => 'worker[00-10].example.org', 'cpu' => '16', 'memory' => '64000'}],
   $partitionname         = 'partition',
 ) {
 

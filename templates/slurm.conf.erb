@@ -52,9 +52,9 @@ ProctrackType=proctrack/pgid
 #RebootProgram=
 ReturnToService=1
 #SallocDefaultCommand=
-SlurmctldPidFile=<%= @slurmctldpid_file %> #/var/run/slurmctld.pid
+SlurmctldPidFile=/var/run/slurmctld.pid
 SlurmctldPort=<%= @slurmctld_port %> # 6817
-SlurmdPidFile=<%= @slurmdpid_file %> #/var/run/slurmd.pid
+SlurmdPidFile=/var/run/slurmd.pid
 SlurmdPort=<%= @slurmd_port %> #6818
 SlurmdSpoolDir=<%= @slurmdspool_dir %> #/var/spool/slurmd
 SlurmUser=<%= @slurmuser %> # slurm
