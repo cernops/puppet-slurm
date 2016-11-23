@@ -165,8 +165,11 @@ SlurmdLogFile=<%= @slurmd_log %> #/var/log/slurmd.log
 
 # COMPUTE NODES
 # Preferably not many entries here. Should use asdf[0-63] notation.
-<% @workernodes.each do |fqdn,cpu,memory| -%>
-    NodeName=<%= fqdn %> CPUs=<%= cpu %> RealMemory=<%= memory %> State=UNKNOWN
-<% end -%>
+<% @workernodes.each do |key,value| -%>
+<%= key %>=<% value -%><%= ' ' -%>
+<% end %>
 
-PartitionName=<%= @partitionname %> Nodes= Default=YES MaxTime=INFINITE State=UP
+PartitionName=DEFAULT MaxTime=INFINITE State=UP
+<% @partitions.each do |key,value| -%>
+<%= key %>=<% value -%><%= ' ' -%>
+<% end %>
