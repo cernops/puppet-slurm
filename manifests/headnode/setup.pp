@@ -1,6 +1,6 @@
 #
 # slurm/headnode/setup.pp
-#   Create folders/logfiles specific to headnode
+#   Creates folders/logfiles and installs packages specific to headnode
 #
 
 class slurm::headnode::setup (
@@ -8,8 +8,11 @@ class slurm::headnode::setup (
   $slurmctld_log    = '/var/log/slurmctld.log',
   $slurmJobacct_log = '/var/log/slurm_jobacct.log',
   $slurmJobcomp_log = '/var/log/slurm_jobcomp.log',
+  $packages      = [],
 ){
 
+  ensure_packages($packages)
+  
   file{ 'slurmctld folder':
     ensure => directory,
     path   => $slurmctld_folder,

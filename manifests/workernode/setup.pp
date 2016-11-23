@@ -1,12 +1,15 @@
 #
 # slurm/headnode/setup.pp
-#   Create folders/logfiles specific to workernode
+#   Creates folders/logfiles and installs packages specific to workernode
 #
 
 class slurm::workernode::setup (
   $slurmd_folder = '/var/spool/slurmd',
   $slurmd_log    = '/var/log/slurmd.log',
+  $packages      = [],
 ) {
+
+  ensure_packages($packages)
 
   file{ 'slurmd folder':
     ensure => directory,
