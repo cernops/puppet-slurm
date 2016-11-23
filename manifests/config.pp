@@ -19,7 +19,7 @@ class slurm::config (
   $scheduler_port        = '7321',
   $accounting_db_host    = 'accountingdb.example.org',
   $accounting_db_loc     = 'accountingdb',
-  $accounting_db_port    = '1234',
+  $accounting_db_port    = '6819',
   $accounting_db_user    = 'slurm',
   $clustername           = 'batch',
   $jobcomp_db_host       = 'jobcompdb.example.org',
