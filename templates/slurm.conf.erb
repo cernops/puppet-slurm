@@ -164,7 +164,11 @@ SlurmdLogFile=<%= @slurmd_log %> #/var/log/slurmd.log
 
 
 # COMPUTE NODES
-# Need a nodelist here..
-NodeName=p05799555e12392.cern.ch CPUs=1 State=UNKNOWN  CPUs=1 State=UNKNOWN
+# Preferably not many entries here. Should use asdf[0-63] notation.
+<% @workernodes.each do |workernode| -%>
+    NodeName= <%= workernode %> CPUs=32 State=UNKNOWN
+<% end -%>
+
+
 
 PartitionName=<%= @partitionname %> Nodes= Default=YES MaxTime=INFINITE State=UP
