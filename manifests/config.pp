@@ -18,7 +18,7 @@ class slurm::config (
   $slurmuser             = 'slurm',
   $accounting_db_host    = 'accountingdb.example.org',
   $accounting_db_loc     = 'accountingdb',
-  $accounting_db_port    = '6819',
+  $accounting_db_port    = '1234',
   $accounting_db_user    = 'slurm',
   $clustername           = 'batch',
   $jobcomp_db_host       = 'jobcompdb.example.org',
@@ -27,8 +27,8 @@ class slurm::config (
   $jobcomp_db_user       = 'slurm',
   $slurmctld_log         = '/var/log/slurmctld.log',
   $slurmd_log            = '/var/log/slurmd.log',
-  $workernodes           = [{'fqdn' => 'worker[00-10].example.org', 'cpu' => '16', 'memory' => '64000'}],
-  $partitionname         = 'partition',
+  $workernodes           = [{'NodeName' => 'worker[00-10]', 'CPUs' => '16'}],
+  $partitions            = [{'PartitionName' => 'workers', 'MaxMemPerCPU' => '2000'}],
 ) {
 
   file{ 'common configuration file':
