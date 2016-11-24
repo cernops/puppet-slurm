@@ -16,7 +16,6 @@ class slurm::config (
   $slurmd_port           = '6818',
   $slurmdspool_dir       = '/var/spool/slurmd',
   $slurmuser             = 'slurm',
-  $scheduler_port        = '7321',
   $accounting_db_host    = 'accountingdb.example.org',
   $accounting_db_loc     = 'accountingdb',
   $accounting_db_port    = '6819',

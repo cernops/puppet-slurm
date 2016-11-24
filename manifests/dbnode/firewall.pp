@@ -1,6 +1,6 @@
 #
 # slurm/dbnode/firewall.pp
-#   Common firewall rules for the dbnode
+#   Firewall rules for the dbnode
 #
 
 class slurm::dbnode::firewall (

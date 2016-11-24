@@ -6,11 +6,19 @@
 class slurm::headnode::setup (
   $slurmctld_folder = '/var/spool/slurmctld',
   $slurmctld_log    = '/var/log/slurmctld.log',
-  $packages      = [],
+  $packages = [
+    'slurm',
+    'slurm-devel',
+    'slurm-perlapi',
+    'slurm-plugins',
+    'slurm-sjobexit',
+    'slurm-sjstat',
+    'slurm-torque',
+  ],
 ){
 
   ensure_packages($packages)
-  
+
   file{ 'slurmctld folder':
     ensure => directory,
     path   => $slurmctld_folder,

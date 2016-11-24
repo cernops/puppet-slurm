@@ -4,9 +4,7 @@
 #   slurmdb daemon are restarted if the configuration files are modified
 #
 
-class slurm::dbnode::config (
-
-) {
+class slurm::dbnode::config {
 
   file{ 'slurmdb configuration file':
     ensure  => file,

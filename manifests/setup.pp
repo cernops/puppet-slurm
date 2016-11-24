@@ -8,38 +8,42 @@ class slurm::setup (
   $homefolder = '/usr/local/slurm',
   $slurm_gid  = '950',
   $slurm_uid  = '950',
-  $key_priv   = 'slurmkey',
-  $key_pub    = 'slurmcert',
+  $key_priv   = 'slurm_priv',
+  $key_pub    = 'slurm_pub',
 ) {
 
-  file{ 'slurm home folder':
-    ensure => directory,
-    path   => $homefolder,
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
-  }
   group{ 'slurm':
     ensure => present,
     gid    => $slurm_gid,
     system => true,
   }
+
   user{ 'slurm':
     ensure  => present,
     comment => 'SLURM workload manager',
     gid     => 'slurm',
     home    => $homefolder,
-    require => [Group['glexec'], File['slurm home folder']],
+    require => Group['slurm'],
     system  => true,
     uid     => $slurm_uid,
   }
 
+  file{ 'slurm home folder':
+    ensure  => directory,
+    path    => $homefolder,
+    group   => 'slurm',
+    mode    => '1755',
+    owner   => 'slurm',
+    require => User['slurm'],
+  }
+
   file{ 'credentials folder':
-    ensure => directory,
-    path   => "${homefolder}/credentials",
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
+    ensure  => directory,
+    path    => "${homefolder}/credentials",
+    group   => 'slurm',
+    mode    => '1755',
+    owner   => 'slurm',
+    require => User['slurm'],
   }
   teigi::secret{ 'slurm private key':
     key     => 'slurmkey',

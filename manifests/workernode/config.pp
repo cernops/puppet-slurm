@@ -4,13 +4,10 @@
 #   modified
 #
 
-class slurm::workernode::config($hostgroup = '') {
-
-  # PuppetDB lookup for many nodes.. check if OK.
-  $workernodes =  sort(unique(query_nodes("hostgroup=\"$hostgroup\"", 'fqdn')))
+class slurm::workernode::config {
 
   service{'slurmd':
     ensure    => running,
-    subscribe => File['common configuration file'],
+    subscribe => [File['common configuration file']],
   }
 }

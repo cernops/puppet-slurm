@@ -7,9 +7,9 @@
 #   Configuration file containing common parameters for headnode and workernode.
 #
 
-ControlMachine=<%= @scheduler_main_fqdn %> #headnode1.example.org
+ControlMachine=<%= @scheduler_main_fqdn %>
 #ControlAddr=
-BackupController=<%= @scheduler_backup_fqdn %> #headnode2.example.org
+BackupController=<%= @scheduler_backup_fqdn %>
 #BackupAddr=
 
 AuthType=auth/none
@@ -24,9 +24,9 @@ FirstJobId=1
 #GresTypes=
 #GroupUpdateForce=0
 #GroupUpdateTime=600
-JobCheckpointDir=<%= @checkpoint_dir %> #/var/slurm/checkpoint
-JobCredentialPrivateKey=<%= @slurmkey_loc %> #/usr/local/slurm/slurm.key
-JobCredentialPublicCertificate=<%= @slurmcert_loc %> #/usr/local/slurm/slurm.cert
+JobCheckpointDir=<%= @checkpoint_dir %>
+JobCredentialPrivateKey=<%= @slurmkey_loc %>
+JobCredentialPublicCertificate=<%= @slurmcert_loc %>
 #JobFileAppend=0
 #JobRequeue=1
 #JobSubmitPlugins=1
@@ -34,13 +34,13 @@ JobCredentialPublicCertificate=<%= @slurmcert_loc %> #/usr/local/slurm/slurm.cer
 #LaunchType=launch/slurm
 #Licenses=foo*4,bar
 #MailProg=/bin/mail
-MaxJobCount=<%= @maxjobcount %> #5000
+MaxJobCount=<%= @maxjobcount %>
 #MaxStepCount=40000
 #MaxTasksPerNode=128
 MpiDefault=none
 #MpiParams=ports=#-#
-PluginDir=<%= @plugin_dir %> #/usr/lib64/slurm
-PlugStackConfig=<%= @plugstackconf_file %> #/etc/slurm/plugstack.conf
+PluginDir=<%= @plugin_dir %>
+PlugStackConfig=<%= @plugstackconf_file %>
 #PrivateData=jobs
 ProctrackType=proctrack/pgid
 #Prolog=
@@ -53,11 +53,11 @@ ProctrackType=proctrack/pgid
 ReturnToService=1
 #SallocDefaultCommand=
 SlurmctldPidFile=/var/run/slurmctld.pid
-SlurmctldPort=<%= @slurmctld_port %> # 6817
+SlurmctldPort=<%= @slurmctld_port %>
 SlurmdPidFile=/var/run/slurmd.pid
-SlurmdPort=<%= @slurmd_port %> #6818
-SlurmdSpoolDir=<%= @slurmdspool_dir %> #/var/spool/slurmd
-SlurmUser=<%= @slurmuser %> # slurm
+SlurmdPort=<%= @slurmd_port %>
+SlurmdSpoolDir=<%= @slurmdspool_dir %>
+SlurmUser=<%= @slurmuser %>
 #SlurmdUser=root
 #SrunEpilog=
 #SrunProlog=
@@ -102,7 +102,7 @@ FastSchedule=1
 #SchedulerRootFilter=1
 #SchedulerTimeSlice=30
 SchedulerType=sched/backfill
-SchedulerPort=<%= @scheduler_port %> #7321
+#SchedulerPort=7321
 SelectType=select/cons_res
 SelectTypeParameters=CR_CPU_Memory
 
@@ -143,9 +143,9 @@ JobCompUser=<%= @jobcomp_db_user %>
 JobAcctGatherFrequency=300
 JobAcctGatherType=jobacct_gather/linux
 SlurmctldDebug=3
-SlurmctldLogFile=<%= @slurmctld_log %> #/var/log/slurmctld.log
+SlurmctldLogFile=<%= @slurmctld_log %>
 SlurmdDebug=3
-SlurmdLogFile=<%= @slurmd_log %> #/var/log/slurmd.log
+SlurmdLogFile=<%= @slurmd_log %>
 # Note, these two were commented and the loglevel is named differently. Check if works.
 #SlurmSchedLogFile=
 #SlurmSchedLogLevel=
@@ -164,12 +164,11 @@ SlurmdLogFile=<%= @slurmd_log %> #/var/log/slurmd.log
 
 
 # COMPUTE NODES
-# Preferably not many entries here. Should use asdf[0-63] notation.
 <% @workernodes.each do |key,value| -%>
 <%= key %>=<% value -%><%= ' ' -%>
 <% end %>
 
-PartitionName=DEFAULT MaxTime=INFINITE State=UP
+# PARTITIONS
 <% @partitions.each do |key,value| -%>
 <%= key %>=<% value -%><%= ' ' -%>
 <% end %>

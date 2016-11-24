@@ -4,16 +4,22 @@
 #
 
 class slurm::dbnode::setup (
-  $slurmJobacct_log = '/var/log/slurm_jobacct.log',
-  $slurmJobcomp_log = '/var/log/slurm_jobcomp.log',
-  $packages      = [],
+  $jobacct_log = '/var/log/slurm_jobacct.log',
+  $jobcomp_log = '/var/log/slurm_jobcomp.log',
+  $packages = [
+    'slurm',
+    'slurm-devel',
+    'slurm-plugins',
+    'slurm-slurmdbd',
+    'slurm-sql',
+  ],
 ){
 
   ensure_packages($packages)
 
   file{ 'slurm job accounting log':
     ensure => file,
-    path   => $slurmJobacct_log,
+    path   => $jobacct_log,
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
@@ -21,7 +27,7 @@ class slurm::dbnode::setup (
 
   file{ 'slurm completed job log':
     ensure => file,
-    path   => $slurmJobcomp_log,
+    path   => $jobcomp_log,
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',

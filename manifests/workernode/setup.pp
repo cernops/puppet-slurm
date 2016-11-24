@@ -6,7 +6,15 @@
 class slurm::workernode::setup (
   $slurmd_folder = '/var/spool/slurmd',
   $slurmd_log    = '/var/log/slurmd.log',
-  $packages      = [],
+  $packages = [
+    'slurm',
+    'slurm-devel',
+    'slurm-perlapi',
+    'slurm-plugins',
+    'slurm-sjobexit',
+    'slurm-sjstat',
+    'slurm-torque',
+  ],
 ) {
 
   ensure_packages($packages)

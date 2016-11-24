@@ -5,10 +5,9 @@
 
 class slurm::workernode {
 
-  class{'::slurm::auks':}
+  class{'::slurm::workernode::firewall':}
   class{'::slurm::setup':}->
   class{'::slurm::workernode::setup':}->
   class{'::slurm::config':}->
-  class{'::slurm::workernode::config':}->
-  class{'::slurm::install':}
+  class{'::slurm::workernode::config':}
 }

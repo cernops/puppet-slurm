@@ -3,9 +3,7 @@
 #   Ensures that the slurmctl is running
 #
 
-class slurm::headnode::config (
-
-) {
+class slurm::headnode::config {
 
   service{'slurmctld':
     ensure    => running,
