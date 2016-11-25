@@ -7,12 +7,12 @@
 #   Configuration file containing common parameters for headnode and workernode.
 #
 
-ControlMachine=<%= @scheduler_main_fqdn %>
+ControlMachine=<%= @headnode %>
 #ControlAddr=
-BackupController=<%= @scheduler_backup_fqdn %>
+BackupController=<%= @failover %>
 #BackupAddr=
 
-AuthType=auth/none
+AuthType=auks
 #CheckpointType=checkpoint/none
 CryptoType=crypto/openssl
 #DisableRootJobs=NO
@@ -164,15 +164,16 @@ SlurmdLogFile=<%= @slurmd_log %>
 
 
 # COMPUTE NODES
-<% @workernodes.each do |workernode| -%>
-<% workernode.each do |key,value| -%>
-<%= key %>=<% value -%><%= ' ' -%>
-<% end -%>
+
+<% @workernodes.each do |workernode| %>
+<% workernode.each_pair do |key, value| -%>
+<%= key %>=<%= value -%><%= ' '-%>
+<% end %>
 <% end %>
 
 # PARTITIONS
-<% @partitions.each do |partition| -%>
-<% partition.each do |key,value| -%>
-<%= key %>=<% value -%><%= ' ' -%>
-<% end -%>
+<% @partitions.each do |partition| %>
+<% partition.each_pair do |key,value| -%>
+<%= key %>=<%= value -%><%= ' ' -%>
+<% end %>
 <% end %>

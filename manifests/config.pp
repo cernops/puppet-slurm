@@ -4,8 +4,8 @@
 #
 
 class slurm::config (
-  $scheduler_main_fqdn   = 'headnode1.example.org',
-  $scheduler_backup_fqdn = 'headnode2.example.org',
+  $headnode              = 'headnode1.example.org',
+  $failover              = 'headnode2.example.org',
   $checkpoint_dir        = '/var/slurm/checkpoint',
   $slurmkey_loc          = '/usr/local/slurm/slurm.key',
   $slurmcert_loc         = '/usr/local/slurm/slurm.cert',
