@@ -10,6 +10,6 @@ class slurm::headnode::firewall (
   firewall{ '200 open slurmctld port':
     action => 'accept',
     dport  => $slurmctld_port,
-    proto  => 'all',
+    proto  => 'tcp',
   }
 }

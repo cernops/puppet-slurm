@@ -10,6 +10,6 @@ class slurm::dbnode::firewall (
   firewall{ '203 open slurmdbd port':
     action => 'accept',
     dport  => $slurmdbd_port,
-    proto  => 'all',
+    proto  => 'tcp',
   }
 }

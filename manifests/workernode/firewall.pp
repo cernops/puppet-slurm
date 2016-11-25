@@ -10,6 +10,6 @@ class slurm::workernode::firewall (
   firewall{ '201 open slurmd port':
     action => 'accept',
     dport  => $slurmd_port,
-    proto  => 'all',
+    proto  => 'tcp',
   }
 }
