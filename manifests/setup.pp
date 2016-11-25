@@ -18,10 +18,10 @@ class slurm::setup (
     system => true,
   }
 
-  file{ 'slurm home folder':
-    ensure => directory,
-    path   => $homefolder,
-  }
+  #file{ 'slurm home folder':
+  #  ensure => directory,
+  #  path   => $homefolder,
+  #}
 
   user{ 'slurm':
     ensure  => present,
