@@ -5,9 +5,14 @@
 
 class slurm::headnode {
 
-  class{'::slurm::headnode::firewall':}
-  class{'::slurm::setup':}->
-  class{'::slurm::headnode::setup':}->
-  class{'::slurm::config':}->
-  class{'::slurm::headnode::config':}
+  include ::slurm::headnode::firewall
+  include ::slurm::setup
+  include ::slurm::headnode::setup
+  include ::slurm::config
+  include ::slurm::headnode::config
+
+  Class['::slurm::setup']->
+  Class['::slurm::headnode::setup']->
+  Class['::slurm::config']->
+  Class['::slurm::headnode::config']
 }

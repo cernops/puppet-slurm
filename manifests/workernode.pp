@@ -5,9 +5,14 @@
 
 class slurm::workernode {
 
-  class{'::slurm::workernode::firewall':}
-  class{'::slurm::setup':}->
-  class{'::slurm::workernode::setup':}->
-  class{'::slurm::config':}->
-  class{'::slurm::workernode::config':}
+  include ::slurm::workernode::firewall
+  include ::slurm::setup
+  include ::slurm::workernode::setup
+  include ::slurm::config
+  include ::slurm::workernode::config
+
+  Class['::slurm::setup']->
+  Class['::slurm::workernode::setup']->
+  Class['::slurm::config']->
+  Class['::slurm::workernode::config']
 }

@@ -1,9 +1,9 @@
 #
-# slurm/headnode/firewall.pp
-#   Firewall rules for the headnode
+# slurm/workernode/firewall.pp
+#   Firewall rules for the workernode
 #
 
-class slurm::headnode::firewall (
+class slurm::workernode::firewall (
   $slurmd_port    = '6818',
 ) {
 
