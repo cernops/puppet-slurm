@@ -18,19 +18,22 @@ class slurm::setup (
     system => true,
   }
 
-  #file{ 'slurm home folder':
-  #  ensure => directory,
-  #  path   => $homefolder,
-  #}
-
   user{ 'slurm':
     ensure  => present,
     comment => 'SLURM workload manager',
     gid     => 'slurm',
-    home    => $homefolder,
-    require => [Group['slurm'],File['slurm home folder']],
+    require => Group['slurm'],
     system  => true,
     uid     => $slurm_uid,
+  }
+
+  file{ 'slurm folder':
+    ensure  => directory,
+    path    => $homefolder,
+    group   => 'slurm',
+    mode    => '1755',
+    owner   => 'slurm',
+    require => User['slurm'],
   }
 
   file{ 'credentials folder':
