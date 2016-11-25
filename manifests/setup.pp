@@ -8,8 +8,8 @@ class slurm::setup (
   $homefolder = '/usr/local/slurm',
   $slurm_gid  = '950',
   $slurm_uid  = '950',
-  $key_priv   = 'slurm_priv',
-  $key_pub    = 'slurm_pub',
+  $key_priv   = 'slurmkey',
+  $key_pub    = 'slurmcert',
 ) {
 
   group{ 'slurm':
@@ -46,19 +46,19 @@ class slurm::setup (
     require => User['slurm'],
   }
   teigi::secret{ 'slurm private key':
-    key     => 'slurmkey',
+    key     => $key_priv,
     path    => "${homefolder}/credentials/slurm.key",
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '0600',
+    mode    => '0400',
     require => File['credentials folder'],
   }
   teigi::secret{ 'slurm public key':
-    key     => 'slurmcert',
+    key     => $key_pub,
     path    => "${homefolder}/credentials/slurm.cert",
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '0644',
+    mode    => '0444',
     require => File['credentials folder'],
   }
 }
