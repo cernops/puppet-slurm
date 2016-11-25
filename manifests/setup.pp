@@ -21,9 +21,6 @@ class slurm::setup (
   file{ 'slurm home folder':
     ensure => directory,
     path   => $homefolder,
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
   }
 
   user{ 'slurm':
