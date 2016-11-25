@@ -15,7 +15,7 @@ class slurm::headnode::setup (
     'slurm-sjstat',
     'slurm-torque',
   ],
-){
+) {
 
   ensure_packages($packages)
 

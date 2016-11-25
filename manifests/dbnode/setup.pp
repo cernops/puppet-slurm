@@ -13,7 +13,7 @@ class slurm::dbnode::setup (
     'slurm-slurmdbd',
     'slurm-sql',
   ],
-){
+) {
 
   ensure_packages($packages)
 

@@ -5,7 +5,7 @@
 
 class slurm (
   $node_type = '',
-){
+) {
 
   case $node_type {
     'worker': {
