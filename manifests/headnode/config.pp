@@ -5,7 +5,8 @@
 
 class slurm::headnode::config {
 
-  service{'slurmctld':
+  # Starts slurmctld on headnode
+  service{'slurm':
     ensure    => running,
     subscribe => File['common configuration file'],
   }
