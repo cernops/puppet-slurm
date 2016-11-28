@@ -8,7 +8,7 @@ class slurm::headnode::config {
   # Starts slurmctld on headnode
   service{'slurm':
     ensure    => running,
-    subscribe => File['common configuration file'],
+    subscribe => File['/etc/slurm/slurm.conf'],
   }
 
 }

@@ -6,16 +6,15 @@
 
 class slurm::dbnode::config {
 
-  file{ 'slurmdb configuration file':
+  file{ '/etc/slurm/slurmdbd.conf':
     ensure  => file,
-    path    => '/etc/slurm/slurmdbd.conf',
     content => template('slurm/slurmdbd.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0644',
   }
-  service{'slurmdbd':
+  service{'slurmdb':
     ensure    => running,
-    subscribe => File['slurmdb configuration file'],
+    subscribe => File['/etc/slurm/slurm.conf','/etc/slurm/slurmdbd.conf'],
   }
 }

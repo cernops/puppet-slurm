@@ -9,6 +9,6 @@ class slurm::workernode::config {
   # Starts slurmd on WN
   service{'slurm':
     ensure    => running,
-    subscribe => [File['common configuration file']],
+    subscribe => File['/etc/slurm/slurm.conf'],
   }
 }
