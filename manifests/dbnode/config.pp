@@ -9,7 +9,7 @@ class slurm::dbnode::config (
   $slurmdb_port   = '6819',
   $slurmuser      = 'slurm',
   $db_host        = 'db_service.example.org',
-  $dp_port        = '1234',
+  $db_port        = '1234',
   $db_user        = 'user',
   $db_loc         = 'accountingdb',
 ) {
