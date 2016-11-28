@@ -18,12 +18,12 @@ class slurm::config (
   $slurmuser             = 'slurm',
   $accounting_db_host    = 'accountingdb.example.org',
   $accounting_db_loc     = 'accountingdb',
-  $accounting_db_port    = '1234',
+  $accounting_db_port    = '6819',
   $accounting_db_user    = 'slurm',
   $clustername           = 'batch',
   $jobcomp_db_host       = 'jobcompdb.example.org',
   $jobcomp_db_loc        = 'jobcompdb',
-  $jobcomp_db_port       = '1234',
+  $jobcomp_db_port       = '6819',
   $jobcomp_db_user       = 'slurm',
   $slurmctld_log         = '/var/log/slurmctld.log',
   $slurmd_log            = '/var/log/slurmd.log',
@@ -32,7 +32,7 @@ class slurm::config (
 ) {
 
   teigi::secret::sub_file{'/etc/slurm/slurm.conf':
-    teigi_keys => ['slurmdbpass', 'slurmcert', 'slurmkey'],
+    teigi_keys => ['slurmdbpass'],
     template   => 'slurm/slurm.conf.erb',
     owner      => 'slurm',
     group      => 'slurm',
