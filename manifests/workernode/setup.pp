@@ -8,6 +8,7 @@ class slurm::workernode::setup (
   $slurmd_log    = '/var/log/slurmd.log',
   $packages = [
     'slurm',
+    'slurm-auth-none',
     'slurm-devel',
     'slurm-perlapi',
     'slurm-plugins',
