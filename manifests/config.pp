@@ -31,17 +31,12 @@ class slurm::config (
   $partitions            = [{'PartitionName' => 'workers', 'MaxMemPerCPU' => '2000'}],
 ) {
 
-  file{ 'common configuration file':
-    ensure  => file,
-    path    => '/etc/slurm/slurm.conf',
-    content => template('slurm/slurm.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-  }
-
-  teigi::secret::sub_file{'teigi secret':
+  teigi::secret::sub_file{'/etc/slurm/slurm.conf':
+    ensure     => file,
     teigi_keys => ['slurmdbpass', 'slurmcert', 'slurmkey'],
-    template => "slurm/slurm.conf.erb",
+    template   => "slurm/slurm.conf.erb",
+    owner      => 'slurm',
+    group      => 'slurm',
+    mode       => '0644',
   }
 }
