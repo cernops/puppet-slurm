@@ -35,5 +35,4 @@ class slurm::headnode::setup (
     mode   => '0600',
     owner  => 'slurm',
   }
-
 }

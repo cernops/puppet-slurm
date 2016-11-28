@@ -1,7 +1,7 @@
 #
-# slurm/config.pp
-#   Creates the slurmdb configuration file and ensures that the
-#   slurmdb daemon are restarted if the configuration files are modified
+# slurm/dbnode/config.pp
+#   Creates the slurmdb configuration file and ensures that the slurmdbd
+#   service is running and restarted if the configuration file is modified
 #
 
 class slurm::dbnode::config (
@@ -22,7 +22,7 @@ class slurm::dbnode::config (
     mode       => '0644',
   }
 
-  #service{'slurmdb':
+  #service{'slurmdbd':
   #  ensure    => running,
   #  subscribe => Teigi_sub_file['/etc/slurm/slurmdbd.conf','/etc/slurm/slurmdbd.conf'],
   #}

@@ -1,5 +1,5 @@
 #
-# slurm/headnode/setup.pp
+# slurm/workernode/setup.pp
 #   Creates folders/logfiles and installs packages specific to workernode
 #
 

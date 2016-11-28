@@ -1,14 +1,15 @@
 #
-# slurm/config.pp
-#   Ensures that the slurm daemons is restarted if the configuration files is
-#   modified
+# slurm/workernode/config.pp
+#   Ensures that the slurmd service is running and restarted if the
+#   configuration file is modified
 #
 
 class slurm::workernode::config {
 
   # Starts slurmd on WN
-  service{'slurm':
+  service{'slurmd':
     ensure    => running,
+    enable    => true,
     subscribe => Teigi_sub_file['/etc/slurm/slurm.conf'],
   }
 }
