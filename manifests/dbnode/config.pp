@@ -15,6 +15,6 @@ class slurm::dbnode::config {
   }
   service{'slurmdb':
     ensure    => running,
-    subscribe => File['/etc/slurm/slurm.conf','/etc/slurm/slurmdbd.conf'],
+    subscribe => Teigi_sub_file['/etc/slurm/slurm.conf'],File['/etc/slurm/slurmdbd.conf']],
   }
 }
