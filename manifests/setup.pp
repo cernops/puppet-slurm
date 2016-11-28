@@ -17,7 +17,6 @@ class slurm::setup (
     gid    => $slurm_gid,
     system => true,
   }
-
   user{ 'slurm':
     ensure  => present,
     comment => 'SLURM workload manager',
@@ -26,22 +25,30 @@ class slurm::setup (
     system  => true,
     uid     => $slurm_uid,
   }
-
   file{ 'slurm folder':
     ensure  => directory,
     path    => $homefolder,
+    owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
+    require => User['slurm'],
+  }
+
+  file{ '/etc/slurm/plugstack.conf':
+    ensure  => file,
+    source  => 'puppet:///modules/slurm/plugstack.conf',
     owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
     require => User['slurm'],
   }
 
   file{ 'credentials folder':
     ensure  => directory,
     path    => "${homefolder}/credentials",
+    owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
-    owner   => 'slurm',
     require => User['slurm'],
   }
   teigi::secret{ 'slurm private key':
