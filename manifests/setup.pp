@@ -8,6 +8,7 @@ class slurm::setup (
   $homefolder = '/usr/local/slurm',
   $munge_folder  = '/etc/munge',
   $munge_log     = '/var/log/munge',
+  $munge_home = '/var/lib/munge',
   $slurm_gid  = '950',
   $slurm_uid  = '950',
   $munge_gid  = '951',
@@ -29,6 +30,14 @@ class slurm::setup (
   file{ 'munge folder':
     ensure => directory,
     path   => $munge_folder,
+    group  => 'munge',
+    mode   => '1700',
+    owner  => 'munge',
+  }
+
+  file{ 'munge homedir':
+    ensure => directory,
+    path   => $munge_home,
     group  => 'munge',
     mode   => '1700',
     owner  => 'munge',
@@ -61,7 +70,7 @@ class slurm::setup (
   service{'munge':
     ensure  => running,
     enable  => true,
-    require => Package[$packages],
+    require => File['munge homedir'],
   }
 
   group{ 'slurm':
