@@ -50,6 +50,7 @@ class slurm::setup (
   user{ 'munge':
     ensure  => present,
     comment => 'Munge',
+    home    => '/var/lib/munge',
     gid     => $munge_gid,
     require => Group['munge'],
     system  => true,
