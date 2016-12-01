@@ -111,12 +111,12 @@ class slurm::setup (
     mode    => '0444',
     require => File['credentials folder'],
   }
-  #teigi::secret{ 'munge secret key':
-  #  key     => $munge_key,
-  #  path    => '/etc/munge/munge.key',
-  #  owner   => 'munge',
-  #  group   => 'munge',
-  #  mode    => '0400',
-  #  require => File['munge folder'],
-  #}
+  teigi::secret{ 'munge secret key':
+    key     => $munge_key,
+    path    => '/etc/munge/munge.key',
+    owner   => 'munge',
+    group   => 'munge',
+    mode    => '0400',
+    require => File['munge folder'],
+  }
 }
