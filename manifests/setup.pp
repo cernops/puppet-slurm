@@ -6,11 +6,55 @@
 
 class slurm::setup (
   $homefolder = '/usr/local/slurm',
+  $munge_folder  = '/etc/munge',
+  $munge_log     = '/var/log/munge',
   $slurm_gid  = '950',
   $slurm_uid  = '950',
+  $munge_gid  = '951',
+  $munge_uid  = '951',
   $key_priv   = 'slurmkey',
   $key_pub    = 'slurmcert',
+  $munge_key  = 'mungekey',
+
+  $packages = [
+    'slurm-munge',
+    'munge',
+    'munge-libs',
+    'munge-devel',
+  ],
 ) {
+
+  ensure_packages($packages)
+  
+  file{ 'munge folder':
+    ensure => directory,
+    path   => $munge_folder,
+    group  => 'munge',
+    mode   => '1700',
+    owner  => 'munge',
+  }
+
+  file{ 'munge log folder':
+    ensure => directory,
+    path   => $munge_log,
+    group  => 'munge',
+    mode   => '1700',
+    owner  => 'munge',
+  }
+
+  group{ 'munge':
+    ensure => present,
+    gid    => $munge_gid,
+    system => true,
+  }
+  user{ 'munge':
+    ensure  => present,
+    comment => 'Munge',
+    gid     => $munge_gid,
+    require => Group['munge'],
+    system  => true,
+    uid     => $munge_uid,
+  }
 
   group{ 'slurm':
     ensure => present,
@@ -67,4 +111,12 @@ class slurm::setup (
     mode    => '0444',
     require => File['credentials folder'],
   }
+  #teigi::secret{ 'munge secret key':
+  #  key     => $munge_key,
+  #  path    => '/etc/munge/munge.key',
+  #  owner   => 'munge',
+  #  group   => 'munge',
+  #  mode    => '0400',
+  #  require => File['munge folder'],
+  #}
 }
