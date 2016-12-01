@@ -55,6 +55,13 @@ class slurm::setup (
     system  => true,
     uid     => $munge_uid,
   }
+  
+  # Starts munge service on headnode
+  service{'munge':
+    ensure  => running,
+    enable  => true,
+    require => Package[$packages],
+  }
 
   group{ 'slurm':
     ensure => present,
