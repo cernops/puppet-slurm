@@ -5,19 +5,20 @@
 #
 
 class slurm::setup (
-  $homefolder = '/usr/local/slurm',
-  $munge_folder  = '/etc/munge',
-  $munge_log     = '/var/log/munge',
-  $munge_home = '/var/lib/munge',
-  $slurm_gid  = '950',
-  $slurm_uid  = '950',
-  $munge_gid  = '951',
-  $munge_uid  = '951',
-  $key_priv   = 'slurmkey',
-  $key_pub    = 'slurmcert',
-  $munge_key  = 'mungekey',
-
+  $slurm_home     = '/usr/local/slurm',
+  $slurm_gid      = '950',
+  $slurm_uid      = '950',
+  $slurm_key_priv = 'slurmkey',
+  $slurm_key_pub  = 'slurmcert',
+  $munge_gid      = '951',
+  $munge_uid      = '951',
+  $munge_folder   = '/etc/munge',
+  $munge_log      = '/var/log/munge',
+  $munge_home     = '/var/lib/munge',
+  $munge_key      = 'mungekey',
   $packages = [
+    'slurm',
+    'slurm-devel',
     'slurm-munge',
     'munge',
     'munge-libs',
@@ -26,52 +27,6 @@ class slurm::setup (
 ) {
 
   ensure_packages($packages)
-  
-  file{ 'munge folder':
-    ensure => directory,
-    path   => $munge_folder,
-    group  => 'munge',
-    mode   => '1700',
-    owner  => 'munge',
-  }
-
-  file{ 'munge homedir':
-    ensure => directory,
-    path   => $munge_home,
-    group  => 'munge',
-    mode   => '1700',
-    owner  => 'munge',
-  }
-
-  file{ 'munge log folder':
-    ensure => directory,
-    path   => $munge_log,
-    group  => 'munge',
-    mode   => '1700',
-    owner  => 'munge',
-  }
-
-  group{ 'munge':
-    ensure => present,
-    gid    => $munge_gid,
-    system => true,
-  }
-  user{ 'munge':
-    ensure  => present,
-    comment => 'Munge',
-    home    => '/var/lib/munge',
-    gid     => $munge_gid,
-    require => Group['munge'],
-    system  => true,
-    uid     => $munge_uid,
-  }
-  
-  # Starts munge service on headnode
-  service{'munge':
-    ensure  => running,
-    enable  => true,
-    require => File['munge homedir'],
-  }
 
   group{ 'slurm':
     ensure => present,
@@ -88,7 +43,7 @@ class slurm::setup (
   }
   file{ 'slurm folder':
     ensure  => directory,
-    path    => $homefolder,
+    path    => $slurm_home,
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
@@ -106,27 +61,73 @@ class slurm::setup (
 
   file{ 'credentials folder':
     ensure  => directory,
-    path    => "${homefolder}/credentials",
+    path    => "${slurm_home}/credentials",
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
     require => User['slurm'],
   }
   teigi::secret{ 'slurm private key':
-    key     => $key_priv,
-    path    => "${homefolder}/credentials/slurm.key",
+    key     => $slurm_key_priv,
+    path    => "${slurm_home}/credentials/slurm.key",
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0400',
     require => File['credentials folder'],
   }
   teigi::secret{ 'slurm public key':
-    key     => $key_pub,
-    path    => "${homefolder}/credentials/slurm.cert",
+    key     => $slurm_key_pub,
+    path    => "${slurm_home}/credentials/slurm.cert",
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0444',
     require => File['credentials folder'],
+  }
+
+  group{ 'munge':
+    ensure => present,
+    gid    => $munge_gid,
+    system => true,
+  }
+  user{ 'munge':
+    ensure  => present,
+    comment => 'Munge',
+    home    => '/var/lib/munge',
+    gid     => $munge_gid,
+    require => Group['munge'],
+    system  => true,
+    uid     => $munge_uid,
+  }
+
+  file{ 'munge folder':
+    ensure  => directory,
+    path    => $munge_folder,
+    owner   => 'munge',
+    group   => 'munge',
+    mode    => '1700',
+    require => User['munge'],
+  }
+  file{ 'munge homedir':
+    ensure  => directory,
+    path    => $munge_home,
+    owner   => 'munge',
+    group   => 'munge',
+    mode    => '1700',
+    require => User['munge'],
+  }
+  file{ 'munge log folder':
+    ensure  => directory,
+    path    => $munge_log,
+    owner   => 'munge',
+    group   => 'munge',
+    mode    => '1700',
+    require => User['munge'],
+  }
+
+  service{'munge':
+    ensure  => running,
+    enable  => true,
+    require => File['munge homedir'],
   }
   teigi::secret{ 'munge secret key':
     key     => $munge_key,

@@ -7,9 +7,7 @@ class slurm::headnode::setup (
   $slurmctld_folder = '/var/spool/slurmctld',
   $slurmctld_log    = '/var/log/slurmctld.log',
   $packages = [
-    'slurm',
     'slurm-auth-none',
-    'slurm-devel',
     'slurm-perlapi',
     'slurm-plugins',
     'slurm-sjobexit',

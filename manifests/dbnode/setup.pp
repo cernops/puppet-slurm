@@ -7,8 +7,6 @@ class slurm::dbnode::setup (
   $jobacct_log = '/var/log/slurm_jobacct.log',
   $jobcomp_log = '/var/log/slurm_jobcomp.log',
   $packages = [
-    'slurm',
-    'slurm-devel',
     'slurm-plugins',
     'slurm-slurmdbd',
     'slurm-sql',
