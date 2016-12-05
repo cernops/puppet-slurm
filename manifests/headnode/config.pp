@@ -8,8 +8,9 @@ class slurm::headnode::config {
 
   # Starts slurmctld on headnode
   service{'slurmctld':
-    ensure    => running,
-    enable    => true,
-    subscribe => Teigi_sub_file['/etc/slurm/slurm.conf'],
+    ensure     => running,
+    enable     => true,
+    has_status => true,
+    subscribe  => [Teigi_sub_file['/etc/slurm/slurm.conf'], Package['slurm']],
   }
 }

@@ -38,4 +38,11 @@ class slurm::config (
     group      => 'slurm',
     mode       => '0644',
   }
+
+  service{'munge':
+    ensure     => running,
+    enable     => true,
+    has_status => true,
+    subscribe  => [File['munge homedir'], Package['slurm-munge','munge','munge-libs','munge-devel',],
+  }
 }

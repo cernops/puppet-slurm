@@ -12,7 +12,6 @@ class slurm::setup (
   $slurm_key_pub  = 'slurmcert',
   $munge_gid      = '951',
   $munge_uid      = '951',
-  $munge_folder   = '/etc/munge',
   $munge_log      = '/var/log/munge',
   $munge_home     = '/var/lib/munge',
   $munge_key      = 'mungekey',
@@ -99,14 +98,6 @@ class slurm::setup (
     uid     => $munge_uid,
   }
 
-  file{ 'munge folder':
-    ensure  => directory,
-    path    => $munge_folder,
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '1700',
-    require => User['munge'],
-  }
   file{ 'munge homedir':
     ensure  => directory,
     path    => $munge_home,
@@ -124,17 +115,12 @@ class slurm::setup (
     require => User['munge'],
   }
 
-  service{'munge':
-    ensure  => running,
-    enable  => true,
-    require => File['munge homedir'],
-  }
   teigi::secret{ 'munge secret key':
     key     => $munge_key,
     path    => '/etc/munge/munge.key',
     owner   => 'munge',
     group   => 'munge',
     mode    => '0400',
-    require => File['munge folder'],
+    require => Package['munge','slurm-munge'],
   }
 }
