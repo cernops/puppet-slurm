@@ -40,9 +40,9 @@ class slurm::config (
   }
 
   service{'munge':
-    ensure     => running,
-    enable     => true,
-    has_status => true,
-    subscribe  => [File['munge homedir'], Package['slurm-munge','munge','munge-libs','munge-devel']],
+    ensure    => running,
+    enable    => true,
+    hasstatus => true,
+    subscribe => [File['munge homedir'], Package['slurm-munge','munge','munge-libs','munge-devel']],
   }
 }

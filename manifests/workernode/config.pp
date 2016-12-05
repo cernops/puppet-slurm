@@ -8,9 +8,9 @@ class slurm::workernode::config {
 
   # Starts slurmd on WN
   service{'slurmd':
-    ensure     => running,
-    enable     => true,
-    has_status => true,
-    subscribe  => [Teigi_sub_file['/etc/slurm/slurm.conf'], Package['slurm'],],
+    ensure    => running,
+    enable    => true,
+    hasstatus => true,
+    subscribe => [Teigi_sub_file['/etc/slurm/slurm.conf'], Package['slurm'],],
   }
 }
