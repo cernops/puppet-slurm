@@ -43,6 +43,6 @@ class slurm::config (
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => [File['munge homedir', '/etc/munge/munge.key'], Package['slurm-munge','munge','munge-libs','munge-devel']],
+    subscribe => File['munge homedir','/etc/munge/munge.key'],
   }
 }
