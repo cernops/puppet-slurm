@@ -130,6 +130,6 @@ class slurm::setup (
     owner   => 'munge',
     group   => 'munge',
     mode    => '0400',
-    require => Package['munge','slurm-munge'],
+    require => [Package['munge','slurm-munge'],File['munge folder']],
   }
 }
