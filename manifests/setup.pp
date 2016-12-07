@@ -12,6 +12,7 @@ class slurm::setup (
   $slurm_key_pub  = 'slurmcert',
   $munge_gid      = '951',
   $munge_uid      = '951',
+  $munge_folder   = '/etc/munge',
   $munge_log      = '/var/log/munge',
   $munge_home     = '/var/lib/munge',
   $munge_key      = 'mungekey',
@@ -97,7 +98,15 @@ class slurm::setup (
     system  => true,
     uid     => $munge_uid,
   }
-
+    
+  file{ 'munge folder':
+    ensure  => directory,
+    path    => $munge_folder,
+    owner   => 'munge',
+    group   => 'munge',
+    mode    => '1700',
+    require => User['munge'],
+  }
   file{ 'munge homedir':
     ensure  => directory,
     path    => $munge_home,
