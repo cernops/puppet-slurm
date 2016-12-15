@@ -98,7 +98,7 @@ class slurm::setup (
     system  => true,
     uid     => $munge_uid,
   }
-    
+
   file{ 'munge folder':
     ensure  => directory,
     path    => $munge_folder,
@@ -130,6 +130,6 @@ class slurm::setup (
     owner   => 'munge',
     group   => 'munge',
     mode    => '0400',
-    require => [Package['munge','slurm-munge'],File['munge folder']],
+    require => File['munge folder'],
   }
 }
