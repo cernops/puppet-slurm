@@ -22,10 +22,10 @@ class slurm::dbnode::config (
     mode       => '0644',
   }
 
-  #service{'slurmdbd':
-  #  ensure    => running,
-  #  enable    => true,
-  #  hasstatus => true,
-  #  subscribe => [Teigi_sub_file['/etc/slurm/slurmdbd.conf','/etc/slurm/slurmdbd.conf'], Package['slurm-slurmdbd']],
-  #}
+  service{'slurmdbd':
+    ensure    => running,
+    enable    => true,
+    hasstatus => true,
+    subscribe => [Teigi_sub_file['/etc/slurm/slurmdbd.conf','/etc/slurm/slurm.conf'], Package['slurm-slurmdbd']],
+  }
 }
