@@ -37,7 +37,7 @@ PidFile=/var/run/slurmdbd.pid
 #TrackWCKey=yes
 #
 # Database info
-StorageType=accounting_storage/slurmdbd
+StorageType=accounting_storage/mysql
 StorageHost=<%= @db_host %>
 StoragePort=<%= @db_port %>
 StoragePass=%TEIGI__slurmdbpass__%
