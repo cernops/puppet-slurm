@@ -6,6 +6,7 @@
 class slurm::dbnode::setup (
   $jobacct_log = '/var/log/slurm_jobacct.log',
   $jobcomp_log = '/var/log/slurm_jobcomp.log',
+  $slurmdbd_log = '/var/log/slurm/slurmdbd.log',
   $packages = [
     'slurm-plugins',
     'slurm-slurmdbd',
@@ -26,6 +27,14 @@ class slurm::dbnode::setup (
   file{ 'slurm completed job log':
     ensure => file,
     path   => $jobcomp_log,
+    group  => 'slurm',
+    mode   => '0600',
+    owner  => 'slurm',
+  }
+
+  file{ 'slurmdbd log file':
+    ensure => file,
+    path   => $slurmdbd_log,
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
