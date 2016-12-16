@@ -6,6 +6,7 @@
 
 class slurm::setup (
   $slurm_home     = '/usr/local/slurm',
+  $slurm_log      = '/var/log/slurm',
   $slurm_gid      = '950',
   $slurm_uid      = '950',
   $slurm_key_priv = 'slurmkey',
@@ -44,6 +45,14 @@ class slurm::setup (
   file{ 'slurm folder':
     ensure  => directory,
     path    => $slurm_home,
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
+    require => User['slurm'],
+  }
+  file{ 'slurm log folder':
+    ensure  => directory,
+    path    => $slurm_log,
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
