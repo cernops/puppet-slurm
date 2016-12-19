@@ -16,6 +16,7 @@ class slurm::setup (
   $munge_folder   = '/etc/munge',
   $munge_log      = '/var/log/munge',
   $munge_home     = '/var/lib/munge',
+  $munge_run      = '/run/munge',
   $munge_key      = 'mungekey',
   $packages = [
     'slurm',
@@ -127,6 +128,14 @@ class slurm::setup (
   file{ 'munge log folder':
     ensure  => directory,
     path    => $munge_log,
+    owner   => 'munge',
+    group   => 'munge',
+    mode    => '1700',
+    require => User['munge'],
+  }
+  file{ 'munge run folder':
+    ensure  => directory,
+    path    => $munge_run,
     owner   => 'munge',
     group   => 'munge',
     mode    => '1700',
