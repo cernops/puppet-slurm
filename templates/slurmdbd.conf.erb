@@ -16,13 +16,13 @@
 #StepPurge=1
 #
 # Authentication info
-AuthType=auth/none
-#AuthInfo=/var/run/munge/munge.socket.2
+AuthType=auth/munge
+AuthInfo=/var/run/munge/munge.socket.2
 #
 # slurmDBD info
 #
 # DbdHost name, used as an argument to the gethostbyname() function
-DbdAddr=<%= @slurmdb_host %>
+#DbdAddr=<%= @slurmdb_host %>
 # name of the machine where the Slurm Database Daemon runs
 DbdHost=<%= @slurmdb_host %>
 DbdPort=<%= @slurmdb_port %>
