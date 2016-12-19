@@ -138,7 +138,7 @@ class slurm::setup (
     path    => $munge_run,
     owner   => 'munge',
     group   => 'munge',
-    mode    => '1700',
+    mode    => '1755',
     require => User['munge'],
   }
 
