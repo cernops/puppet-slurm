@@ -20,29 +20,29 @@ class slurm::headnode::setup (
   ensure_packages($packages)
 
   file{ 'slurmctld folder':
-    ensure => directory,
-    path   => $slurmctld_folder,
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
+    ensure  => directory,
+    path    => $slurmctld_folder,
+    group   => 'slurm',
+    mode    => '1755',
+    owner   => 'slurm',
     require => User['slurm'],
   }
 
   file{ 'slurmctld state folder':
-    ensure => directory,
-    path   => $slurm_state_folder,
-    group  => 'slurm',
-    mode   => '1755',
-    owner  => 'slurm',
+    ensure  => directory,
+    path    => $slurm_state_folder,
+    group   => 'slurm',
+    mode    => '1755',
+    owner   => 'slurm',
     require => File['slurmctld folder'],
   }
 
   file{ 'slurmctld log':
-    ensure => file,
-    path   => $slurmctld_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
+    ensure  => file,
+    path    => $slurmctld_log,
+    group   => 'slurm',
+    mode    => '0600',
+    owner   => 'slurm',
     require => User['slurm'],
   }
 
