@@ -42,7 +42,7 @@ MpiDefault=pmi2
 PluginDir=<%= @plugin_dir %>
 PlugStackConfig=<%= @plugstackconf_file %>
 #PrivateData=jobs
-ProctrackType=proctrack/pgid
+ProctrackType=proctrack/cgroup
 #Prolog=
 #PrologFlags=
 #PrologSlurmctld=
@@ -64,7 +64,7 @@ SlurmUser=<%= @slurmuser %>
 StateSaveLocation=<%= @slurmstate_dir %>
 SwitchType=switch/none
 #TaskEpilog=
-TaskPlugin=task/affinity
+TaskPlugin=task/cgroup
 TaskPluginParam=Sched
 #TaskProlog=
 #TopologyPlugin=topology/tree
@@ -141,7 +141,7 @@ JobCompType=jobcomp/none #jobcomp/slurmdbd
 #JobCompUser=<%= @jobcomp_db_user %>
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300
-JobAcctGatherType=jobacct_gather/none
+JobAcctGatherType=jobacct_gather/cgroup
 SlurmctldDebug=3
 SlurmctldLogFile=<%= @slurmctld_log %>
 SlurmdDebug=3
