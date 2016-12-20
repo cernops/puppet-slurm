@@ -74,7 +74,7 @@ class slurm::setup (
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
-    require => User['slurm'],
+    require => File['slurmctld folder'],
   }
 
   file{ 'credentials folder':
