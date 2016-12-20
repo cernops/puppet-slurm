@@ -4,8 +4,9 @@
 #
 
 class slurm::headnode::setup (
-  $slurmctld_folder = '/var/spool/slurmctld',
-  $slurmctld_log    = '/var/log/slurmctld.log',
+  $slurmctld_folder   = '/var/spool/slurmctld',
+  $slurm_state_folder = '/var/spool/slurmctld/slurm.state',
+  $slurmctld_log      = '/var/log/slurmctld.log',
   $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -27,13 +28,13 @@ class slurm::headnode::setup (
     require => User['slurm'],
   }
 
-  file{ 'slurmctld log':
-    ensure => file,
-    path   => $slurmctld_log,
+  file{ 'slurmctld state folder':
+    ensure => directory,
+    path   => $slurm_state_folder,
     group  => 'slurm',
-    mode   => '0600',
+    mode   => '1755',
     owner  => 'slurm',
-    require => User['slurm'],
+    require => File['slurmctld folder'],
   }
 
   file{ '/var/spool/slurmctld/slurm.state/clustername':
@@ -41,7 +42,16 @@ class slurm::headnode::setup (
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
-    require => File['slurmctld folder'],
+    require => File['slurmctld state folder'],
+  }
+
+  file{ 'slurmctld log':
+    ensure => file,
+    path   => $slurmctld_log,
+    group  => 'slurm',
+    mode   => '0600',
+    owner  => 'slurm',
+    require => User['slurm'],
   }
 
 }
