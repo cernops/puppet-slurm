@@ -37,14 +37,6 @@ class slurm::headnode::setup (
     require => File['slurmctld folder'],
   }
 
-  file{ '/var/spool/slurmctld/slurm.state/clustername':
-    ensure  => file,
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '1755',
-    require => File['slurmctld state folder'],
-  }
-
   file{ 'slurmctld log':
     ensure => file,
     path   => $slurmctld_log,
