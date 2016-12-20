@@ -69,14 +69,6 @@ class slurm::setup (
     require => User['slurm'],
   }
 
-  file{ '/var/spool/slurmctld/slurm.state/clustername':
-    ensure  => file,
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '1755',
-    require => File['slurmctld folder'],
-  }
-
   file{ 'credentials folder':
     ensure  => directory,
     path    => "${slurm_home}/credentials",

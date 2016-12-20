@@ -24,6 +24,7 @@ class slurm::headnode::setup (
     group  => 'slurm',
     mode   => '1755',
     owner  => 'slurm',
+    require => User['slurm'],
   }
 
   file{ 'slurmctld log':
@@ -32,5 +33,15 @@ class slurm::headnode::setup (
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
+    require => User['slurm'],
   }
+
+  file{ '/var/spool/slurmctld/slurm.state/clustername':
+    ensure  => file,
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
+    require => File['slurmctld folder'],
+  }
+
 }
