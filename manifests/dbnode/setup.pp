@@ -4,8 +4,8 @@
 #
 
 class slurm::dbnode::setup (
-  $jobacct_log = '/var/log/slurm_jobacct.log',
-  $jobcomp_log = '/var/log/slurm_jobcomp.log',
+  $jobacct_log = '/var/log/slurm/slurm_jobacct.log',
+  $jobcomp_log = '/var/log/slurm/slurm_jobcomp.log',
   $slurmdbd_log = '/var/log/slurm/slurmdbd.log',
   $packages = [
     'slurm-plugins',
@@ -38,5 +38,20 @@ class slurm::dbnode::setup (
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
+  }
+
+  logrotate::file{ $jobacct_log:
+    log => $jobacct_log,
+    options => ['daily','copytruncate','rotate 7','compress'],
+  }
+
+  logrotate::file{ $jobcomp_log:
+    log => $jobcomp_log,
+    options => ['daily','copytruncate','rotate 7','compress'],
+  }
+
+  logrotate::file{ $slurmdbd_log:
+    log => $slurmdbd_log,
+    options => ['daily','copytruncate','rotate 7','compress'],
   }
 }

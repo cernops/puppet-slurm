@@ -6,7 +6,7 @@
 class slurm::headnode::setup (
   $slurmctld_folder   = '/var/spool/slurmctld',
   $slurm_state_folder = '/var/spool/slurmctld/slurm.state',
-  $slurmctld_log      = '/var/log/slurmctld.log',
+  $slurmctld_log      = '/var/log/slurm/slurmctld.log',
   $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -46,4 +46,8 @@ class slurm::headnode::setup (
     require => User['slurm'],
   }
 
+  logrotate::file{ $slurmctld_log:
+    log => $slurmctld_log,
+    options => ['daily','copytruncate','rotate 7','compress'],
+  }
 }

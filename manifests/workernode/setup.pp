@@ -5,7 +5,7 @@
 
 class slurm::workernode::setup (
   $slurmd_folder = '/var/spool/slurmd',
-  $slurmd_log    = '/var/log/slurmd.log',
+  $slurmd_log    = '/var/log/slurm/slurmd.log',
   $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -32,5 +32,10 @@ class slurm::workernode::setup (
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
+ }
+
+  logrotate::file{ $slurmd_log:
+    log => $slurmd_log,
+    options => ['daily','copytruncate','rotate 7','compress'],
   }
 }
