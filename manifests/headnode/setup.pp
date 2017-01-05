@@ -46,7 +46,7 @@ class slurm::headnode::setup (
     require => User['slurm'],
   }
 
-  logrotate::file{ $slurmctld_log:
+  logrotate::file{ 'slurmctld':
     log => $slurmctld_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }

@@ -34,7 +34,7 @@ class slurm::workernode::setup (
     owner  => 'slurm',
  }
 
-  logrotate::file{ $slurmd_log:
+  logrotate::file{ 'slurmd':
     log => $slurmd_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }
