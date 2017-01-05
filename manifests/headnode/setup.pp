@@ -47,7 +47,7 @@ class slurm::headnode::setup (
   }
 
   logrotate::file{ 'slurmctld':
-    log => $slurmctld_log,
+    log     => $slurmctld_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }
 }

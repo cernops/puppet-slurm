@@ -32,10 +32,10 @@ class slurm::workernode::setup (
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
- }
+  }
 
   logrotate::file{ 'slurmd':
-    log => $slurmd_log,
+    log     => $slurmd_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }
 }

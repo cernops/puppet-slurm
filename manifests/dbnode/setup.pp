@@ -41,17 +41,17 @@ class slurm::dbnode::setup (
   }
 
   logrotate::file{ 'slurm_jobacct':
-    log => $jobacct_log,
+    log     => $jobacct_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }
 
   logrotate::file{ 'slurm_jobcomp':
-    log => $jobcomp_log,
+    log     => $jobcomp_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }
 
   logrotate::file{ 'slurmdbd':
-    log => $slurmdbd_log,
+    log     => $slurmdbd_log,
     options => ['daily','copytruncate','rotate 7','compress'],
   }
 }
