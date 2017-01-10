@@ -48,6 +48,6 @@ class slurm::headnode::setup (
 
   logrotate::file{ 'slurmctld':
     log     => $slurmctld_log,
-    options => ['weekly','copytruncate','rotate 5','compress'],
+    options => ['weekly','copytruncate','rotate 26','compress'],
   }
 }
