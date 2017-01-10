@@ -26,8 +26,8 @@ class slurm::config (
   $jobcomp_db_loc     = 'jobcompdb',
   $jobcomp_db_port    = '6819',
   $jobcomp_db_user    = 'slurm',
-  $slurmctld_log      = '/var/log/slurmctld.log',
-  $slurmd_log         = '/var/log/slurmd.log',
+  $slurmctld_log      = '/var/log/slurm/slurmctld.log',
+  $slurmd_log         = '/var/log/slurm/slurmd.log',
   $workernodes        = [{'NodeName' => 'worker[00-10]', 'CPUs' => '16'}],
   $partitions         = [{'PartitionName' => 'workers', 'MaxMemPerCPU' => '2000'}],
 ) {
