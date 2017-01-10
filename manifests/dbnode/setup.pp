@@ -42,16 +42,16 @@ class slurm::dbnode::setup (
 
   logrotate::file{ 'slurm_jobacct':
     log     => $jobacct_log,
-    options => ['daily','copytruncate','rotate 7','compress'],
+    options => ['weekly','copytruncate','rotate 26','compress'],
   }
 
   logrotate::file{ 'slurm_jobcomp':
     log     => $jobcomp_log,
-    options => ['daily','copytruncate','rotate 7','compress'],
+    options => ['weekly','copytruncate','rotate 26','compress'],
   }
 
   logrotate::file{ 'slurmdbd':
     log     => $slurmdbd_log,
-    options => ['daily','copytruncate','rotate 7','compress'],
+    options => ['weekly','copytruncate','rotate 26','compress'],
   }
 }
