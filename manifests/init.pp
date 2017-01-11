@@ -22,7 +22,7 @@ class slurm (
       class{'::slurm::dbnode':}
     }
     default: {
-      error('No role specified! Please provide one in hiera.')
+      err('No role specified! Please provide one in hiera.')
     }
   }
 }
