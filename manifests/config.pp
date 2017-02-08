@@ -34,7 +34,7 @@ class slurm::config (
 
   teigi::secret::sub_file{'/etc/slurm/slurm.conf':
     teigi_keys => ['slurmdbpass'],
-    template   => 'slurm/slurm.conf.erb',
+    content    => template('slurm/slurm.conf.erb'),
     owner      => 'slurm',
     group      => 'slurm',
     mode       => '0644',
