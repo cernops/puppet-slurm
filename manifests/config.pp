@@ -41,10 +41,11 @@ class slurm::config (
   }
 
   file{'/etc/slurm/acct_gather.conf':
-    content    => template('slurm/acct_gather.conf.erb'),
-    owner      => 'slurm',
-    group      => 'slurm',
-    mode       => '0644',
+    ensure  => file,
+    content => template('slurm/acct_gather.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
   }
 
   service{'munge':
