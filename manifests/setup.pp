@@ -74,7 +74,7 @@ class slurm::setup (
     source  => 'puppet:///modules/slurm/job_stuck_alert.sh',
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '1755',
+    mode    => '0755',
     require => User['slurm'],
   }
 
