@@ -69,6 +69,15 @@ class slurm::setup (
     require => User['slurm'],
   }
 
+  file{ '/etc/slurm/job_stuck_alert.sh':
+    ensure  => file,
+    source  => 'puppet:///modules/slurm/job_stuck_alert.sh',
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
+    require => User['slurm'],
+  }
+
   file{ 'credentials folder':
     ensure  => directory,
     path    => "${slurm_home}/credentials",
