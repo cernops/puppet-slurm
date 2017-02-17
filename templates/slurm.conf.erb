@@ -124,20 +124,20 @@ SelectTypeParameters=CR_CPU_Memory
 
 # LOGGING AND ACCOUNTING
 #AccountingStorageEnforce=0
-#AccountingStorageHost=<%= @slurmdbd_host %>
-AccountingStorageLoc=<%= @slurmdbd_loc %>
-#AccountingStoragePass=/var/run/munge/munge.socket.2
-#AccountingStoragePort=<%= @slurmdbd_port %>
-AccountingStorageType=accounting_storage/filetxt
+AccountingStorageHost=<%= @slurmdbd_host %>
+#AccountingStorageLoc=<%= @slurmdbd_loc %>
+AccountingStoragePass=/var/run/munge/munge.socket.2
+AccountingStoragePort=<%= @slurmdbd_port %>
+AccountingStorageType=accounting_storage/slurmdbd
 #AccountingStorageUser=<%= @slurmdbd_user %>
 #AccountingStoreJobComment=NO # YES
 ClusterName=<%= @clustername %>
 #DebugFlags=
 #JobCompHost=<%= @jobcomp_db_host %>
-JobCompLoc=<%= @jobcomp_db_loc %>
+#JobCompLoc=<%= @jobcomp_db_loc %>
 #JobCompPass=%TEIGI__slurmdbpass__%
 #JobCompPort=<%= @jobcomp_db_port %>
-JobCompType=jobcomp/filetxt
+JobCompType=jobcomp/none #jobcomp/slurmdbd
 #JobCompUser=<%= @jobcomp_db_user %>
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300

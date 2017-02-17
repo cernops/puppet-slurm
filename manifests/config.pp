@@ -48,20 +48,6 @@ class slurm::config (
     mode    => '0644',
   }
 
-  file{ $slurmdbd_loc :
-    ensure  => file,
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-  }
-
-  file{ $jobcomp_db_loc :
-    ensure  => file,
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-  }
-
   service{'munge':
     ensure    => running,
     enable    => true,
