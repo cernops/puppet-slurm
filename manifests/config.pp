@@ -40,14 +40,6 @@ class slurm::config (
     mode       => '0644',
   }
 
-  file{'/etc/slurm/acct_gather.conf':
-    ensure  => file,
-    content => template('slurm/acct_gather.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-  }
-
   service{'munge':
     ensure    => running,
     enable    => true,

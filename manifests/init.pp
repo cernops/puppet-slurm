@@ -1,6 +1,6 @@
 #
 # slurm/init.pp
-#   Installs SLURM with configuration according to role
+#   Installs SLURM with configuration according
 #
 
 class slurm (
@@ -21,6 +21,8 @@ class slurm (
       class{'::slurm::headnode':}
       class{'::slurm::dbnode':}
     }
-    default: {}
+    default: {
+      err('No role specified! Please provide one in hiera.')
+    }
   }
 }
