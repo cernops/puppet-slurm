@@ -141,6 +141,10 @@ JobCompType=jobcomp/none #jobcomp/slurmdbd
 #JobCompUser=<%= @jobcomp_db_user %>
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300
+JobAcctGatherType=jobacct_gather/linux
+#AcctGatherProfileType=acct_gather_profile/hdf5
+AcctGatherEnergyType=acct_gather_energy/ipmi
+AcctGatherNodeFreq=60
 JobAcctGatherType=jobacct_gather/none
 SlurmctldDebug=3
 SlurmctldLogFile=<%= @slurmctld_log %>
