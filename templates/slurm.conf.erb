@@ -167,8 +167,6 @@ SlurmdLogFile=<%= @slurmd_log %>
 
 
 # COMPUTE NODES
-GresTypes=Hepspec,Hepspec_per_core
-
 <% @workernodes.each do |workernode| %>
 <% workernode.each_pair do |key, value| -%>
 <%= key %>=<%= value -%><%= ' '-%>
