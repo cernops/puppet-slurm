@@ -308,13 +308,13 @@ class slurm::workernode::setup (
 Setup the workernode type.
 
 
-### slurm::slurmworkernode::config
+### slurm::workernode::config
 ```
-class slurm::slurmworkernode::config ()
+class slurm::workernode::config ()
 ```
 Configure the workernode type.
 
-### slurm::slurmworkernode::firewall
+### slurm::workernode::firewall
 ```
 class slurm::workernode::firewall (
   Integer $slurmd_port = 6818,
