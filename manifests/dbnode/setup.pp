@@ -1,13 +1,25 @@
-#
 # slurm/dbnode/setup.pp
-#   Creates folders/logfiles and installs packages specific to dbnode
+#
+# Creates folders/logfiles and installs packages specific to dbnode
+#
+# version 20170301
+#
+# @param jobacct_log
+# @param jobcomp_log
+# @param slurmdbd_log
+# @param packages
+#
+# Copyright (c) CERN, 2016-2017
+# Authors: - Philippe Ganz <phganz@cern.ch>
+#          - Carolina Lindqvist <calindqv@cern.ch>
+# License: GNU GPL v3 or later.
 #
 
 class slurm::dbnode::setup (
-  $jobacct_log = '/var/log/slurm/slurm_jobacct.log',
-  $jobcomp_log = '/var/log/slurm/slurm_jobcomp.log',
-  $slurmdbd_log = '/var/log/slurm/slurmdbd.log',
-  $packages = [
+  String $jobacct_log = '/var/log/slurm/slurm_jobacct.log',
+  String $jobcomp_log = '/var/log/slurm/slurm_jobcomp.log',
+  String $slurmdbd_log = '/var/log/slurm/slurmdbd.log',
+  Array $packages = [
     'slurm-plugins',
     'slurm-slurmdbd',
     'slurm-sql',

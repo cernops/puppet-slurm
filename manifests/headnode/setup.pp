@@ -1,13 +1,25 @@
-#
 # slurm/headnode/setup.pp
-#   Creates folders/logfiles and installs packages specific to headnode
+#
+# Creates folders/logfiles and installs packages specific to headnode
+#
+# version 20170301
+#
+# @param slurmctld_folder
+# @param slurm_state_folder
+# @param slurmctld_log
+# @param packages
+#
+# Copyright (c) CERN, 2016-2017
+# Authors: - Philippe Ganz <phganz@cern.ch>
+#          - Carolina Lindqvist <calindqv@cern.ch>
+# License: GNU GPL v3 or later.
 #
 
 class slurm::headnode::setup (
-  $slurmctld_folder   = '/var/spool/slurmctld',
-  $slurm_state_folder = '/var/spool/slurmctld/slurm.state',
-  $slurmctld_log      = '/var/log/slurm/slurmctld.log',
-  $packages = [
+  String $slurmctld_folder   = '/var/spool/slurmctld',
+  String $slurm_state_folder = '/var/spool/slurmctld/slurm.state',
+  String $slurmctld_log      = '/var/log/slurm/slurmctld.log',
+  Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',

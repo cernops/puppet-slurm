@@ -1,7 +1,14 @@
-#
 # slurm/workernode/config.pp
-#   Ensures that the slurmd service is running and restarted if the
-#   configuration file is modified
+#
+# Ensures that the slurmd service is running and restarted if the
+# configuration file is modified
+#
+# version 20170301
+#
+# Copyright (c) CERN, 2016-2017
+# Authors: - Philippe Ganz <phganz@cern.ch>
+#          - Carolina Lindqvist <calindqv@cern.ch>
+# License: GNU GPL v3 or later.
 #
 
 class slurm::workernode::config {
