@@ -20,13 +20,13 @@
 #
 
 class slurm::dbnode::config (
-  String $slurmdb_host   = 'dbnode.example.org',
-  Integer $slurmdb_port  = 6819,
-  String $slurmuser      = 'slurm',
-  String $db_host        = 'db_service.example.org',
-  Integer $db_port       = 1234,
-  String $db_user        = 'user',
-  String $db_loc         = 'accountingdb',
+  String $slurmdb_host  = 'dbnode.example.org',
+  Integer $slurmdb_port = 6819,
+  String $slurmuser     = 'slurm',
+  String $db_host       = 'db_service.example.org',
+  Integer $db_port      = 1234,
+  String $db_user       = 'user',
+  String $db_loc        = 'accountingdb',
 ) {
 
   teigi::secret::sub_file{ '/etc/slurm/slurmdbd.conf':

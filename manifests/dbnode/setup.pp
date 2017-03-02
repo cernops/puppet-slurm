@@ -16,8 +16,8 @@
 #
 
 class slurm::dbnode::setup (
-  String $jobacct_log = '/var/log/slurm/slurm_jobacct.log',
-  String $jobcomp_log = '/var/log/slurm/slurm_jobcomp.log',
+  String $jobacct_log  = '/var/log/slurm/slurm_jobacct.log',
+  String $jobcomp_log  = '/var/log/slurm/slurm_jobcomp.log',
   String $slurmdbd_log = '/var/log/slurm/slurmdbd.log',
   Array $packages = [
     'slurm-plugins',
