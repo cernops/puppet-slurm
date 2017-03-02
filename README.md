@@ -22,9 +22,9 @@
 
 # Description
 
-This module installs the SLURM scheduler needed to run parallel programs on a distributed HPC cluster.
+This module installs the SLURM scheduler for running parallel programs on an HPC cluster.
 
-It setups, configures and installs all the required binaries and configuration files according to the parameters detailed [below](#beginning-with-slurm). It relies on hiera data provided by the hostgroup it is installed on.
+It sets up, configures and installs all required binaries and configuration files according to the parameters shown [below](#beginning-with-slurm). It relies on hiera data provided by the hostgroup it is included in.
 
 # Setup
 
@@ -77,17 +77,20 @@ To avoid version conflicts, all the following packages will be installed/replace
 #### Authentication
 TODO Bla bla Munge...
 
+#### Secrets stored in Teigi
+TODO Bla bla example of how to add.
+
 #### Checkpointing
 TODO Bla bla BLCR...
 
-#### Data base
+#### Database configuration
 TODO Bla bla MySQL, MariaDB...
 
 #### More Bla bla
 TODO Bla bla
 
 
-## Setup Requirements
+## Setup requirements
 
 The module needs to be enabled in the pluginsync filter since it's not a standard CERN module :
 ```
@@ -101,8 +104,6 @@ pluginsync_filter:
 
 ...
 ```
-
-### Hiera data details here...
 
 ## Beginning with slurm
 
@@ -118,16 +119,16 @@ To use the module, simply include it in your hostgroup manifest :
 ...
 ```
 
-### ...or Hiera data details here.
+### Hiera data details here.
 
 # Usage
 
 Please refer to the official [SLURM documentation](https://slurm.schedmd.com/).
 
 TODO Specific usage at CERN ? Probably yes...
+We can put examples and link to the KB here.
 
-
-# Reference
+# References
 
 ## slurm
 ```
@@ -200,7 +201,7 @@ TODO I do not want to do this one! :''(
 ```
 class slurm::dbnode ()
 ```
-Setup, configure and installs the dbnode type.
+Setup, configure and install the dbnode.
 
 
 ### slurm::dbnode::setup
@@ -216,7 +217,7 @@ class slurm::dbnode::setup (
   ],
 )
 ```
-Setup the dbnode type.
+Setup the dbnode.
 
 
 ### slurm::dbnode::config
@@ -231,7 +232,7 @@ class slurm::dbnode::config (
   String $db_loc         = 'accountingdb',
 )
 ```
-Configure the dbnode type.
+Configure the dbnode.
 
 ### slurm::dbnode::firewall
 ```
@@ -239,14 +240,14 @@ class slurm::dbnode::firewall (
   Integer $slurmdbd_port = 6819,
 )
 ```
-Setup the firewall for the dbnode type.
+Define the port used for DB communication on the DB node.
 
 
 ## slurm::headnode
 ```
 class slurm::headnode ()
 ```
-Setup, configure and installs the headnode type.
+Setup, configure and install the headnode.
 
 
 ### slurm::headnode::setup
@@ -265,14 +266,14 @@ class slurm::headnode::setup (
   ],
 )
 ```
-Setup the headnode type.
+Setup the headnode.
 
 
 ### slurm::headnode::config
 ```
 class slurm::headnode::config ()
 ```
-Configure the headnode type.
+Configure the headnode.
 
 ### slurm::headnode::firewall
 ```
@@ -280,14 +281,14 @@ class slurm::headnode::firewall (
   Integer $slurmctld_port = 6817,
 )
 ```
-Setup the firewall for the headnode type.
+Setup the firewall for the headnode.
 
 
 ## slurm::workernode
 ```
 class slurm::workernode ()
 ```
-Setup, configure and installs the workernode type.
+Setup, configure and installs the workernode.
 
 
 ### slurm::workernode::setup
@@ -305,14 +306,14 @@ class slurm::workernode::setup (
   ],
 )
 ```
-Setup the workernode type.
+Setup the workernode.
 
 
 ### slurm::workernode::config
 ```
 class slurm::workernode::config ()
 ```
-Configure the workernode type.
+Configure the workernode.
 
 ### slurm::workernode::firewall
 ```
@@ -320,7 +321,7 @@ class slurm::workernode::firewall (
   Integer $slurmd_port = 6818,
 )
 ```
-Setup the firewall for the workernode type.
+Setup the firewall for the workernode.
 
 ## Files
 
@@ -349,11 +350,11 @@ It is tested and working on Centos 7.2/7.3 with Puppet 4.8.1. Not working with P
 
 # Development
 
-The future tasks needed will be to test the new versions of SLURM and check if the current module still supports the latest features.
+The future task which needs to be done is testing any new versions of SLURM and checking if the current module still supports the latest features.
 
-As always, changes should be done in a new branch first for testing and then a merge request made to qa. Once the module is validated in qa for at least one week, it can be merged into master.
+As always, changes should be done in a new branch first for testing and then a merged to qa using a merge request. Once the module is validated in qa for at least one week, the changes can be merged into master.
 
-Please document all your doing in the CHANGELOG and update this README if need be!
+Please document all changes in the CHANGELOG and update this README if necessary!
 
 # Contributors
 
