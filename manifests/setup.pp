@@ -1,24 +1,46 @@
-#
 # slurm/setup.pp
-#   Creates the basic folders, user/group and security for SLURM, common to
-#   headnodes and workernodes
+#
+# Creates the basic folders, user/group and security for SLURM, common to
+# headnodes and workernodes
+#
+# version 20170301
+#
+# @param slurm_home
+# @param slurm_log
+# @param slurm_gid
+# @param slurm_uid
+# @param slurm_key_priv
+# @param slurm_key_pub
+# @param munge_gid
+# @param munge_uid
+# @param munge_folder
+# @param munge_log
+# @param munge_home
+# @param munge_run
+# @param munge_key
+# @param packages
+#
+# Copyright (c) CERN, 2016-2017
+# Authors: - Philippe Ganz <phganz@cern.ch>
+#          - Carolina Lindqvist <calindqv@cern.ch>
+# License: GNU GPL v3 or later.
 #
 
 class slurm::setup (
-  $slurm_home     = '/usr/local/slurm',
-  $slurm_log      = '/var/log/slurm',
-  $slurm_gid      = '950',
-  $slurm_uid      = '950',
-  $slurm_key_priv = 'slurmkey',
-  $slurm_key_pub  = 'slurmcert',
-  $munge_gid      = '951',
-  $munge_uid      = '951',
-  $munge_folder   = '/etc/munge',
-  $munge_log      = '/var/log/munge',
-  $munge_home     = '/var/lib/munge',
-  $munge_run      = '/run/munge',
-  $munge_key      = 'mungekey',
-  $packages = [
+  String $slurm_home     = '/usr/local/slurm',
+  String $slurm_log      = '/var/log/slurm',
+  Integer $slurm_gid     = 950,
+  Integer $slurm_uid     = 950,
+  String $slurm_key_priv = 'slurmkey',
+  String $slurm_key_pub  = 'slurmcert',
+  Integer $munge_gid     = 951,
+  Integer $munge_uid     = 951,
+  String $munge_folder   = '/etc/munge',
+  String $munge_log      = '/var/log/munge',
+  String $munge_home     = '/var/lib/munge',
+  String $munge_run      = '/run/munge',
+  String $munge_key      = 'mungekey',
+  Array $packages = [
     'slurm',
     'slurm-devel',
     'slurm-munge',
