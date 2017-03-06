@@ -1,6 +1,6 @@
 # slurm/config.pp
 #
-# Creates the commun configuration file
+# Creates the common configuration file
 #
 # version 20170301
 #
