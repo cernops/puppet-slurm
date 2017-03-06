@@ -71,20 +71,77 @@ To avoid version conflicts, all the following packages will be installed/replace
  - 'slurm-torque',
 ```
 
-
 ### Dependencies
 
 #### Authentication
-TODO Bla bla Munge...
+The default (and only supported) authentication mechanism for SLURM is [MUNGE](https://dun.github.io/munge/). It is set in the configuration file `slurm.conf` as follows:
+```
+AuthType=auth/munge
+```
+Other alternatives for this value is `auth/none` which requires the `auth-none` plugin to be built as part of SLURM. It is recommended to use MUNGE rather than unauthenticated communication.
 
-#### Secrets stored in Teigi
-TODO Bla bla example of how to add.
+Further configuration of MUNGE is done in [setup.pp](https://gitlab.cern.ch/ai/it-puppet-module-slurm/blob/master/code/manifests/setup.pp). The only required effort to set up MUNGE through the module is to generate a MUNGE secret key that is shared between nodes. For our setup, the key is stored in `tbag` as shown below.
+
+```
+[calindqv@aiadm16 slurm]$ tbag set --hg bi/hpc/batch mungekey --file munge.key
+Adding key 'mungekey' to tbag for hostgroup 'bi/hpc/batch'
+Key 'mungekey' successfully added to hostgroup 'bi/hpc/batch'
+```
+
+#### Secrets stored in Teigi (tbag)
+The following secrets are stored using `tbag`. These are necessary for the SLURM module to work. Ensure that they have the same identifiers (names) or that the secrets have been renamed accordingly in the module.
+
+```
+[calindqv@aiadm18 ~]$ tbag showkeys --hg bi/hpc/batch
+[
+     "slurmkey",
+     "slurmdbpass",
+     "slurmcert",
+     "mungekey"
+]
+```
 
 #### Checkpointing
 TODO Bla bla BLCR...
 
 #### Database configuration
-TODO Bla bla MySQL, MariaDB...
+The database for SLURM is used solely for accounting purposes. The module supports a setup with a database node either separate from or combined with a headnode. The database configuration is done in the [dbnode](https://gitlab.cern.ch/ai/it-puppet-module-slurm/tree/master/code/manifests/dbnode) manifests.
+
+The main configuration values (as defined in [slurm.conf](###slurm.conf.erb) and [slurmdbd.conf](###slurmdbd.conf.erb) for the database are the following:
+```
+# class slurm::config
+slurmdbd_host = 'dbnode.example.org'
+slurmdbd_loc  = 'accountingdb' # database name (inside the MySQL DB)
+slurmdbd_port = '6819' # DB node port
+slurmdbd_user = 'slurm'
+
+# slurm.conf
+AccountingStorageHost=dbnode.example.org ## DB node hostname (either headnode or dbnode hostname)
+AccountingStoragePass=/var/run/munge/munge.socket.2
+AccountingStoragePort=<%= @slurmdbd_port %>
+AccountingStorageType=accounting_storage/slurmdbd
+
+# class slurm::dbnode::config
+slurmdb_host   = 'dbnode.example.org' # DB node hostname (either headnode or dbnode hostname. Preferably `localhost`.)
+slurmdb_port   = '6819' # DB node port
+slurmuser      = 'slurm'
+db_host        = 'db_instance.example.org' # Hostname of the node where MySQL instance is running.
+db_port        = '1234' # MySQL instance port number.
+db_user        = 'slurm'
+db_loc         = 'accountingdb' # database name (inside the MySQL DB)
+slurmdbpass    = 'somethingsecret'
+
+# slurmdbd.conf
+StorageType=accounting_storage/mysql
+StorageHost=db_instance.example.org
+StoragePort=1234
+StorageUser=slurm
+StorageLoc=accountingdb
+StoragePass=somethingsecret
+```
+
+If the database is running on a headnode, and locally, the hostnames can be set as `localhost`.
+Further information can be found in the [official documentation](https://slurm.schedmd.com/accounting.html).
 
 #### More Bla bla
 TODO Bla bla
@@ -195,7 +252,7 @@ class slurm::config (
   Array $partitions          = [{'PartitionName' => 'workers', 'MaxMemPerCPU' => '2000'}],
 )
 ```
-TODO I do not want to do this one! :''(
+Configuration class that defines values for the `slurm.conf` main configuration file. This file is described in detail [here](### slurm.conf.erb).
 
 ## slurm::dbnode
 ```
@@ -339,7 +396,7 @@ TODO Bla bla
 ### slurm.conf.erb
 TODO Bla bla
 
-### slurmdb.conf.erb
+### slurmdbd.conf.erb
 TODO Bla bla
 
 
