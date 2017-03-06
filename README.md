@@ -116,10 +116,10 @@ The database for SLURM is used solely for accounting purposes. The module suppor
 The main configuration values (as defined in [slurm.conf](#slurm.conf.erb) and [slurmdbd.conf](#slurmdbd.conf.erb) for the database are the following:
 ```
 # class slurm::config
-slurmdbd_host = 'dbnode.example.org'
-slurmdbd_loc  = 'accountingdb' # database name (inside the MySQL DB)
-slurmdbd_port = '6819' # DB node port
-slurmdbd_user = 'slurm'
+accounting_storage_host = 'dbnode.example.org'
+accounting_storage_loc  = 'accountingdb' # database name (inside the MySQL DB)
+accounting_storage_port = '6819' # DB node port
+accounting_storage_user = 'slurm'
 
 # slurm.conf
 AccountingStorageHost=dbnode.example.org ## DB node hostname (either headnode or dbnode hostname)
@@ -128,13 +128,13 @@ AccountingStoragePort=1234
 AccountingStorageType=accounting_storage/slurmdbd
 
 # class slurm::dbnode::config
-slurmdbd_host   = 'dbnode.example.org' # DB node hostname (either headnode or dbnode hostname. Preferably `localhost`.)
-slurmdbd_port   = '6819' # DB node port
-slurmuser       = 'slurm'
-db_host         = 'db_instance.example.org' # Hostname of the node where MySQL instance is running.
-db_port         = '1234' # MySQL instance port number.
-db_user         = 'slurm'
-db_loc          = 'accountingdb' # database name (inside the MySQL DB)
+accounting_storage_host   = 'dbnode.example.org' # DB node hostname (either headnode or dbnode hostname. Preferably `localhost`.)
+accounting_storage_port   = '6819' # DB node port
+slurm_user       = 'slurm'
+storage_host         = 'db_instance.example.org' # Hostname of the node where MySQL instance is running.
+storage_port         = '1234' # MySQL instance port number.
+storage_user         = 'slurm'
+storage_loc          = 'accountingdb' # database name (inside the MySQL DB)
 slurmdbpass     = 'somethingsecret'
 
 # slurmdbd.conf
@@ -202,19 +202,19 @@ TODO Bla bla
 ## slurm::setup
 ```
 class slurm::setup (
-  String $slurm_home     = '/usr/local/slurm',
-  String $slurm_log      = '/var/log/slurm',
-  Integer $slurm_gid     = 950,
-  Integer $slurm_uid     = 950,
-  String $slurm_key_priv = 'slurmkey',
-  String $slurm_key_pub  = 'slurmcert',
-  Integer $munge_gid     = 951,
-  Integer $munge_uid     = 951,
-  String $munge_folder   = '/etc/munge',
-  String $munge_log      = '/var/log/munge',
-  String $munge_home     = '/var/lib/munge',
-  String $munge_run      = '/run/munge',
-  String $munge_key      = 'mungekey',
+  String $slurm_home_loc    = '/usr/local/slurm',
+  String $slurm_log_file    = '/var/log/slurm',
+  Integer $slurm_gid        = 950,
+  Integer $slurm_uid        = 950,
+  String $slurm_private_key = 'slurmkey',
+  String $slurm_public_key  = 'slurmcert',
+  Integer $munge_gid        = 951,
+  Integer $munge_uid        = 951,
+  String $munge_loc         = '/etc/munge',
+  String $munge_log_file    = '/var/log/munge',
+  String $munge_home_loc    = '/var/lib/munge',
+  String $munge_run_loc     = '/run/munge',
+  String $munge_shared_key  = 'mungekey',
   Array $packages = [
     'slurm',
     'slurm-devel',
@@ -230,32 +230,34 @@ TODO I do not want to do this one! :''(
 ## slurm::config
 ```
 class slurm::config (
-  String $headnode           = 'headnode1.example.org',
-  String $failover           = 'headnode2.example.org',
-  String $checkpoint_dir     = '/var/slurm/checkpoint',
-  String $slurmkey_loc       = '/usr/local/slurm/credentials/slurm.key',
-  String $slurmcert_loc      = '/usr/local/slurm/credentials/slurm.cert',
-  Integer $maxjobcount       = 5000,
-  String $plugin_dir         = '/usr/lib64/slurm',
-  String $plugstackconf_file = '/etc/slurm/plugstack.conf',
-  Integer $slurmctld_port    = 6817,
-  Integer $slurmd_port       = 6818,
-  String $slurmdspool_dir    = '/var/spool/slurmd',
-  String $slurmstate_dir     = '/var/spool/slurmctld/slurm.state',
-  String $slurmuser          = 'slurm',
-  String $slurmdbd_host      = 'accountingdb.example.org',
-  String $slurmdbd_loc       = 'accountingdb',
-  Integer $slurmdbd_port     = 6819,
-  String $slurmdbd_user      = 'slurm',
-  String $clustername        = 'batch',
-  String $jobcomp_db_host    = 'jobcompdb.example.org',
-  String $jobcomp_db_loc     = 'jobcompdb',
-  Integer $jobcomp_db_port   = 6819,
-  String $jobcomp_db_user    = 'slurm',
-  String $slurmctld_log      = '/var/log/slurm/slurmctld.log',
-  String $slurmd_log         = '/var/log/slurm/slurmd.log',
-  Array $workernodes         = [{'NodeName' => 'worker[00-10]', 'CPUs' => '16'}],
-  Array $partitions          = [{'PartitionName' => 'workers', 'MaxMemPerCPU' => '2000'}],
+  String $control_machine                   = 'headnode1.example.org',
+  String $backup_controller                 = 'headnode2.example.org',
+  String $job_checkpoint_dir                = '/var/slurm/checkpoint',
+  String $job_credential_private_key        = '/usr/local/slurm/credentials/slurm.key',
+  String $job_credential_public_certificate = '/usr/local/slurm/credentials/slurm.cert',
+  Integer $max_job_count                    = 5000,
+  String $plugin_dir                        = '/usr/lib64/slurm',
+  String $plug_stack_config                 = '/etc/slurm/plugstack.conf',
+  Integer $slurmctld_port                   = 6817,
+  Integer $slurmd_port                      = 6818,
+  String $slurmd_spool_dir                  = '/var/spool/slurmd',
+  String $state_save_location               = '/var/spool/slurmctld/slurm.state',
+  String $slurm_user                        = 'slurm',
+  String $accounting_storage_host           = 'accountingdb.example.org',
+  String $accounting_storage_loc            = 'accountingdb',
+  Integer $accounting_storage_port          = 6819,
+  String $accounting_storage_user           = 'slurm',
+  String $cluster_name                      = 'batch',
+  String $slurmctld_log_file                = '/var/log/slurm/slurmctld.log',
+  String $slurmd_log_file                   = '/var/log/slurm/slurmd.log',
+  Array $workernodes = [{
+    'NodeName' => 'worker[00-10]',
+    'CPUs' => '16'
+  }],
+  Array $partitions = [{
+    'PartitionName' => 'workers',
+    'MaxMemPerCPU' => '2000'
+  }],
 )
 ```
 Configuration class that defines values for the `slurm.conf` main configuration file. This file is described in detail [here](### slurm.conf.erb).
@@ -270,9 +272,9 @@ Setup, configure and install the dbnode.
 ### slurm::dbnode::setup
 ```
 class slurm::dbnode::setup (
-  String $jobacct_log = '/var/log/slurm/slurm_jobacct.log',
-  String $jobcomp_log = '/var/log/slurm/slurm_jobcomp.log',
-  String $slurmdbd_log = '/var/log/slurm/slurmdbd.log',
+  String $job_accounting_log = '/var/log/slurm/slurm_jobacct.log',
+  String $job_completion_log = '/var/log/slurm/slurm_jobcomp.log',
+  String $slurmdbd_log_file  = '/var/log/slurm/slurmdbd.log',
   Array $packages = [
     'slurm-plugins',
     'slurm-slurmdbd',
@@ -286,13 +288,13 @@ Setup the dbnode.
 ### slurm::dbnode::config
 ```
 class slurm::dbnode::config (
-  String $slurmdb_host   = 'dbnode.example.org',
-  Integer $slurmdb_port  = 6819,
-  String $slurmuser      = 'slurm',
-  String $db_host        = 'db_service.example.org',
-  Integer $db_port       = 1234,
-  String $db_user        = 'user',
-  String $db_loc         = 'accountingdb',
+  String $dbd_host      = 'dbnode.example.org',
+  Integer $dbd_port     = 6819,
+  String $slurm_user    = 'slurm',
+  String $storage_host  = 'db_instance.example.org',
+  Integer $storage_port = 1234,
+  String $storage_user  = 'user',
+  String $storage_loc   = 'accountingdb',
 )
 ```
 Configure the dbnode.
@@ -300,7 +302,7 @@ Configure the dbnode.
 ### slurm::dbnode::firewall
 ```
 class slurm::dbnode::firewall (
-  Integer $slurmdbd_port = 6819,
+  Integer $accounting_storage_port = 6819,
 )
 ```
 Define the port used for DB communication on the DB node.
@@ -316,9 +318,9 @@ Setup, configure and install the headnode.
 ### slurm::headnode::setup
 ```
 class slurm::headnode::setup (
-  String $slurmctld_folder   = '/var/spool/slurmctld',
-  String $slurm_state_folder = '/var/spool/slurmctld/slurm.state',
-  String $slurmctld_log      = '/var/log/slurm/slurmctld.log',
+  String $slurmctld_loc      = '/var/spool/slurmctld',
+  String $slurm_state_loc    = '/var/spool/slurmctld/slurm.state',
+  String $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -357,8 +359,8 @@ Setup, configure and installs the workernode.
 ### slurm::workernode::setup
 ```
 class slurm::workernode::setup (
-  String $slurmd_folder = '/var/spool/slurmd',
-  String $slurmd_log    = '/var/log/slurm/slurmd.log',
+  String $slurmd_loc      = '/var/spool/slurmd',
+  String $slurmd_log_file = '/var/log/slurm/slurmd.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',

@@ -2,9 +2,9 @@
 #
 # Firewall rules for the workernode
 #
-# version 20170301
-#
 # @param slurmd_port
+#
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

@@ -29,11 +29,11 @@ AuthInfo=/var/run/munge/munge.socket.2
 # slurmDBD info
 #
 # DbdHost name, used as an argument to the gethostbyname() function
-#DbdAddr=<%= @slurmdb_host %>
+#DbdAddr=
 # name of the machine where the Slurm Database Daemon runs
-DbdHost=<%= @slurmdb_host %>
-DbdPort=<%= @slurmdb_port %>
-SlurmUser=<%= @slurmuser %>
+DbdHost=<%= @dbd_host %>
+DbdPort=<%= @dbd_port %>
+SlurmUser=<%= @slurm_user %>
 #MessageTimeout=300
 DebugLevel=4
 #DefaultQOS=normal,standby
@@ -45,8 +45,8 @@ PidFile=/var/run/slurmdbd.pid
 
 # Database info
 StorageType=accounting_storage/mysql
-StorageHost=<%= @db_host %>
-StoragePort=<%= @db_port %>
+StorageHost=<%= @storage_host %>
+StoragePort=<%= @storage_port %>
 StoragePass=%TEIGI__slurmdbpass__%
-StorageUser=<%= @db_user %>
-StorageLoc=<%= @db_loc %>
+StorageUser=<%= @storage_user %>
+StorageLoc=<%= @storage_loc %>

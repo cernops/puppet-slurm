@@ -2,9 +2,9 @@
 #
 # Common firewall rules for the headnode
 #
-# version 20170301
-#
 # @param slurmctld_port
+#
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

@@ -3,15 +3,15 @@
 # Creates the slurmdb configuration file and ensures that the slurmdbd
 # service is running and restarted if the configuration file is modified
 #
-# @param slurmdb_host
-# @param slurmdb_port
-# @param slurmuser
-# @param db_host
-# @param db_port
-# @param db_user
-# @param db_loc
+# @param dbd_host
+# @param dbd_port
+# @param slurm_user
+# @param storage_host
+# @param storage_port
+# @param storage_user
+# @param storage_loc
 #
-# version 20170301
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -20,13 +20,13 @@
 #
 
 class slurm::dbnode::config (
-  String $slurmdb_host  = 'dbnode.example.org',
-  Integer $slurmdb_port = 6819,
-  String $slurmuser     = 'slurm',
-  String $db_host       = 'db_service.example.org',
-  Integer $db_port      = 1234,
-  String $db_user       = 'user',
-  String $db_loc        = 'accountingdb',
+  String $dbd_host      = 'dbnode.example.org',
+  Integer $dbd_port     = 6819,
+  String $slurm_user    = 'slurm',
+  String $storage_host  = 'db_instance.example.org',
+  Integer $storage_port = 1234,
+  String $storage_user  = 'user',
+  String $storage_loc   = 'accountingdb',
 ) {
 
   teigi::secret::sub_file{ '/etc/slurm/slurmdbd.conf':

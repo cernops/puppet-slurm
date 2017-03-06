@@ -2,11 +2,11 @@
 #
 # Creates folders/logfiles and installs packages specific to workernode
 #
-# version 20170301
-#
-# @param slurmd_folder
-# @param slurmd_log
+# @param slurmd_loc
+# @param slurmd_log_file
 # @param packages
+#
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -15,8 +15,8 @@
 #
 
 class slurm::workernode::setup (
-  String $slurmd_folder = '/var/spool/slurmd',
-  String $slurmd_log    = '/var/log/slurm/slurmd.log',
+  String $slurmd_loc      = '/var/spool/slurmd',
+  String $slurmd_log_file = '/var/log/slurm/slurmd.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -31,7 +31,7 @@ class slurm::workernode::setup (
 
   file{ 'slurmd folder':
     ensure => directory,
-    path   => $slurmd_folder,
+    path   => $slurmd_loc,
     group  => 'slurm',
     mode   => '1755',
     owner  => 'slurm',
@@ -39,14 +39,14 @@ class slurm::workernode::setup (
 
   file{ 'slurmd log':
     ensure => file,
-    path   => $slurmd_log,
+    path   => $slurmd_log_file,
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
   }
 
   logrotate::file{ 'slurmd':
-    log     => $slurmd_log,
+    log     => $slurmd_log_file,
     options => ['weekly','copytruncate','rotate 26','compress'],
   }
 }

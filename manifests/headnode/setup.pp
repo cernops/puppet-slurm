@@ -2,12 +2,12 @@
 #
 # Creates folders/logfiles and installs packages specific to headnode
 #
-# version 20170301
-#
-# @param slurmctld_folder
-# @param slurm_state_folder
-# @param slurmctld_log
+# @param slurmctld_loc
+# @param slurm_state_loc
+# @param slurmctld_log_file
 # @param packages
+#
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -16,9 +16,9 @@
 #
 
 class slurm::headnode::setup (
-  String $slurmctld_folder   = '/var/spool/slurmctld',
-  String $slurm_state_folder = '/var/spool/slurmctld/slurm.state',
-  String $slurmctld_log      = '/var/log/slurm/slurmctld.log',
+  String $slurmctld_loc      = '/var/spool/slurmctld',
+  String $slurm_state_loc    = '/var/spool/slurmctld/slurm.state',
+  String $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -33,7 +33,7 @@ class slurm::headnode::setup (
 
   file{ 'slurmctld folder':
     ensure  => directory,
-    path    => $slurmctld_folder,
+    path    => $slurmctld_loc,
     group   => 'slurm',
     mode    => '1755',
     owner   => 'slurm',
@@ -42,7 +42,7 @@ class slurm::headnode::setup (
 
   file{ 'slurmctld state folder':
     ensure  => directory,
-    path    => $slurm_state_folder,
+    path    => $slurm_state_loc,
     group   => 'slurm',
     mode    => '1755',
     owner   => 'slurm',
@@ -51,7 +51,7 @@ class slurm::headnode::setup (
 
   file{ 'slurmctld log':
     ensure  => file,
-    path    => $slurmctld_log,
+    path    => $slurmctld_log_file,
     group   => 'slurm',
     mode    => '0600',
     owner   => 'slurm',
@@ -59,7 +59,7 @@ class slurm::headnode::setup (
   }
 
   logrotate::file{ 'slurmctld':
-    log     => $slurmctld_log,
+    log     => $slurmctld_log_file,
     options => ['weekly','copytruncate','rotate 26','compress'],
   }
 }

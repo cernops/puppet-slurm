@@ -3,7 +3,7 @@
 # Ensures that the slurmctld service is running and restarted if the
 # configuration file is modified
 #
-# version 20170301
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

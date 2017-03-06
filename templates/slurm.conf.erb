@@ -14,9 +14,9 @@
 # Configuration file containing common parameters for headnode and workernode.
 #
 
-ControlMachine=<%= @headnode %>
+ControlMachine=<%= @control_machine %>
 #ControlAddr=
-BackupController=<%= @failover %>
+BackupController=<%= @backup_controller %>
 #BackupAddr=
 
 AuthType=auth/munge
@@ -31,9 +31,9 @@ FirstJobId=1
 #GresTypes=
 #GroupUpdateForce=0
 #GroupUpdateTime=600
-JobCheckpointDir=<%= @checkpoint_dir %>
-JobCredentialPrivateKey=<%= @slurmkey_loc %>
-JobCredentialPublicCertificate=<%= @slurmcert_loc %>
+JobCheckpointDir=<%= @job_checkpoint_dir %>
+JobCredentialPrivateKey=<%= @job_credential_private_key %>
+JobCredentialPublicCertificate=<%= @job_credential_public_certificate %>
 #JobFileAppend=0
 #JobRequeue=1
 #JobSubmitPlugins=1
@@ -41,13 +41,13 @@ KillOnBadExit=1
 #LaunchType=launch/slurm
 #Licenses=foo*4,bar
 #MailProg=/bin/mail
-MaxJobCount=<%= @maxjobcount %>
+MaxJobCount=<%= @max_job_count %>
 #MaxStepCount=40000
 #MaxTasksPerNode=128
 MpiDefault=pmi2
 #MpiParams=ports=#-#
 PluginDir=<%= @plugin_dir %>
-PlugStackConfig=<%= @plugstackconf_file %>
+PlugStackConfig=<%= @plug_stack_config %>
 #PrivateData=jobs
 ProctrackType=proctrack/pgid
 #Prolog=
@@ -63,12 +63,12 @@ SlurmctldPidFile=/var/run/slurmctld.pid
 SlurmctldPort=<%= @slurmctld_port %>
 SlurmdPidFile=/var/run/slurmd.pid
 SlurmdPort=<%= @slurmd_port %>
-SlurmdSpoolDir=<%= @slurmdspool_dir %>
-SlurmUser=<%= @slurmuser %>
+SlurmdSpoolDir=<%= @slurmd_spool_dir %>
+SlurmUser=<%= @slurm_user %>
 #SlurmdUser=root
 #SrunEpilog=
 #SrunProlog=
-StateSaveLocation=<%= @slurmstate_dir %>
+StateSaveLocation=<%= @state_save_location %>
 SwitchType=switch/none
 #TaskEpilog=
 TaskPlugin=task/affinity
@@ -131,21 +131,21 @@ SelectTypeParameters=CR_CPU_Memory
 
 # LOGGING AND ACCOUNTING
 #AccountingStorageEnforce=0
-AccountingStorageHost=<%= @slurmdbd_host %>
-#AccountingStorageLoc=<%= @slurmdbd_loc %>
+AccountingStorageHost=<%= @accounting_storage_host %>
+#AccountingStorageLoc=<%= @accounting_storage_loc %>
 AccountingStoragePass=/var/run/munge/munge.socket.2
-AccountingStoragePort=<%= @slurmdbd_port %>
+AccountingStoragePort=<%= @accounting_storage_port %>
 AccountingStorageType=accounting_storage/slurmdbd
-#AccountingStorageUser=<%= @slurmdbd_user %>
+#AccountingStorageUser=<%= @accounting_storage_user %>
 #AccountingStoreJobComment=NO # YES
-ClusterName=<%= @clustername %>
+ClusterName=<%= @cluster_name %>
 #DebugFlags=
-#JobCompHost=<%= @jobcomp_db_host %>
-#JobCompLoc=<%= @jobcomp_db_loc %>
-#JobCompPass=%TEIGI__slurmdbpass__%
-#JobCompPort=<%= @jobcomp_db_port %>
-JobCompType=jobcomp/none #jobcomp/slurmdbd
-#JobCompUser=<%= @jobcomp_db_user %>
+#JobCompHost=
+#JobCompLoc=
+#JobCompPass=
+#JobCompPort=
+JobCompType=jobcomp/none
+#JobCompUser=
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300
 JobAcctGatherType=jobacct_gather/linux
@@ -153,9 +153,9 @@ JobAcctGatherType=jobacct_gather/linux
 AcctGatherEnergyType=acct_gather_energy/ipmi
 AcctGatherNodeFreq=60
 SlurmctldDebug=3
-SlurmctldLogFile=<%= @slurmctld_log %>
+SlurmctldLogFile=<%= @slurmctld_log_file %>
 SlurmdDebug=3
-SlurmdLogFile=<%= @slurmd_log %>
+SlurmdLogFile=<%= @slurmd_log_file %>
 # Note, these two were commented and the loglevel is named differently. Check if works.
 #SlurmSchedLogFile=
 #SlurmSchedLogLevel=

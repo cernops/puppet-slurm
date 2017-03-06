@@ -2,9 +2,9 @@
 #
 # Installs SLURM with configuration according
 #
-# version 20170301
-#
 # @param node_type
+#
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

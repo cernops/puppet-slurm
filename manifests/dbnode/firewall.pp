@@ -2,9 +2,9 @@
 #
 # Firewall rules for the dbnode
 #
-# version 20170301
+# @param accounting_storage_port
 #
-# @param slurmdbd_port
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -13,12 +13,12 @@
 #
 
 class slurm::dbnode::firewall (
-  Integer $slurmdbd_port = 6819,
+  Integer $accounting_storage_port = 6819,
 ) {
 
   firewall{ '203 open slurmdbd port':
     action => 'accept',
-    dport  => $slurmdbd_port,
+    dport  => $accounting_storage_port,
     proto  => 'tcp',
   }
 }

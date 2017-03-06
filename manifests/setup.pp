@@ -3,22 +3,22 @@
 # Creates the basic folders, user/group and security for SLURM, common to
 # headnodes and workernodes
 #
-# version 20170301
-#
-# @param slurm_home
-# @param slurm_log
+# @param slurm_home_loc
+# @param slurm_log_file
 # @param slurm_gid
 # @param slurm_uid
-# @param slurm_key_priv
-# @param slurm_key_pub
+# @param slurm_private_key
+# @param slurm_public_key
 # @param munge_gid
 # @param munge_uid
-# @param munge_folder
-# @param munge_log
-# @param munge_home
-# @param munge_run
-# @param munge_key
+# @param munge_loc
+# @param munge_log_file
+# @param munge_home_loc
+# @param munge_run_loc
+# @param munge_shared_key
 # @param packages
+#
+# version 20170306
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -27,19 +27,19 @@
 #
 
 class slurm::setup (
-  String $slurm_home     = '/usr/local/slurm',
-  String $slurm_log      = '/var/log/slurm',
-  Integer $slurm_gid     = 950,
-  Integer $slurm_uid     = 950,
-  String $slurm_key_priv = 'slurmkey',
-  String $slurm_key_pub  = 'slurmcert',
-  Integer $munge_gid     = 951,
-  Integer $munge_uid     = 951,
-  String $munge_folder   = '/etc/munge',
-  String $munge_log      = '/var/log/munge',
-  String $munge_home     = '/var/lib/munge',
-  String $munge_run      = '/run/munge',
-  String $munge_key      = 'mungekey',
+  String $slurm_home_loc    = '/usr/local/slurm',
+  String $slurm_log_file    = '/var/log/slurm',
+  Integer $slurm_gid        = 950,
+  Integer $slurm_uid        = 950,
+  String $slurm_private_key = 'slurmkey',
+  String $slurm_public_key  = 'slurmcert',
+  Integer $munge_gid        = 951,
+  Integer $munge_uid        = 951,
+  String $munge_loc         = '/etc/munge',
+  String $munge_log_file    = '/var/log/munge',
+  String $munge_home_loc    = '/var/lib/munge',
+  String $munge_run_loc     = '/run/munge',
+  String $munge_shared_key  = 'mungekey',
   Array $packages = [
     'slurm',
     'slurm-devel',
@@ -67,7 +67,7 @@ class slurm::setup (
   }
   file{ 'slurm folder':
     ensure  => directory,
-    path    => $slurm_home,
+    path    => $slurm_home_loc,
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
@@ -75,7 +75,7 @@ class slurm::setup (
   }
   file{ 'slurm log folder':
     ensure  => directory,
-    path    => $slurm_log,
+    path    => $slurm_log_file,
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
@@ -102,23 +102,23 @@ class slurm::setup (
 
   file{ 'credentials folder':
     ensure  => directory,
-    path    => "${slurm_home}/credentials",
+    path    => "${slurm_home_loc}/credentials",
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
     require => User['slurm'],
   }
   teigi::secret{ 'slurm private key':
-    key     => $slurm_key_priv,
-    path    => "${slurm_home}/credentials/slurm.key",
+    key     => $slurm_private_key,
+    path    => "${slurm_home_loc}/credentials/slurm.key",
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0400',
     require => File['credentials folder'],
   }
   teigi::secret{ 'slurm public key':
-    key     => $slurm_key_pub,
-    path    => "${slurm_home}/credentials/slurm.cert",
+    key     => $slurm_public_key,
+    path    => "${slurm_home_loc}/credentials/slurm.cert",
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0444',
@@ -142,7 +142,7 @@ class slurm::setup (
 
   file{ 'munge folder':
     ensure  => directory,
-    path    => $munge_folder,
+    path    => $munge_loc,
     owner   => 'munge',
     group   => 'munge',
     mode    => '1700',
@@ -150,7 +150,7 @@ class slurm::setup (
   }
   file{ 'munge homedir':
     ensure  => directory,
-    path    => $munge_home,
+    path    => $munge_home_loc,
     owner   => 'munge',
     group   => 'munge',
     mode    => '1700',
@@ -158,7 +158,7 @@ class slurm::setup (
   }
   file{ 'munge log folder':
     ensure  => directory,
-    path    => $munge_log,
+    path    => $munge_log_file,
     owner   => 'munge',
     group   => 'munge',
     mode    => '1700',
@@ -166,7 +166,7 @@ class slurm::setup (
   }
   file{ 'munge run folder':
     ensure  => directory,
-    path    => $munge_run,
+    path    => $munge_run_loc,
     owner   => 'munge',
     group   => 'munge',
     mode    => '1755',
@@ -174,7 +174,7 @@ class slurm::setup (
   }
 
   teigi::secret{ 'munge secret key':
-    key     => $munge_key,
+    key     => $munge_shared_key,
     path    => '/etc/munge/munge.key',
     owner   => 'munge',
     group   => 'munge',
