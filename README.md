@@ -88,6 +88,12 @@ Adding key 'mungekey' to tbag for hostgroup 'bi/hpc/batch'
 Key 'mungekey' successfully added to hostgroup 'bi/hpc/batch'
 ```
 
+If you want to change the default tbag identifier (name) for the key, i.e. `mungekey`, or some other parameter for the `setup.pp` class, please make sure you add the corresponding variables in your hostgroups hieradata, e.g.:
+```
+# myhostgroup.yaml
+slurm::setup::munge_key: mungekey
+```
+
 #### Secrets stored in Teigi (tbag)
 The following secrets are stored using `tbag`. These are necessary for the SLURM module to work. Ensure that they have the same identifiers (names) or that the secrets have been renamed accordingly in the module.
 
@@ -107,7 +113,7 @@ TODO Bla bla BLCR...
 #### Database configuration
 The database for SLURM is used solely for accounting purposes. The module supports a setup with a database node either separate from or combined with a headnode. The database configuration is done in the [dbnode](https://gitlab.cern.ch/ai/it-puppet-module-slurm/tree/master/code/manifests/dbnode) manifests.
 
-The main configuration values (as defined in [slurm.conf](###slurm.conf.erb) and [slurmdbd.conf](###slurmdbd.conf.erb) for the database are the following:
+The main configuration values (as defined in [slurm.conf](#slurm.conf.erb) and [slurmdbd.conf](#slurmdbd.conf.erb) for the database are the following:
 ```
 # class slurm::config
 slurmdbd_host = 'dbnode.example.org'
@@ -118,18 +124,18 @@ slurmdbd_user = 'slurm'
 # slurm.conf
 AccountingStorageHost=dbnode.example.org ## DB node hostname (either headnode or dbnode hostname)
 AccountingStoragePass=/var/run/munge/munge.socket.2
-AccountingStoragePort=<%= @slurmdbd_port %>
+AccountingStoragePort=1234
 AccountingStorageType=accounting_storage/slurmdbd
 
 # class slurm::dbnode::config
-slurmdb_host   = 'dbnode.example.org' # DB node hostname (either headnode or dbnode hostname. Preferably `localhost`.)
-slurmdb_port   = '6819' # DB node port
-slurmuser      = 'slurm'
-db_host        = 'db_instance.example.org' # Hostname of the node where MySQL instance is running.
-db_port        = '1234' # MySQL instance port number.
-db_user        = 'slurm'
-db_loc         = 'accountingdb' # database name (inside the MySQL DB)
-slurmdbpass    = 'somethingsecret'
+slurmdbd_host   = 'dbnode.example.org' # DB node hostname (either headnode or dbnode hostname. Preferably `localhost`.)
+slurmdbd_port   = '6819' # DB node port
+slurmuser       = 'slurm'
+db_host         = 'db_instance.example.org' # Hostname of the node where MySQL instance is running.
+db_port         = '1234' # MySQL instance port number.
+db_user         = 'slurm'
+db_loc          = 'accountingdb' # database name (inside the MySQL DB)
+slurmdbpass     = 'somethingsecret'
 
 # slurmdbd.conf
 StorageType=accounting_storage/mysql
