@@ -49,8 +49,6 @@ To avoid version conflicts, all the following packages will be installed/replace
  - 'slurm-auth-none',
  - 'slurm-perlapi',
  - 'slurm-plugins',
- - 'slurm-sjobexit',
- - 'slurm-sjstat',
  - 'slurm-torque',
 ```
 
@@ -66,8 +64,6 @@ To avoid version conflicts, all the following packages will be installed/replace
  - 'slurm-auth-none',
  - 'slurm-perlapi',
  - 'slurm-plugins',
- - 'slurm-sjobexit',
- - 'slurm-sjstat',
  - 'slurm-torque',
 ```
 
@@ -325,8 +321,6 @@ class slurm::headnode::setup (
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',
-    'slurm-sjobexit',
-    'slurm-sjstat',
     'slurm-torque',
   ],
 )
@@ -365,8 +359,6 @@ class slurm::workernode::setup (
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',
-    'slurm-sjobexit',
-    'slurm-sjstat',
     'slurm-torque',
   ],
 )

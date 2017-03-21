@@ -23,8 +23,6 @@ class slurm::headnode::setup (
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',
-    'slurm-sjobexit',
-    'slurm-sjstat',
     'slurm-torque',
   ],
 ) {
