@@ -2,12 +2,10 @@
 #
 # Creates folders/logfiles and installs packages specific to dbnode
 #
-# @param job_accounting_log
-# @param job_completion_log
-# @param slurmdbd_log_file
-# @param packages
+# @param slurmdbd_log_file Fully qualified pathname of a file into which the slurmd data base daemon will log entries
+# @param packages Packages to install
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -16,8 +14,6 @@
 #
 
 class slurm::dbnode::setup (
-  String $job_accounting_log = '/var/log/slurm/slurm_jobacct.log',
-  String $job_completion_log = '/var/log/slurm/slurm_jobcomp.log',
   String $slurmdbd_log_file  = '/var/log/slurm/slurmdbd.log',
   Array $packages = [
     'slurm-plugins',
@@ -28,38 +24,12 @@ class slurm::dbnode::setup (
 
   ensure_packages($packages)
 
-  file{ 'slurm job accounting log':
-    ensure => file,
-    path   => $job_accounting_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
-  }
-
-  file{ 'slurm completed job log':
-    ensure => file,
-    path   => $job_completion_log,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
-  }
-
   file{ 'slurmdbd log file':
     ensure => file,
     path   => $slurmdbd_log_file,
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
-  }
-
-  logrotate::file{ 'slurm_jobacct':
-    log     => $job_accounting_log,
-    options => ['weekly','copytruncate','rotate 26','compress'],
-  }
-
-  logrotate::file{ 'slurm_jobcomp':
-    log     => $job_completion_log,
-    options => ['weekly','copytruncate','rotate 26','compress'],
   }
 
   logrotate::file{ 'slurmdbd':

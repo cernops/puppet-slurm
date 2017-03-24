@@ -2,11 +2,11 @@
 #
 # Creates folders/logfiles and installs packages specific to workernode
 #
-# @param slurmd_loc
-# @param slurmd_log_file
-# @param packages
+# @param slurmd_spool_dir Fully qualified pathname of a directory into which the Slurm deamon, slurmd, saves its state
+# @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written
+# @param packages Packages to install
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -15,8 +15,8 @@
 #
 
 class slurm::workernode::setup (
-  String $slurmd_loc      = '/var/spool/slurmd',
-  String $slurmd_log_file = '/var/log/slurm/slurmd.log',
+  String $slurmd_spool_dir = '/var/spool/slurmd',
+  String $slurmd_log_file  = '/var/log/slurm/slurmd.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -29,7 +29,7 @@ class slurm::workernode::setup (
 
   file{ 'slurmd folder':
     ensure => directory,
-    path   => $slurmd_loc,
+    path   => $slurmd_spool_dir,
     group  => 'slurm',
     mode   => '1755',
     owner  => 'slurm',

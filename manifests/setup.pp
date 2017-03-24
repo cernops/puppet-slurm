@@ -3,22 +3,22 @@
 # Creates the basic folders, user/group and security for SLURM, common to
 # headnodes and workernodes
 #
-# @param slurm_home_loc
-# @param slurm_log_file
-# @param slurm_gid
-# @param slurm_uid
-# @param slurm_private_key
-# @param slurm_public_key
-# @param munge_gid
-# @param munge_uid
-# @param munge_loc
-# @param munge_log_file
-# @param munge_home_loc
-# @param munge_run_loc
-# @param munge_shared_key
-# @param packages
+# @param slurm_home_loc Location of SLURM's home folder, defaults to /usr/local/slurm
+# @param slurm_log_file Location of SLURM's log folder, defaults to /var/log/slurm
+# @param slurm_gid Group id for slurm group, defaults to 950
+# @param slurm_uid User id for slurm user, defaults to 950
+# @param slurm_private_key Name of SLURM's private key, defaults to slurmkey
+# @param slurm_public_key Name of SLURM's public key, defaults to slurmcert
+# @param munge_gid Group id for munge group, defaults to 951
+# @param munge_uid User id for munge user, defaults to 951
+# @param munge_loc Location of MUNGE's root folder, defaults to /etc/munge
+# @param munge_log_file Location of MUNGE's log folder, defaults to /var/log/munge
+# @param munge_home_loc Location of MUNGE's home folder, defaults to /var/lib/munge
+# @param munge_run_loc Location of MUNGE's run folder, defaults to /run/munge
+# @param munge_shared_key Name of MUNGE's shared key, defaults to mungekey
+# @param packages Packages to install
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -52,6 +52,9 @@ class slurm::setup (
 
   ensure_packages($packages)
 
+################################################################################
+# SLURM
+################################################################################
   group{ 'slurm':
     ensure => present,
     gid    => $slurm_gid,
@@ -82,24 +85,7 @@ class slurm::setup (
     require => User['slurm'],
   }
 
-  file{ '/etc/slurm/plugstack.conf':
-    ensure  => file,
-    source  => 'puppet:///modules/slurm/plugstack.conf',
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '1755',
-    require => User['slurm'],
-  }
-
-  file{ '/etc/slurm/job_stuck_alert.sh':
-    ensure  => file,
-    source  => 'puppet:///modules/slurm/job_stuck_alert.sh',
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0755',
-    require => User['slurm'],
-  }
-
+# SLURM private and public key for user authentication
   file{ 'credentials folder':
     ensure  => directory,
     path    => "${slurm_home_loc}/credentials",
@@ -125,6 +111,40 @@ class slurm::setup (
     require => File['credentials folder'],
   }
 
+# Cgroup configuration
+  file{ '/etc/slurm/cgroup.conf':
+    ensure  => file,
+    content => template('slurm/cgroup.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
+    require => User['slurm'],
+  }
+
+# Plugin loader
+  file{ '/etc/slurm/plugstack.conf':
+    ensure  => file,
+    content => template('slurm/plugstack.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
+    require => User['slurm'],
+  }
+
+# Stuck CG job alert
+  file{ '/etc/slurm/job_stuck_alert.sh':
+    ensure  => file,
+    content => template('slurm/job_stuck_alert.sh.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0755',
+    require => User['slurm'],
+  }
+
+
+################################################################################
+# MUNGE
+################################################################################
   group{ 'munge':
     ensure => present,
     gid    => $munge_gid,
@@ -139,7 +159,6 @@ class slurm::setup (
     system  => true,
     uid     => $munge_uid,
   }
-
   file{ 'munge folder':
     ensure  => directory,
     path    => $munge_loc,
@@ -172,7 +191,6 @@ class slurm::setup (
     mode    => '1755',
     require => User['munge'],
   }
-
   teigi::secret{ 'munge secret key':
     key     => $munge_shared_key,
     path    => '/etc/munge/munge.key',

@@ -191,7 +191,9 @@ We can put examples and link to the KB here.
 
 ## slurm
 ```
-class slurm ()
+class slurm (
+  String $node_type = '',
+)
 ```
 TODO Bla bla
 
@@ -268,8 +270,6 @@ Setup, configure and install the dbnode.
 ### slurm::dbnode::setup
 ```
 class slurm::dbnode::setup (
-  String $job_accounting_log = '/var/log/slurm/slurm_jobacct.log',
-  String $job_completion_log = '/var/log/slurm/slurm_jobcomp.log',
   String $slurmdbd_log_file  = '/var/log/slurm/slurmdbd.log',
   Array $packages = [
     'slurm-plugins',
@@ -284,9 +284,9 @@ Setup the dbnode.
 ### slurm::dbnode::config
 ```
 class slurm::dbnode::config (
-  String $dbd_host      = 'dbnode.example.org',
-  Integer $dbd_port     = 6819,
-  String $slurm_user    = 'slurm',
+  String $dbd_host      = 'localhost',
+  Integer $dbd_port     = $slurm::config::accounting_storage_port,
+  String $slurm_user    = $slurm::config::slurm_user,
   String $storage_host  = 'db_instance.example.org',
   Integer $storage_port = 1234,
   String $storage_user  = 'user',
@@ -298,7 +298,7 @@ Configure the dbnode.
 ### slurm::dbnode::firewall
 ```
 class slurm::dbnode::firewall (
-  Integer $accounting_storage_port = 6819,
+  Integer $accounting_storage_port = $slurm::config::accounting_storage_port,
 )
 ```
 Define the port used for DB communication on the DB node.
@@ -314,9 +314,9 @@ Setup, configure and install the headnode.
 ### slurm::headnode::setup
 ```
 class slurm::headnode::setup (
-  String $slurmctld_loc      = '/var/spool/slurmctld',
-  String $slurm_state_loc    = '/var/spool/slurmctld/slurm.state',
-  String $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
+  String $slurmctld_spool_dir = '/var/spool/slurmctld',
+  String $state_save_location = '/var/spool/slurmctld/slurm.state',
+  String $slurmctld_log_file  = '/var/log/slurm/slurmctld.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -337,7 +337,7 @@ Configure the headnode.
 ### slurm::headnode::firewall
 ```
 class slurm::headnode::firewall (
-  Integer $slurmctld_port = 6817,
+  Integer $slurmctld_port = $slurm::config::slurmctld_port,
 )
 ```
 Setup the firewall for the headnode.
@@ -353,8 +353,8 @@ Setup, configure and installs the workernode.
 ### slurm::workernode::setup
 ```
 class slurm::workernode::setup (
-  String $slurmd_loc      = '/var/spool/slurmd',
-  String $slurmd_log_file = '/var/log/slurm/slurmd.log',
+  String $slurmd_spool_dir = '/var/spool/slurmd',
+  String $slurmd_log_file  = '/var/log/slurm/slurmd.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -375,7 +375,7 @@ Configure the workernode.
 ### slurm::workernode::firewall
 ```
 class slurm::workernode::firewall (
-  Integer $slurmd_port = 6818,
+  Integer $slurmd_port = $slurm::config::slurmd_port,
 )
 ```
 Setup the firewall for the workernode.

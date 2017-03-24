@@ -2,30 +2,30 @@
 #
 # Creates the common configuration file
 #
-# @param control_machine
-# @param backup_controller
-# @param job_checkpoint_dir
-# @param job_credential_private_key
-# @param job_credential_public_certificate
-# @param max_job_count
-# @param plugin_dir
-# @param plug_stack_config
-# @param slurmctld_port
-# @param slurmd_port
-# @param slurmd_spool_dir
-# @param state_save_location
-# @param slurm_user
-# @param accounting_storage_host
-# @param accounting_storage_loc
-# @param accounting_storage_port
-# @param accounting_storage_user
-# @param cluster_name
-# @param slurmctld_log_file
-# @param slurmd_log_file
-# @param workernodes
-# @param partitions
+# @param control_machine The short, or long, hostname of the machine where Slurm control functions are executed
+# @param backup_controller The short, or long, name of the machine where Slurm control functions are to be executed in the event that control_machine fails
+# @param job_checkpoint_dir Specifies the default directory for storing or reading job checkpoint information
+# @param job_credential_private_key Fully qualified pathname of a file containing a private key used for authentication by Slurm daemons
+# @param job_credential_public_certificate Fully qualified pathname of a file containing a public key used for authentication by Slurm daemons
+# @param max_job_count The maximum number of jobs Slurm can have in its active database at one time
+# @param plugin_dir Identifies the places in which to look for Slurm plugins
+# @param plug_stack_config Location of the config file for Slurm stackable plugins that use the Stackable Plugin Architecture for Node job (K)control (SPANK)
+# @param slurmctld_port The port number that the Slurm controller, slurmctld, listens to for work
+# @param slurmd_port The port number that the Slurm compute node daemon, slurmd, listens to for work
+# @param slurmd_spool_dir Fully qualified pathname of a directory into which the slurmd daemon's state information and batch job script information are written
+# @param state_save_location Fully qualified pathname of a directory into which the Slurm controller, slurmctld, saves its state
+# @param slurm_user The name of the user that the slurmctld daemon executes as
+# @param accounting_storage_host The name of the machine hosting the accounting storage database
+# @param accounting_storage_loc The fully qualified file name where accounting records are written when the AccountingStorageType is "accounting_storage/filetxt" or else the name of the database where accounting records are stored when the AccountingStorageType is a database
+# @param accounting_storage_port The listening port of the accounting storage database server
+# @param accounting_storage_user The user account for accessing the accounting storage database
+# @param cluster_name The name by which this Slurm managed cluster is known in the accounting database
+# @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written
+# @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written
+# @param workernodes Array of hashes containing the information about the workernodes
+# @param partitions Array of hashes containing the information about the paritions
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

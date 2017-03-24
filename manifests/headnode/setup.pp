@@ -2,12 +2,12 @@
 #
 # Creates folders/logfiles and installs packages specific to headnode
 #
-# @param slurmctld_loc
-# @param slurm_state_loc
-# @param slurmctld_log_file
-# @param packages
+# @param slurmctld_spool_dir Fully qualified pathname of a directory into which the slurmctld daemon's state information and batch job script information are written
+# @param state_save_location Fully qualified pathname of a directory into which the Slurm controller, slurmctld, saves its state
+# @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written
+# @param packages Packages to install
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -16,9 +16,9 @@
 #
 
 class slurm::headnode::setup (
-  String $slurmctld_loc      = '/var/spool/slurmctld',
-  String $slurm_state_loc    = '/var/spool/slurmctld/slurm.state',
-  String $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
+  String $slurmctld_spool_dir = '/var/spool/slurmctld',
+  String $state_save_location = '/var/spool/slurmctld/slurm.state',
+  String $slurmctld_log_file  = '/var/log/slurm/slurmctld.log',
   Array $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
@@ -31,7 +31,7 @@ class slurm::headnode::setup (
 
   file{ 'slurmctld folder':
     ensure  => directory,
-    path    => $slurmctld_loc,
+    path    => $slurmctld_spool_dir,
     group   => 'slurm',
     mode    => '1755',
     owner   => 'slurm',
@@ -40,7 +40,7 @@ class slurm::headnode::setup (
 
   file{ 'slurmctld state folder':
     ensure  => directory,
-    path    => $slurm_state_loc,
+    path    => $state_save_location,
     group   => 'slurm',
     mode    => '1755',
     owner   => 'slurm',

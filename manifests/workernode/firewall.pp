@@ -2,9 +2,9 @@
 #
 # Firewall rules for the workernode
 #
-# @param slurmd_port
+# @param slurmd_port The port number that the Slurm compute node daemon, slurmd, listens to for work
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -13,7 +13,7 @@
 #
 
 class slurm::workernode::firewall (
-  Integer $slurmd_port = 6818,
+  Integer $slurmd_port = $slurm::config::slurmd_port,
 ) {
 
   firewall{ '201 open slurmd port':

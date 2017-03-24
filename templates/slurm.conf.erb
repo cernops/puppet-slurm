@@ -1,8 +1,8 @@
 <%# slurm.conf.erb                                                           -%>
 <%#                                                                          -%>
-<%# Template containing common parameters for db, head and worker node       -%>
+<%# Common SLURM parameters for db, head and worker node                     -%>
 <%#                                                                          -%>
-<%# version 20170301                                                         -%>
+<%# version 20170327                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -49,7 +49,7 @@ MpiDefault=pmi2
 PluginDir=<%= @plugin_dir %>
 PlugStackConfig=<%= @plug_stack_config %>
 #PrivateData=jobs
-ProctrackType=proctrack/pgid
+ProctrackType=proctrack/cgroup
 #Prolog=
 #PrologFlags=
 #PrologSlurmctld=
@@ -71,7 +71,7 @@ SlurmUser=<%= @slurm_user %>
 StateSaveLocation=<%= @state_save_location %>
 SwitchType=switch/none
 #TaskEpilog=
-TaskPlugin=task/affinity
+TaskPlugin=task/cgroup
 TaskPluginParam=Sched
 #TaskProlog=
 #TopologyPlugin=topology/tree
@@ -148,7 +148,7 @@ JobCompType=jobcomp/none
 #JobCompUser=
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300
-JobAcctGatherType=jobacct_gather/linux
+JobAcctGatherType=jobacct_gather/cgroup
 #AcctGatherProfileType=acct_gather_profile/hdf5
 AcctGatherEnergyType=acct_gather_energy/ipmi
 AcctGatherNodeFreq=60

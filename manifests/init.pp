@@ -1,10 +1,10 @@
 # slurm/init.pp
 #
-# Installs SLURM with configuration according
+# Installs SLURM with configuration according to node type
 #
-# @param node_type
+# @param node_type Specifies the node type which defines the configuration that will be applied to that node
 #
-# version 20170306
+# version 20170327
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
