@@ -12,13 +12,11 @@
 # License: GNU GPL v3 or later.
 #
 
-class slurm::dbnode::firewall (
-  Integer $accounting_storage_port = $slurm::config::accounting_storage_port,
-) {
+class slurm::dbnode::firewall {
 
   firewall{ '203 open slurmdbd port':
     action => 'accept',
-    dport  => $accounting_storage_port,
+    dport  => $slurm::config::accounting_storage_port,
     proto  => 'tcp',
   }
 }

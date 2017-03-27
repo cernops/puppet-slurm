@@ -12,13 +12,11 @@
 # License: GNU GPL v3 or later.
 #
 
-class slurm::headnode::firewall (
-  Integer $slurmctld_port = $slurm::config::slurmctld_port,
-) {
+class slurm::headnode::firewall {
 
   firewall{ '200 open slurmctld port':
     action => 'accept',
-    dport  => $slurmctld_port,
+    dport  => $slurm::config::slurmctld_port,
     proto  => 'tcp',
   }
 }

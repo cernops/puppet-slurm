@@ -111,17 +111,7 @@ class slurm::setup (
     require => File['credentials folder'],
   }
 
-# Cgroup configuration
-  file{ '/etc/slurm/cgroup.conf':
-    ensure  => file,
-    content => template('slurm/cgroup.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '1755',
-    require => User['slurm'],
-  }
-
-# Plugin loader
+  # Plugin loader
   file{ '/etc/slurm/plugstack.conf':
     ensure  => file,
     content => template('slurm/plugstack.conf.erb'),
@@ -131,13 +121,33 @@ class slurm::setup (
     require => User['slurm'],
   }
 
-# Stuck CG job alert
+  # Stuck CG job alert
   file{ '/etc/slurm/job_stuck_alert.sh':
     ensure  => file,
     content => template('slurm/job_stuck_alert.sh.erb'),
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0755',
+    require => User['slurm'],
+  }
+
+  # AcctGatherEnergy/impi plugin
+  file{'/etc/slurm/acct_gather.conf':
+    ensure  => file,
+    content => template('slurm/acct_gather.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
+  }
+
+  # Cgroup configuration
+  file{ '/etc/slurm/cgroup.conf':
+    ensure  => file,
+    content => template('slurm/cgroup.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
     require => User['slurm'],
   }
 

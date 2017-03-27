@@ -12,13 +12,11 @@
 # License: GNU GPL v3 or later.
 #
 
-class slurm::workernode::firewall (
-  Integer $slurmd_port = $slurm::config::slurmd_port,
-) {
+class slurm::workernode::firewall {
 
   firewall{ '201 open slurmd port':
     action => 'accept',
-    dport  => $slurmd_port,
+    dport  => $slurm::config::slurmd_port,
     proto  => 'tcp',
   }
 }

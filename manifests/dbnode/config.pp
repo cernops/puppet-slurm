@@ -21,8 +21,8 @@
 
 class slurm::dbnode::config (
   String $dbd_host      = 'localhost',
-  Integer $dbd_port     = $slurm::config::accounting_storage_port,
-  String $slurm_user    = $slurm::config::slurm_user,
+  Integer $dbd_port     = 6819,
+  String $slurm_user    = 'slurm',
   String $storage_host  = 'db_instance.example.org',
   Integer $storage_port = 1234,
   String $storage_user  = 'user',
@@ -41,6 +41,16 @@ class slurm::dbnode::config (
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => [Teigi_sub_file['/etc/slurm/slurmdbd.conf','/etc/slurm/slurm.conf'], Package['slurm-slurmdbd']],
+    subscribe => [
+      Package['slurm-slurmdbd'],
+      Teigi_sub_file[
+        '/etc/slurm/slurmdbd.conf',
+        '/etc/slurm/slurm.conf',
+      ],
+      File[
+        '/etc/slurm/cgroup.conf',
+        '/etc/slurm/plugstack.conf',
+      ],
+    ],
   }
 }

@@ -56,11 +56,15 @@ class slurm::config (
   String $slurmd_log_file                   = '/var/log/slurm/slurmd.log',
   Array $workernodes = [{
     'NodeName' => 'worker[00-10]',
-    'CPUs' => '16'
+    'CPUs' => '16',
   }],
   Array $partitions = [{
     'PartitionName' => 'workers',
-    'MaxMemPerCPU' => '2000'
+    'MaxMemPerCPU' => '2000',
+  }],
+  Array $switches = [{
+    'SwitchName' => 's0',
+    'Nodes' => 'worker[00-10]',
   }],
 ) {
 
@@ -72,9 +76,9 @@ class slurm::config (
     mode       => '0644',
   }
 
-  file{'/etc/slurm/acct_gather.conf':
+  file{'/etc/slurm/topology.conf':
     ensure  => file,
-    content => template('slurm/acct_gather.conf.erb'),
+    content => template('slurm/topology.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0644',

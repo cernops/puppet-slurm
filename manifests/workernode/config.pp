@@ -17,6 +17,14 @@ class slurm::workernode::config {
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => [Teigi_sub_file['/etc/slurm/slurm.conf'], Package['slurm']],
+    subscribe => [
+      Package['slurm'],
+      Teigi_sub_file['/etc/slurm/slurm.conf'],
+      File[
+        '/etc/slurm/cgroup.conf',
+        '/etc/slurm/plugstack.conf',
+        '/etc/slurm/topology.conf',
+      ],
+    ],
   }
 }
