@@ -80,7 +80,7 @@ TopologyPlugin=topology/tree
 TreeWidth=<%= (Math.sqrt(@amount_of_nodes).ceil) %> # Optimal system performance can typically be achieved if TreeWidth is set to the square root of the number of nodes in the cluster for systems having no more than 2500 nodes or the cube root for larger systems. ref https://slurm.schedmd.com/slurm.conf.html
 UnkillableStepProgram=/etc/slurm/job_stuck_alert.sh
 #UsePAM=0
-VSizeFactor=200
+VSizeFactor=150 # 100 physical + 50 swap
 
 
 # TIMERS
