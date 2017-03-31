@@ -43,9 +43,9 @@ KillOnBadExit=1
 #MailProg=/bin/mail
 MaxJobCount=<%= @max_job_count %>
 #MaxStepCount=40000
-MaxTasksPerNode=64
+MaxTasksPerNode=32
 MpiDefault=pmi2
-#MpiParams=ports=#-# # Probably not needed since all ports open
+#MpiParams=ports=#-#
 PluginDir=<%= @plugin_dir %>
 PlugStackConfig=<%= @plug_stack_config %>
 #PrivateData=jobs # TODO Should all users see all the jobs or the nodes currently down ?
