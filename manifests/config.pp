@@ -22,10 +22,11 @@
 # @param cluster_name The name by which this Slurm managed cluster is known in the accounting database
 # @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written
 # @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written
+# @param amount_of_nodes The total amount of nodes contained in the cluster
 # @param workernodes Array of hashes containing the information about the workernodes
 # @param partitions Array of hashes containing the information about the paritions
 #
-# version 20170327
+# version 20170331
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -54,6 +55,7 @@ class slurm::config (
   String $cluster_name                      = 'batch',
   String $slurmctld_log_file                = '/var/log/slurm/slurmctld.log',
   String $slurmd_log_file                   = '/var/log/slurm/slurmd.log',
+  Integer $amount_of_nodes                  = 1,
   Array $workernodes = [{
     'NodeName' => 'worker[00-10]',
     'CPUs' => '16',

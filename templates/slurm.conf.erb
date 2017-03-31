@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Common SLURM parameters for db, head and worker node                     -%>
 <%#                                                                          -%>
-<%# version 20170327                                                         -%>
+<%# version 20170331                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -23,7 +23,7 @@ AuthType=auth/munge
 #CheckpointType=checkpoint/none
 CryptoType=crypto/openssl
 #DisableRootJobs=NO
-#EnforcePartLimits=NO
+EnforcePartLimits=ALL
 #Epilog=
 #EpilogSlurmctld=
 FirstJobId=1
@@ -35,7 +35,7 @@ JobCheckpointDir=<%= @job_checkpoint_dir %>
 JobCredentialPrivateKey=<%= @job_credential_private_key %>
 JobCredentialPublicCertificate=<%= @job_credential_public_certificate %>
 #JobFileAppend=0
-#JobRequeue=1
+JobRequeue=0
 #JobSubmitPlugins=1
 KillOnBadExit=1
 #LaunchType=launch/slurm
@@ -43,12 +43,12 @@ KillOnBadExit=1
 #MailProg=/bin/mail
 MaxJobCount=<%= @max_job_count %>
 #MaxStepCount=40000
-#MaxTasksPerNode=128
+MaxTasksPerNode=64
 MpiDefault=pmi2
-#MpiParams=ports=#-#
+#MpiParams=ports=#-# # Probably not needed since all ports open
 PluginDir=<%= @plugin_dir %>
 PlugStackConfig=<%= @plug_stack_config %>
-#PrivateData=jobs
+#PrivateData=jobs # TODO Should all users see all the jobs or the nodes currently down ?
 ProctrackType=proctrack/cgroup
 #Prolog=
 #PrologFlags=
@@ -77,7 +77,7 @@ TaskPluginParam=Sched
 TopologyPlugin=topology/tree
 #TmpFS=/tmp
 #TrackWCKey=no
-#TreeWidth=
+TreeWidth=<%= (Math.sqrt(@amount_of_nodes).ceil) %> # Optimal system performance can typically be achieved if TreeWidth is set to the square root of the number of nodes in the cluster for systems having no more than 2500 nodes or the cube root for larger systems. ref https://slurm.schedmd.com/slurm.conf.html
 UnkillableStepProgram=/etc/slurm/job_stuck_alert.sh
 #UsePAM=0
 
@@ -103,13 +103,11 @@ Waittime=0
 
 
 # SCHEDULING
-#DefMemPerCPU=0
+DefMemPerCPU=4000
 FastSchedule=1
-#MaxMemPerCPU=0
-#SchedulerRootFilter=1
+MaxMemPerCPU=4000
 #SchedulerTimeSlice=30
 SchedulerType=sched/backfill
-#SchedulerPort=7321
 SelectType=select/cons_res
 SelectTypeParameters=CR_CPU_Memory
 
