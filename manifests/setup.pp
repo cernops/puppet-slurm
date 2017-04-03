@@ -18,7 +18,7 @@
 # @param munge_shared_key Name of MUNGE's shared key, defaults to mungekey
 # @param packages Packages to install
 #
-# version 20170327
+# version 20170403
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -117,7 +117,7 @@ class slurm::setup (
     content => template('slurm/plugstack.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '1755',
+    mode    => '0644',
     require => User['slurm'],
   }
 
@@ -127,7 +127,7 @@ class slurm::setup (
     content => template('slurm/job_stuck_alert.sh.erb'),
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '0755',
+    mode    => '0644',
     require => User['slurm'],
   }
 
@@ -147,7 +147,7 @@ class slurm::setup (
     content => template('slurm/cgroup.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '1755',
+    mode    => '0644',
     require => User['slurm'],
   }
 
