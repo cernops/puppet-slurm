@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Common SLURM parameters for db, head and worker node                     -%>
 <%#                                                                          -%>
-<%# version 20170403                                                         -%>
+<%# version 20170404                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -48,7 +48,7 @@ MpiDefault=pmi2
 #MpiParams=ports=#-#
 PluginDir=<%= @plugin_dir %>
 PlugStackConfig=<%= @plug_stack_config %>
-#PrivateData=jobs # TODO Should all users see all the jobs or the nodes currently down ?
+#PrivateData=jobs
 ProctrackType=proctrack/cgroup
 #Prolog=
 #PrologFlags=
@@ -80,7 +80,7 @@ TopologyPlugin=topology/tree
 TreeWidth=<%= (Math.sqrt(@amount_of_nodes).ceil) %> # Optimal system performance can typically be achieved if TreeWidth is set to the square root of the number of nodes in the cluster for systems having no more than 2500 nodes or the cube root for larger systems. ref https://slurm.schedmd.com/slurm.conf.html
 UnkillableStepProgram=/etc/slurm/job_stuck_alert.sh
 #UsePAM=0
-VSizeFactor=150 # 100 physical + 50 swap
+#VSizeFactor=0  # Virtual memory can be much higher than physical memory since it includes all shared libraries and shared memory; thus setting to unlimited.
 
 
 # TIMERS
@@ -147,7 +147,7 @@ JobCompType=jobcomp/none
 #JobCompUser=
 #JobContainerType=job_container/none
 JobAcctGatherFrequency=300
-JobAcctGatherType=jobacct_gather/cgroup
+JobAcctGatherType=jobacct_gather/linux
 #AcctGatherProfileType=acct_gather_profile/hdf5
 AcctGatherEnergyType=acct_gather_energy/ipmi
 AcctGatherNodeFreq=60
