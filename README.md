@@ -76,10 +76,10 @@ AuthType=auth/munge
 ```
 Other alternatives for this value is `auth/none` which requires the `auth-none` plugin to be built as part of SLURM. It is recommended to use MUNGE rather than unauthenticated communication.
 
-Further configuration of MUNGE is done in [setup.pp](https://gitlab.cern.ch/ai/it-puppet-module-slurm/blob/master/code/manifests/setup.pp). The only required effort to set up MUNGE through the module is to generate a MUNGE secret key that is shared between nodes. For our setup, the key is stored in `tbag` as shown below.
+Further configuration of MUNGE is done in [setup.pp](https://gitlab.cern.ch/ai/it-puppet-module-slurm/blob/master/code/manifests/setup.pp). The only required effort to set up MUNGE through the module is to generate a secret key that is shared between nodes. For our setup, the key is stored in `tbag` as shown below.
 
 ```
-[calindqv@aiadm16 slurm]$ tbag set --hg bi/hpc/batch mungekey --file munge.key
+$ tbag set --hg bi/hpc/batch mungekey --file munge.key
 Adding key 'mungekey' to tbag for hostgroup 'bi/hpc/batch'
 Key 'mungekey' successfully added to hostgroup 'bi/hpc/batch'
 ```
@@ -91,10 +91,10 @@ slurm::setup::munge_key: mungekey
 ```
 
 #### Secrets stored in Teigi (tbag)
-The following secrets are stored using `tbag`. These are necessary for the SLURM module to work. Ensure that they have the same identifiers (names) or that the secrets have been renamed accordingly in the module.
+The following secrets are stored using `tbag`. Those are necessary for the slurm module to work. Ensure that they have the same identifiers (names) or that the secrets have been renamed accordingly in the module.
 
 ```
-[calindqv@aiadm18 ~]$ tbag showkeys --hg bi/hpc/batch
+$ tbag showkeys --hg bi/hpc/batch
 [
      "slurmkey",
      "slurmdbpass",
@@ -103,8 +103,10 @@ The following secrets are stored using `tbag`. These are necessary for the SLURM
 ]
 ```
 
+<!---
 #### Checkpointing
-TODO Bla bla BLCR...
+This feature is currently not available since the main project, i.e. BLCR, has been discontinued since 2013. We are investigating alternatives like DMTCP, SCR and OpenMPI's build it checkpointing mechanism.
+--->
 
 #### Database configuration
 The database for SLURM is used solely for accounting purposes. The module supports a setup with a database node either separate from or combined with a headnode. The database configuration is done in the [dbnode](https://gitlab.cern.ch/ai/it-puppet-module-slurm/tree/master/code/manifests/dbnode) manifests.

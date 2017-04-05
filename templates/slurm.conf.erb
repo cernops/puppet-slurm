@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Common SLURM parameters for db, head and worker node                     -%>
 <%#                                                                          -%>
-<%# version 20170404                                                         -%>
+<%# version 20170405                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -19,9 +19,9 @@ ControlMachine=<%= @control_machine %>
 BackupController=<%= @backup_controller %>
 #BackupAddr=
 
-AuthType=auth/munge
-#CheckpointType=checkpoint/none
-CryptoType=crypto/openssl
+AuthType=<%= @auth_type %>
+CheckpointType=<%= @checkpoint_type %>
+CryptoType=<%= @crypto_type %>
 #DisableRootJobs=NO
 EnforcePartLimits=ALL
 #Epilog=
@@ -43,19 +43,19 @@ KillOnBadExit=1
 #MailProg=/bin/mail
 MaxJobCount=<%= @max_job_count %>
 #MaxStepCount=40000
-MaxTasksPerNode=32
-MpiDefault=pmi2
+MaxTasksPerNode=<%= @max_tasks_per_node %>
+MpiDefault=<%= @mpi_default %>
 #MpiParams=ports=#-#
 PluginDir=<%= @plugin_dir %>
 PlugStackConfig=<%= @plug_stack_config %>
-#PrivateData=jobs
-ProctrackType=proctrack/cgroup
+PrivateData=<%= @private_data %>
+ProctrackType=<%= @proctrack_type %>
 #Prolog=
 #PrologFlags=
 #PrologSlurmctld=
 #PropagatePrioProcess=0
 #PropagateResourceLimits=
-PropagateResourceLimitsExcept=ALL
+PropagateResourceLimitsExcept=ALL  # do not propagate headnode's resource limits
 RebootProgram=/usr/sbin/reboot
 ReturnToService=1
 #SallocDefaultCommand=
@@ -69,18 +69,18 @@ SlurmUser=<%= @slurm_user %>
 #SrunEpilog=
 #SrunProlog=
 StateSaveLocation=<%= @state_save_location %>
-SwitchType=switch/none
+#SwitchType=switch/none
 #TaskEpilog=
-TaskPlugin=task/cgroup
-TaskPluginParam=Sched
+TaskPlugin=<%= @task_plugin %>
+TaskPluginParam=<%= @task_plugin_param %>
 #TaskProlog=
-TopologyPlugin=topology/tree
+TopologyPlugin=<%= @topology_plugin %>
 #TmpFS=/tmp
 #TrackWCKey=no
-TreeWidth=<%= (Math.sqrt(@amount_of_nodes).ceil) %> # Optimal system performance can typically be achieved if TreeWidth is set to the square root of the number of nodes in the cluster for systems having no more than 2500 nodes or the cube root for larger systems. ref https://slurm.schedmd.com/slurm.conf.html
-UnkillableStepProgram=/etc/slurm/job_stuck_alert.sh
+TreeWidth=<%= @tree_width %>
+UnkillableStepProgram=<%= @unkillable_step_program %>
 #UsePAM=0
-#VSizeFactor=0  # Virtual memory can be much higher than physical memory since it includes all shared libraries and shared memory; thus setting to unlimited.
+#VSizeFactor=0
 
 
 # TIMERS
@@ -98,19 +98,19 @@ MinJobAge=300
 #OverTimeLimit=0
 SlurmctldTimeout=120
 SlurmdTimeout=300
-UnkillableStepTimeout=600
+UnkillableStepTimeout=120
 #VSizeFactor=0
 Waittime=0
 
 
 # SCHEDULING
-DefMemPerCPU=4000
+DefMemPerCPU=<%= @def_mem_per_cpu %>
 FastSchedule=1
 #MaxMemPerCPU=
 #SchedulerTimeSlice=30
-SchedulerType=sched/backfill
-SelectType=select/cons_res
-SelectTypeParameters=CR_CPU_Memory
+SchedulerType=<%= @scheduler_type %>
+SelectType=<%= @select_type %>
+SelectTypeParameters=<%= @select_type_parameters %>
 
 
 # JOB PRIORITY
@@ -131,11 +131,11 @@ SelectTypeParameters=CR_CPU_Memory
 # LOGGING AND ACCOUNTING
 #AccountingStorageEnforce=0
 AccountingStorageHost=<%= @accounting_storage_host %>
-#AccountingStorageLoc=<%= @accounting_storage_loc %>
-AccountingStoragePass=/var/run/munge/munge.socket.2
+AccountingStorageLoc=<%= @accounting_storage_loc %>
+AccountingStoragePass=<%= @accounting_storage_pass %>
 AccountingStoragePort=<%= @accounting_storage_port %>
-AccountingStorageType=accounting_storage/slurmdbd
-#AccountingStorageUser=<%= @accounting_storage_user %>
+AccountingStorageType=<%= @accounting_storage_type %>
+AccountingStorageUser=<%= @accounting_storage_user %>
 #AccountingStoreJobComment=NO # YES
 ClusterName=<%= @cluster_name %>
 #DebugFlags=
@@ -143,17 +143,19 @@ ClusterName=<%= @cluster_name %>
 #JobCompLoc=
 #JobCompPass=
 #JobCompPort=
-JobCompType=jobcomp/none
+#JobCompType=jobcomp/none
 #JobCompUser=
 #JobContainerType=job_container/none
-JobAcctGatherFrequency=300
-JobAcctGatherType=jobacct_gather/linux
-#AcctGatherProfileType=acct_gather_profile/hdf5
-AcctGatherEnergyType=acct_gather_energy/ipmi
-AcctGatherNodeFreq=60
-SlurmctldDebug=3
+JobAcctGatherFrequency=<%= @job_acct_gather_frequency %>
+JobAcctGatherType=<%= @job_acct_gather_type %>
+AcctGatherNodeFreq=0  # do not gather node accounting
+AcctGatherEnergyType=<%= @acct_gather_energy_type %>
+AcctGatherInfinibandType=<%= @acct_gather_infiniband_type %>
+AcctGatherFilesystemType=<%= @acct_gather_filesystem_type %>
+AcctGatherProfileType=<%= @acct_gather_profile_type %>
+SlurmctldDebug=<%= @slurmctld_debug %>
 SlurmctldLogFile=<%= @slurmctld_log_file %>
-SlurmdDebug=3
+SlurmdDebug=<%= @slurmd_debug %>
 SlurmdLogFile=<%= @slurmd_log_file %>
 # Note, these two were commented and the loglevel is named differently. Check if works.
 #SlurmSchedLogFile=
