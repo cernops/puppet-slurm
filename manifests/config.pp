@@ -71,7 +71,7 @@ class slurm::config (
   Integer $max_job_count                    = 5000,
   String $plugin_dir                        = '/usr/lib64/slurm',
   String $plug_stack_config                 = '/etc/slurm/plugstack.conf',
-  String $private_data                      = '',
+  String $private_data                      = 'cloud',
   String $proctrack_type                    = 'proctrack/pgid',
   Integer $slurmctld_port                   = 6817,
   Integer $slurmd_port                      = 6818,
