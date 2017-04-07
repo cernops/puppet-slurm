@@ -49,7 +49,7 @@
 # @param workernodes Array of hashes containing the information about the workernodes.
 # @param partitions Array of hashes containing the information about the paritions.
 #
-# version 20170405
+# version 20170407
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -126,18 +126,49 @@ class slurm::config (
     mode       => '0644',
   }
 
+  service{'munge':
+    ensure    => running,
+    enable    => true,
+    hasstatus => true,
+    subscribe => File['munge homedir','/etc/munge/munge.key'],
+  }
+
+  # AcctGatherEnergy/impi plugin
+  file{'/etc/slurm/acct_gather.conf':
+    ensure  => file,
+    content => template('slurm/acct_gather.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
+  }
+
+  # Cgroup configuration
+  file{ '/etc/slurm/cgroup.conf':
+    ensure  => file,
+    content => template('slurm/cgroup.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
+  }
+
+  # Plugin loader
+  file{ '/etc/slurm/plugstack.conf':
+    ensure  => file,
+    content => template('slurm/plugstack.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
+  }
+
+  # Topology file
   file{'/etc/slurm/topology.conf':
     ensure  => file,
     content => template('slurm/topology.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0644',
-  }
-
-  service{'munge':
-    ensure    => running,
-    enable    => true,
-    hasstatus => true,
-    subscribe => File['munge homedir','/etc/munge/munge.key'],
   }
 }

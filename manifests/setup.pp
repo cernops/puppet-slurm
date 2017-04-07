@@ -18,7 +18,7 @@
 # @param munge_shared_key Name of MUNGE's shared key, defaults to mungekey
 # @param packages Packages to install
 #
-# version 20170403
+# version 20170407
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -111,40 +111,10 @@ class slurm::setup (
     require => File['credentials folder'],
   }
 
-  # Plugin loader
-  file{ '/etc/slurm/plugstack.conf':
-    ensure  => file,
-    content => template('slurm/plugstack.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
-  }
-
   # Stuck CG job alert
   file{ '/etc/slurm/job_stuck_alert.sh':
     ensure  => file,
     content => template('slurm/job_stuck_alert.sh.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
-  }
-
-  # AcctGatherEnergy/impi plugin
-  file{'/etc/slurm/acct_gather.conf':
-    ensure  => file,
-    content => template('slurm/acct_gather.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
-  }
-
-  # Cgroup configuration
-  file{ '/etc/slurm/cgroup.conf':
-    ensure  => file,
-    content => template('slurm/cgroup.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0644',
