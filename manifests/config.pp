@@ -81,7 +81,7 @@ class slurm::config (
   String $task_plugin_param                 = 'Sched',
   String $topology_plugin                   = 'topology/none',
   Integer $tree_width                       = 50,
-  String $unkillable_step_program           = '',
+  String $unkillable_step_program           = '/usr/bin/echo',
   Integer $def_mem_per_cpu                  = 4000,
   String $scheduler_type                    = 'sched/backfill',
   String $select_type                       = 'select/cons_res',
