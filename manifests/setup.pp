@@ -3,22 +3,23 @@
 # Creates the basic folders, user/group and security for SLURM, common to
 # headnodes and workernodes
 #
-# @param slurm_home_loc Location of SLURM's home folder, defaults to /usr/local/slurm
-# @param slurm_log_file Location of SLURM's log folder, defaults to /var/log/slurm
-# @param slurm_gid Group id for slurm group, defaults to 950
-# @param slurm_uid User id for slurm user, defaults to 950
-# @param slurm_private_key Name of SLURM's private key, defaults to slurmkey
-# @param slurm_public_key Name of SLURM's public key, defaults to slurmcert
-# @param munge_gid Group id for munge group, defaults to 951
-# @param munge_uid User id for munge user, defaults to 951
-# @param munge_loc Location of MUNGE's root folder, defaults to /etc/munge
-# @param munge_log_file Location of MUNGE's log folder, defaults to /var/log/munge
-# @param munge_home_loc Location of MUNGE's home folder, defaults to /var/lib/munge
-# @param munge_run_loc Location of MUNGE's run folder, defaults to /run/munge
-# @param munge_shared_key Name of MUNGE's shared key, defaults to mungekey
+# @param slurm_gid Group id for slurm group
+# @param slurm_uid User id for slurm user
+# @param slurm_home_loc Location of SLURM's home folder
+# @param slurm_log_file Location of SLURM's log folder
+# @param slurm_plugstack_loc Location of SLURM's plugstack folder
+# @param slurm_private_key Name of SLURM's private key
+# @param slurm_public_key Name of SLURM's public key
+# @param munge_gid Group id for munge group
+# @param munge_uid User id for munge user
+# @param munge_loc Location of MUNGE's root folder
+# @param munge_log_file Location of MUNGE's log folder
+# @param munge_home_loc Location of MUNGE's home folder
+# @param munge_run_loc Location of MUNGE's run folder
+# @param munge_shared_key Name of MUNGE's shared key
 # @param packages Packages to install
 #
-# version 20170407
+# version 20170410
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -27,19 +28,20 @@
 #
 
 class slurm::setup (
-  String $slurm_home_loc    = '/usr/local/slurm',
-  String $slurm_log_file    = '/var/log/slurm',
-  Integer $slurm_gid        = 950,
-  Integer $slurm_uid        = 950,
-  String $slurm_private_key = 'slurmkey',
-  String $slurm_public_key  = 'slurmcert',
-  Integer $munge_gid        = 951,
-  Integer $munge_uid        = 951,
-  String $munge_loc         = '/etc/munge',
-  String $munge_log_file    = '/var/log/munge',
-  String $munge_home_loc    = '/var/lib/munge',
-  String $munge_run_loc     = '/run/munge',
-  String $munge_shared_key  = 'mungekey',
+  Integer $slurm_gid          = 950,
+  Integer $slurm_uid          = 950,
+  String $slurm_home_loc      = '/usr/local/slurm',
+  String $slurm_log_file      = '/var/log/slurm',
+  String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  String $slurm_private_key   = 'slurmkey',
+  String $slurm_public_key    = 'slurmcert',
+  Integer $munge_gid          = 951,
+  Integer $munge_uid          = 951,
+  String $munge_loc           = '/etc/munge',
+  String $munge_log_file      = '/var/log/munge',
+  String $munge_home_loc      = '/var/lib/munge',
+  String $munge_run_loc       = '/run/munge',
+  String $munge_shared_key    = 'mungekey',
   Array $packages = [
     'slurm',
     'slurm-devel',
@@ -79,6 +81,14 @@ class slurm::setup (
   file{ 'slurm log folder':
     ensure  => directory,
     path    => $slurm_log_file,
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '1755',
+    require => User['slurm'],
+  }
+  file{ 'slurm plugstack folder':
+    ensure  => directory,
+    path    => $slurm_plugstack_loc,
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
