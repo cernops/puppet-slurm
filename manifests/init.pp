@@ -4,7 +4,7 @@
 #
 # @param node_type Specifies the node type which defines the configuration that will be applied to that node
 #
-# version 20170327
+# version 20170420
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -20,16 +20,22 @@ class slurm (
     'worker': {
       class{'::slurm::workernode':}
     }
+
     'head': {
       class{'::slurm::headnode':}
     }
+
     'db': {
       class{'::slurm::dbnode':}
     }
+
     'db-head': {
       class{'::slurm::headnode':}
       class{'::slurm::dbnode':}
     }
+
+    'none': {}
+
     default: {
       err('No role specified! Please provide one in hiera.')
     }
