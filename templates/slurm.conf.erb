@@ -114,16 +114,15 @@ SelectTypeParameters=<%= @select_type_parameters %>
 
 
 # JOB PRIORITY
-#PriorityFlags=
-#PriorityType=priority/basic
-#PriorityDecayHalfLife=
-#PriorityCalcPeriod=
-#PriorityFavorSmall=
-#PriorityMaxAge=
-#PriorityUsageResetPeriod=
-#PriorityWeightAge=
-#PriorityWeightFairshare=
-#PriorityWeightJobSize=
+PriorityType=priority/multifactor
+PriorityFlags=SMALL_RELATIVE_TO_TIME  # The job's size component will be based upon not the job size alone, but the job's size divided by it's time limit, e.g. a full-system job with a time limit of one minute will receive a job size factor of 1.0, while a tiny job with a large time limit will receive a job size factor close to 0.0.
+PriorityDecayHalfLife=28-0    # 4 weeks half life; the contribution of historical usage on the composite usage value, i.e. the larger the number, the longer past usage affects fair-share
+PriorityCalcPeriod=5          # priorities recomputed every 5 minutes
+PriorityFavorSmall=NO         # priorities bigger jobs
+PriorityMaxAge=7-0            # age factor maxed out after one week in queue #PriorityUsageResetPeriod=
+PriorityWeightAge=2000        # 20% from time in queue
+PriorityWeightFairshare=5000  # 50% from fair-share
+PriorityWeightJobSize=3000    # 30% from relative job size
 #PriorityWeightPartition=
 #PriorityWeightQOS=
 
