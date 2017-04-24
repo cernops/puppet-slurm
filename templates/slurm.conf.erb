@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Common SLURM parameters for db, head and worker node                     -%>
 <%#                                                                          -%>
-<%# version 20170405                                                         -%>
+<%# version 20170424                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -114,17 +114,19 @@ SelectTypeParameters=<%= @select_type_parameters %>
 
 
 # JOB PRIORITY
-PriorityType=priority/multifactor
-PriorityFlags=SMALL_RELATIVE_TO_TIME  # The job's size component will be based upon not the job size alone, but the job's size divided by it's time limit, e.g. a full-system job with a time limit of one minute will receive a job size factor of 1.0, while a tiny job with a large time limit will receive a job size factor close to 0.0.
-PriorityDecayHalfLife=28-0    # 4 weeks half life; the contribution of historical usage on the composite usage value, i.e. the larger the number, the longer past usage affects fair-share
-PriorityCalcPeriod=5          # priorities recomputed every 5 minutes
-PriorityFavorSmall=NO         # priorities bigger jobs
-PriorityMaxAge=7-0            # age factor maxed out after one week in queue #PriorityUsageResetPeriod=
-PriorityWeightAge=2000        # 20% from time in queue
-PriorityWeightFairshare=5000  # 50% from fair-share
-PriorityWeightJobSize=3000    # 30% from relative job size
-#PriorityWeightPartition=
-#PriorityWeightQOS=
+PriorityType=<%= @priority_type %>
+PriorityFlags=<%= @priority_flags %>
+PriorityCalcPeriod=<%= @priority_calc_period %>
+PriorityDecayHalfLife=<%= @priority_decay_half_life %>
+PriorityFavorSmall=<%= @priority_favor_small %>
+PriorityMaxAge=<%= @priority_max_age %>
+PriorityUsageResetPeriod=<%= @priority_usage_reset_period %>
+PriorityWeightAge=<%= @priority_weight_age %>
+PriorityWeightFairshare=<%= @priority_weight_fairshare %>
+PriorityWeightJobSize=<%= @priority_weight_job_size %>
+PriorityWeightPartition=<%= @priority_weight_partition %>
+PriorityWeightQOS=<%= @priority_weight_qos %>
+PriorityWeightTRES=<%= @priority_weight_tres %>
 
 
 # LOGGING AND ACCOUNTING

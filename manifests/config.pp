@@ -1,6 +1,6 @@
 # slurm/config.pp
 #
-# Creates the common configuration file
+# Creates the common configuration files
 #
 # @param control_machine The short, or long, hostname of the machine where Slurm control functions are executed.
 # @param backup_controller The short, or long, name of the machine where Slurm control functions are to be executed in the event that control_machine fails.
@@ -30,6 +30,19 @@
 # @param $scheduler_type Identifies the type of scheduler to be used.
 # @param $select_type Identifies the type of resource selection algorithm to be used.
 # @param $select_type_parameters The permitted values of SelectTypeParameters depend upon the configured value of SelectType.
+# @param priority_type This specifies the plugin to be used in establishing a job's scheduling priority.
+# @param priority_flags Flags to modify priority behavior.
+# @param priority_calc_period The period of time in minutes in which the half-life decay will be re-calculated.
+# @param priority_decay_half_life This controls how long prior resource use is considered in determining how over- or under-serviced an association is (user, bank account and cluster) in determining job priority.
+# @param priority_favor_small Specifies that small jobs should be given preferential scheduling priority.
+# @param priority_max_age Specifies the job age which will be given the maximum age factor in computing priority.
+# @param priority_usage_reset_period At this interval the usage of associations will be reset to 0.
+# @param priority_weight_age An integer value that sets the degree to which the queue wait time component contributes to the job's priority.
+# @param priority_weight_fairshare An integer value that sets the degree to which the fair-share component contributes to the job's priority.
+# @param priority_weight_job_size An integer value that sets the degree to which the job size component contributes to the job's priority.
+# @param priority_weight_partition Partition factor used by priority/multifactor plugin in calculating job priority.
+# @param priority_weight_qos An integer value that sets the degree to which the Quality Of Service component contributes to the job's priority.
+# @param priority_weight_tres A comma separated list of TRES Types and weights that sets the degree that each TRES Type contributes to the job's priority.
 # @param slurm_user The name of the user that the slurmctld daemon executes as.
 # @param accounting_storage_host The name of the machine hosting the accounting storage database.
 # @param accounting_storage_loc The fully qualified file name where accounting records are written when the AccountingStorageType is "accounting_storage/filetxt" or else the name of the database where accounting records are stored when the AccountingStorageType is a database.
@@ -49,7 +62,7 @@
 # @param workernodes Array of hashes containing the information about the workernodes.
 # @param partitions Array of hashes containing the information about the paritions.
 #
-# version 20170407
+# version 20170424
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -86,6 +99,19 @@ class slurm::config (
   String $scheduler_type                    = 'sched/backfill',
   String $select_type                       = 'select/cons_res',
   String $select_type_parameters            = 'CR_CPU_Memory',
+  String $priority_type                     = 'priority/basic',
+  String $priority_flags                    = '',
+  Integer $priority_calc_period             = 5,
+  String $priority_decay_half_life          = '7-0',
+  String $priority_favor_small              = 'NO',
+  String $priority_max_age                  = '7-0',
+  String $priority_usage_reset_period       = 'NONE',
+  Integer $priority_weight_age              = 0,
+  Integer $priority_weight_fairshare        = 0,
+  Integer $priority_weight_job_size         = 0,
+  Integer $priority_weight_partition        = 0,
+  Integer $priority_weight_qos              = 0,
+  String $priority_weight_tres              = '0',
   String $slurm_user                        = 'slurm',
   String $accounting_storage_host           = 'accountingdb.example.org',
   String $accounting_storage_loc            = 'slurm_acct_db',
