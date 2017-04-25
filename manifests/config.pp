@@ -111,7 +111,7 @@ class slurm::config (
   Integer $priority_weight_job_size         = 0,
   Integer $priority_weight_partition        = 0,
   Integer $priority_weight_qos              = 0,
-  String $priority_weight_tres              = '0',
+  String $priority_weight_tres              = 'CPU=0,Mem=0',
   String $slurm_user                        = 'slurm',
   String $accounting_storage_host           = 'accountingdb.example.org',
   String $accounting_storage_loc            = 'slurm_acct_db',
