@@ -100,7 +100,7 @@ class slurm::config (
   String $select_type                       = 'select/cons_res',
   String $select_type_parameters            = 'CR_CPU_Memory',
   String $priority_type                     = 'priority/basic',
-  String $priority_flags                    = '',
+  String $priority_flags                    = 'SMALL_RELATIVE_TO_TIME',
   Integer $priority_calc_period             = 5,
   String $priority_decay_half_life          = '7-0',
   String $priority_favor_small              = 'NO',
