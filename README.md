@@ -186,8 +186,7 @@ To use the module, simply include it in your hostgroup manifest :
 
 Please refer to the official [SLURM documentation](https://slurm.schedmd.com/).
 
-TODO Specific usage at CERN ? Probably yes...
-We can put examples and link to the KB here.
+TODO Should be very generic here since upstream at some point, i.e. no CERN specific usage.
 
 # References
 
@@ -202,19 +201,20 @@ TODO Bla bla
 ## slurm::setup
 ```
 class slurm::setup (
-  String $slurm_home_loc    = '/usr/local/slurm',
-  String $slurm_log_file    = '/var/log/slurm',
-  Integer $slurm_gid        = 950,
-  Integer $slurm_uid        = 950,
-  String $slurm_private_key = 'slurmkey',
-  String $slurm_public_key  = 'slurmcert',
-  Integer $munge_gid        = 951,
-  Integer $munge_uid        = 951,
-  String $munge_loc         = '/etc/munge',
-  String $munge_log_file    = '/var/log/munge',
-  String $munge_home_loc    = '/var/lib/munge',
-  String $munge_run_loc     = '/run/munge',
-  String $munge_shared_key  = 'mungekey',
+  Integer $slurm_gid          = 950,
+  Integer $slurm_uid          = 950,
+  String $slurm_home_loc      = '/usr/local/slurm',
+  String $slurm_log_file      = '/var/log/slurm',
+  String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  String $slurm_private_key   = 'slurmkey',
+  String $slurm_public_key    = 'slurmcert',
+  Integer $munge_gid          = 951,
+  Integer $munge_uid          = 951,
+  String $munge_loc           = '/etc/munge',
+  String $munge_log_file      = '/var/log/munge',
+  String $munge_home_loc      = '/var/lib/munge',
+  String $munge_run_loc       = '/run/munge',
+  String $munge_shared_key    = 'mungekey',
   Array $packages = [
     'slurm',
     'slurm-devel',
@@ -225,38 +225,81 @@ class slurm::setup (
   ],
 )
 ```
-TODO I do not want to do this one! :''(
+TODO
 
 ## slurm::config
 ```
 class slurm::config (
   String $control_machine                   = 'headnode1.example.org',
   String $backup_controller                 = 'headnode2.example.org',
+  String $auth_type                         = 'auth/munge',
+  String $checkpoint_type                   = 'checkpoint/none',
+  String $crypto_type                       = 'crypto/munge',
   String $job_checkpoint_dir                = '/var/slurm/checkpoint',
   String $job_credential_private_key        = '/usr/local/slurm/credentials/slurm.key',
   String $job_credential_public_certificate = '/usr/local/slurm/credentials/slurm.cert',
+  Integer $max_tasks_per_node               = 32,
+  String $mpi_default                       = 'pmi2',
   Integer $max_job_count                    = 5000,
   String $plugin_dir                        = '/usr/lib64/slurm',
   String $plug_stack_config                 = '/etc/slurm/plugstack.conf',
+  String $private_data                      = 'cloud',
+  String $proctrack_type                    = 'proctrack/pgid',
   Integer $slurmctld_port                   = 6817,
   Integer $slurmd_port                      = 6818,
   String $slurmd_spool_dir                  = '/var/spool/slurmd',
   String $state_save_location               = '/var/spool/slurmctld/slurm.state',
+  String $task_plugin                       = 'task/none',
+  String $task_plugin_param                 = 'Sched',
+  String $topology_plugin                   = 'topology/none',
+  Integer $tree_width                       = 50,
+  String $unkillable_step_program           = '/usr/bin/echo',
+  Integer $def_mem_per_cpu                  = 4000,
+  String $scheduler_type                    = 'sched/backfill',
+  String $select_type                       = 'select/cons_res',
+  String $select_type_parameters            = 'CR_CPU_Memory',
+  String $priority_type                     = 'priority/basic',
+  String $priority_flags                    = 'SMALL_RELATIVE_TO_TIME',
+  Integer $priority_calc_period             = 5,
+  String $priority_decay_half_life          = '7-0',
+  String $priority_favor_small              = 'NO',
+  String $priority_max_age                  = '7-0',
+  String $priority_usage_reset_period       = 'NONE',
+  Integer $priority_weight_age              = 0,
+  Integer $priority_weight_fairshare        = 0,
+  Integer $priority_weight_job_size         = 0,
+  Integer $priority_weight_partition        = 0,
+  Integer $priority_weight_qos              = 0,
+  String $priority_weight_tres              = 'CPU=0,Mem=0',
   String $slurm_user                        = 'slurm',
   String $accounting_storage_host           = 'accountingdb.example.org',
-  String $accounting_storage_loc            = 'accountingdb',
+  String $accounting_storage_loc            = 'slurm_acct_db',
+  String $accounting_storage_pass           = '/var/run/munge/munge.socket.2',
   Integer $accounting_storage_port          = 6819,
+  String $accounting_storage_type           = 'accounting_storage/none',
   String $accounting_storage_user           = 'slurm',
-  String $cluster_name                      = 'batch',
+  String $cluster_name                      = 'mycluster',
+  String $job_acct_gather_frequency         = 'task=30,energy=0,network=0,filesystem=0',
+  String $job_acct_gather_type              = 'jobacct_gather/none',
+  String $acct_gather_energy_type           = 'acct_gather_energy/none',
+  String $acct_gather_infiniband_type       = 'acct_gather_infiniband/none',
+  String $acct_gather_filesystem_type       = 'acct_gather_filesystem/none',
+  String $acct_gather_profile_type          = 'acct_gather_profile/none',
+  String $slurmctld_debug                   = 'info',
   String $slurmctld_log_file                = '/var/log/slurm/slurmctld.log',
+  String $slurmd_debug                      = 'info',
   String $slurmd_log_file                   = '/var/log/slurm/slurmd.log',
   Array $workernodes = [{
     'NodeName' => 'worker[00-10]',
-    'CPUs' => '16'
+    'CPUs' => '16',
   }],
   Array $partitions = [{
     'PartitionName' => 'workers',
-    'MaxMemPerCPU' => '2000'
+    'MaxMemPerCPU' => '2000',
+  }],
+  Array $switches = [{
+    'SwitchName' => 's0',
+    'Nodes' => 'worker[00-10]',
   }],
 )
 ```
@@ -384,23 +427,26 @@ Setup the firewall for the workernode.
 
 ## Files
 
-### job_stuck_alert.sh
-TODO Bla bla
-
-### plugstack.conf
-TODO Bla bla
-
-## Templates
-
 ### acct_gather.conf.erb
-TODO Bla bla
+TODO
+
+### cgroup.conf.erb
+TODO
+
+### job_stuck_alert.sh.erb
+TODO
+
+### plugstack.conf.erb
+TODO
 
 ### slurm.conf.erb
-TODO Bla bla
+TODO
 
 ### slurmdbd.conf.erb
-TODO Bla bla
+TODO
 
+### topology.conf.erb
+TODO
 
 # Limitations
 
