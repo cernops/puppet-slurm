@@ -3,7 +3,7 @@
 # Ensures that the slurmd service is running and restarted if the
 # configuration file is modified
 #
-# version 20170327
+# version 20170427
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -19,10 +19,10 @@ class slurm::workernode::config {
     hasstatus => true,
     subscribe => [
       Package['slurm'],
-      Teigi_sub_file['/etc/slurm/slurm.conf'],
       File[
         '/etc/slurm/cgroup.conf',
         '/etc/slurm/plugstack.conf',
+        '/etc/slurm/slurm.conf',
         '/etc/slurm/topology.conf',
       ],
     ],

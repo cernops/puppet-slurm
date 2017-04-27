@@ -62,7 +62,7 @@
 # @param workernodes Array of hashes containing the information about the workernodes.
 # @param partitions Array of hashes containing the information about the paritions.
 #
-# version 20170424
+# version 20170427
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -144,19 +144,14 @@ class slurm::config (
   }],
 ) {
 
-  teigi::secret::sub_file{'/etc/slurm/slurm.conf':
-    teigi_keys => ['slurmdbpass'],
-    content    => template('slurm/slurm.conf.erb'),
-    owner      => 'slurm',
-    group      => 'slurm',
-    mode       => '0644',
-  }
-
-  service{'munge':
-    ensure    => running,
-    enable    => true,
-    hasstatus => true,
-    subscribe => File['munge homedir','/etc/munge/munge.key'],
+  # Common SLURM configuration file
+  file{'/etc/slurm/slurm.conf':
+    ensure  => file,
+    content => template('slurm/slurm.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
   }
 
   # AcctGatherEnergy/impi plugin
@@ -196,5 +191,14 @@ class slurm::config (
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0644',
+    require => User['slurm'],
+  }
+
+  # Authentication service for SLURM
+  service{'munge':
+    ensure    => running,
+    enable    => true,
+    hasstatus => true,
+    subscribe => File['munge homedir','/etc/munge/munge.key'],
   }
 }

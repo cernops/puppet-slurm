@@ -11,7 +11,7 @@
 # @param storage_user Define the name of the user we are going to connect to the database with to store the job accounting data
 # @param storage_loc Specify the name of the database as the location where accounting records are written
 #
-# version 20170327
+# version 20170427
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -45,11 +45,11 @@ class slurm::dbnode::config (
       Package['slurm-slurmdbd'],
       Teigi_sub_file[
         '/etc/slurm/slurmdbd.conf',
-        '/etc/slurm/slurm.conf',
       ],
       File[
         '/etc/slurm/cgroup.conf',
         '/etc/slurm/plugstack.conf',
+        '/etc/slurm/slurm.conf',
       ],
     ],
   }
