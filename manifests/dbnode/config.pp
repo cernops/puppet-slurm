@@ -21,13 +21,13 @@
 
 class slurm::dbnode::config (
   String $dbd_host      = 'localhost',
-  Integer $dbd_port     = 6819,
-  String $slurm_user    = 'slurm',
+  Integer $dbd_port     = $slurm::config::accounting_storage_port,
+  String $slurm_user    = $slurm::config::slurm_user,
   String $storage_host  = 'db_instance.example.org',
   Integer $storage_port = 1234,
   String $storage_user  = 'user',
   String $storage_loc   = 'accountingdb',
-) {
+) inherits slurm::config {
 
   teigi::secret::sub_file{ '/etc/slurm/slurmdbd.conf':
     teigi_keys => ['slurmdbpass'],
@@ -36,6 +36,8 @@ class slurm::dbnode::config (
     group      => 'slurm',
     mode       => '0644',
   }
+
+
 
   service{'slurmdbd':
     ensure    => running,
