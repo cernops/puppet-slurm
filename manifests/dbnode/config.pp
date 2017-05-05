@@ -11,7 +11,7 @@
 # @param storage_user Define the name of the user we are going to connect to the database with to store the job accounting data
 # @param storage_loc Specify the name of the database as the location where accounting records are written
 #
-# version 20170427
+# version 20170505
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -37,7 +37,21 @@ class slurm::dbnode::config (
     mode       => '0644',
   }
 
-
+  $required_files = [
+    '/etc/slurm/cgroup.conf',
+    '/etc/slurm/plugstack.conf',
+    '/etc/slurm/slurm.conf',
+  ]
+  $openssl_credendials = [
+    $slurm::config::job_credential_private_key,
+    $slurm::config::job_credential_public_certificate,
+  ]
+  if $slurm::config::crypto_type == 'crypto/openssl' {
+    $files = [$required_files, $openssl_credendials]
+  }
+  else {
+    $files = $required_files
+  }
 
   service{'slurmdbd':
     ensure    => running,
@@ -48,11 +62,7 @@ class slurm::dbnode::config (
       Teigi_sub_file[
         '/etc/slurm/slurmdbd.conf',
       ],
-      File[
-        '/etc/slurm/cgroup.conf',
-        '/etc/slurm/plugstack.conf',
-        '/etc/slurm/slurm.conf',
-      ],
+      File[$files],
     ],
   }
 }
