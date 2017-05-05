@@ -48,12 +48,12 @@ class slurm::setup (
     'munge-libs',
     'munge-devel',
   ]
-  if  ($slurm::config::auth_type != 'auth/munge') and
-      ($slurm::config::crypto_type != 'crypto/munge') {
-    $packages = $slurm_packages
+  if  ($slurm::config::auth_type == 'auth/munge') or
+      ($slurm::config::crypto_type == 'crypto/munge') {
+    $packages = [$slurm_packages, $munge_packages]
   }
   else {
-    $packages = [$slurm_packages, $munge_packages]
+    $packages = $slurm_packages
   }
 
   ensure_packages($packages)
@@ -109,54 +109,58 @@ class slurm::setup (
     require => User['slurm'],
   }
 
-
 ################################################################################
 # MUNGE
+#   only set up if MUNGE will be used as auth and/or crypto plugin
 ################################################################################
-  group{ 'munge':
-    ensure => present,
-    gid    => $munge_gid,
-    system => true,
-  }
-  user{ 'munge':
-    ensure  => present,
-    comment => 'Munge',
-    home    => '/var/lib/munge',
-    gid     => $munge_gid,
-    require => Group['munge'],
-    system  => true,
-    uid     => $munge_uid,
-  }
-  file{ 'munge folder':
-    ensure  => directory,
-    path    => $munge_loc,
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '1700',
-    require => User['munge'],
-  }
-  file{ 'munge homedir':
-    ensure  => directory,
-    path    => $munge_home_loc,
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '1700',
-    require => User['munge'],
-  }
-  file{ 'munge log folder':
-    ensure  => directory,
-    path    => $munge_log_file,
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '1700',
-    require => User['munge'],
-  }
-  file{ 'munge run folder':
-    ensure  => directory,
-    path    => $munge_run_loc,
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '1755',
-    require => User['munge'],
+  if  ($slurm::config::auth_type == 'auth/munge') or
+      ($slurm::config::crypto_type == 'crypto/munge') {
+
+    group{ 'munge':
+      ensure => present,
+      gid    => $munge_gid,
+      system => true,
+    }
+    user{ 'munge':
+      ensure  => present,
+      comment => 'Munge',
+      home    => '/var/lib/munge',
+      gid     => $munge_gid,
+      require => Group['munge'],
+      system  => true,
+      uid     => $munge_uid,
+    }
+    file{ 'munge folder':
+      ensure  => directory,
+      path    => $munge_loc,
+      owner   => 'munge',
+      group   => 'munge',
+      mode    => '1700',
+      require => User['munge'],
+    }
+    file{ 'munge homedir':
+      ensure  => directory,
+      path    => $munge_home_loc,
+      owner   => 'munge',
+      group   => 'munge',
+      mode    => '1700',
+      require => User['munge'],
+    }
+    file{ 'munge log folder':
+      ensure  => directory,
+      path    => $munge_log_file,
+      owner   => 'munge',
+      group   => 'munge',
+      mode    => '1700',
+      require => User['munge'],
+    }
+    file{ 'munge run folder':
+      ensure  => directory,
+      path    => $munge_run_loc,
+      owner   => 'munge',
+      group   => 'munge',
+      mode    => '1755',
+      require => User['munge'],
+    }
   }
 }
