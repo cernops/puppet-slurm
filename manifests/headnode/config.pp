@@ -19,12 +19,13 @@ class slurm::headnode::config inherits slurm::config {
     '/etc/slurm/slurm.conf',
     '/etc/slurm/topology.conf',
   ]
-  $openssl_credendials = [
-    $slurm::config::job_credential_private_key,
-    $slurm::config::job_credential_public_certificate,
-  ]
+
   if $slurm::config::crypto_type == 'crypto/openssl' {
-    $files = [$required_files, $openssl_credendials]
+    $files = [
+      $required_files,
+      $slurm::config::job_credential_private_key,
+      $slurm::config::job_credential_public_certificate,
+    ]
   }
   else {
     $files = $required_files

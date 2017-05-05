@@ -42,12 +42,13 @@ class slurm::dbnode::config (
     '/etc/slurm/plugstack.conf',
     '/etc/slurm/slurm.conf',
   ]
-  $openssl_credendials = [
-    $slurm::config::job_credential_private_key,
-    $slurm::config::job_credential_public_certificate,
-  ]
+
   if $slurm::config::crypto_type == 'crypto/openssl' {
-    $files = [$required_files, $openssl_credendials]
+    $files = [
+      $required_files,
+      $slurm::config::job_credential_private_key,
+      $slurm::config::job_credential_public_certificate,
+    ]
   }
   else {
     $files = $required_files
