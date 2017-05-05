@@ -16,10 +16,8 @@
 # @param munge_log_file Location of MUNGE's log folder
 # @param munge_home_loc Location of MUNGE's home folder
 # @param munge_run_loc Location of MUNGE's run folder
-# @param munge_shared_key Name of MUNGE's shared key
-# @param packages Packages to install
 #
-# version 20170410
+# version 20170505
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -33,24 +31,34 @@ class slurm::setup (
   String $slurm_home_loc      = '/usr/local/slurm',
   String $slurm_log_file      = '/var/log/slurm',
   String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
-  String $slurm_private_key   = 'slurmkey',
-  String $slurm_public_key    = 'slurmcert',
+  String $slurm_private_key   = $slurm::config::job_credential_private_key,
+  String $slurm_public_key    = $slurm::config::job_credential_private_certificate,
   Integer $munge_gid          = 951,
   Integer $munge_uid          = 951,
   String $munge_loc           = '/etc/munge',
   String $munge_log_file      = '/var/log/munge',
   String $munge_home_loc      = '/var/lib/munge',
   String $munge_run_loc       = '/run/munge',
-  String $munge_shared_key    = 'mungekey',
-  Array $packages = [
+) inherits slurm::config {
+
+  # install MUNGE packages only if MUNGE will be used as auth and/or crypto plugin
+  $slurm_packages = [
     'slurm',
     'slurm-devel',
     'slurm-munge',
+  ]
+  $munge_packages = [
     'munge',
     'munge-libs',
     'munge-devel',
-  ],
-) {
+  ]
+  if  ($slurm::config::auth_type != 'auth/munge') and
+      ($slurm::config::crypto_type != 'crypto/munge') {
+    $packages = $slurm_packages
+  }
+  else {
+    $packages = [$slurm_packages, $munge_packages]
+  }
 
   ensure_packages($packages)
 
