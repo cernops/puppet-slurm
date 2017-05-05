@@ -189,12 +189,4 @@ class slurm::setup (
     mode    => '1755',
     require => User['munge'],
   }
-  teigi::secret{ 'munge secret key':
-    key     => $munge_shared_key,
-    path    => '/etc/munge/munge.key',
-    owner   => 'munge',
-    group   => 'munge',
-    mode    => '0400',
-    require => File['munge folder'],
-  }
 }
