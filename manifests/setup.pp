@@ -8,8 +8,6 @@
 # @param slurm_home_loc Location of SLURM's home folder
 # @param slurm_log_file Location of SLURM's log folder
 # @param slurm_plugstack_loc Location of SLURM's plugstack folder
-# @param slurm_private_key Name of SLURM's private key
-# @param slurm_public_key Name of SLURM's public key
 # @param munge_gid Group id for munge group
 # @param munge_uid User id for munge user
 # @param munge_loc Location of MUNGE's root folder
@@ -31,8 +29,6 @@ class slurm::setup (
   String $slurm_home_loc      = '/usr/local/slurm',
   String $slurm_log_file      = '/var/log/slurm',
   String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
-  String $slurm_private_key   = $slurm::config::job_credential_private_key,
-  String $slurm_public_key    = $slurm::config::job_credential_private_certificate,
   Integer $munge_gid          = 951,
   Integer $munge_uid          = 951,
   String $munge_loc           = '/etc/munge',
@@ -101,32 +97,6 @@ class slurm::setup (
     group   => 'slurm',
     mode    => '1755',
     require => User['slurm'],
-  }
-
-# SLURM private and public key for user authentication
-  file{ 'credentials folder':
-    ensure  => directory,
-    path    => "${slurm_home_loc}/credentials",
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '1755',
-    require => User['slurm'],
-  }
-  teigi::secret{ 'slurm private key':
-    key     => $slurm_private_key,
-    path    => "${slurm_home_loc}/credentials/slurm.key",
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0400',
-    require => File['credentials folder'],
-  }
-  teigi::secret{ 'slurm public key':
-    key     => $slurm_public_key,
-    path    => "${slurm_home_loc}/credentials/slurm.cert",
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0444',
-    require => File['credentials folder'],
   }
 
   # Stuck CG job alert
