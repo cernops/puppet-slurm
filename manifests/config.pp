@@ -51,6 +51,7 @@
 # @param accounting_storage_user The user account for accessing the accounting storage database.
 # @param cluster_name The name by which this Slurm managed cluster is known in the accounting database.
 # @param $job_acct_gather_frequency The job accounting and profiling sampling intervals.
+# @param $acct_gather_node_freq The AcctGather plugins sampling interval for node accounting.
 # @param $acct_gather_energy_type Identifies the plugin to be used for energy consumption accounting.
 # @param $acct_gather_infiniband_type Identifies the plugin to be used for infiniband network traffic accounting.
 # @param $acct_gather_filesystem_type Identifies the plugin to be used for filesystem traffic accounting.
@@ -122,6 +123,7 @@ class slurm::config (
   String $cluster_name                      = 'mycluster',
   String $job_acct_gather_frequency         = 'task=30,energy=0,network=0,filesystem=0',
   String $job_acct_gather_type              = 'jobacct_gather/none',
+  Integer $acct_gather_node_freq            = 0,
   String $acct_gather_energy_type           = 'acct_gather_energy/none',
   String $acct_gather_infiniband_type       = 'acct_gather_infiniband/none',
   String $acct_gather_filesystem_type       = 'acct_gather_filesystem/none',
@@ -154,7 +156,7 @@ class slurm::config (
     require => User['slurm'],
   }
 
-  # AcctGatherEnergy/impi plugin
+  # AcctGatherEnergy plugin
   file{'/etc/slurm/acct_gather.conf':
     ensure  => file,
     content => template('slurm/acct_gather.conf.erb'),

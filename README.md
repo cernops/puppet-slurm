@@ -273,6 +273,7 @@ class slurm::config (
   String $cluster_name                      = 'mycluster',
   String $job_acct_gather_frequency         = 'task=30,energy=0,network=0,filesystem=0',
   String $job_acct_gather_type              = 'jobacct_gather/none',
+  Integer $acct_gather_node_freq            = 0,
   String $acct_gather_energy_type           = 'acct_gather_energy/none',
   String $acct_gather_infiniband_type       = 'acct_gather_infiniband/none',
   String $acct_gather_filesystem_type       = 'acct_gather_filesystem/none',
