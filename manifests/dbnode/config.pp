@@ -37,23 +37,6 @@ class slurm::dbnode::config (
     mode       => '0644',
   }
 
-  $required_files = [
-    '/etc/slurm/cgroup.conf',
-    '/etc/slurm/plugstack.conf',
-    '/etc/slurm/slurm.conf',
-  ]
-
-  if $slurm::config::crypto_type == 'crypto/openssl' {
-    $files = [
-      $required_files,
-      $slurm::config::job_credential_private_key,
-      $slurm::config::job_credential_public_certificate,
-    ]
-  }
-  else {
-    $files = $required_files
-  }
-
   service{'slurmdbd':
     ensure    => running,
     enable    => true,
@@ -63,7 +46,7 @@ class slurm::dbnode::config (
       Teigi_sub_file[
         '/etc/slurm/slurmdbd.conf',
       ],
-      File[$files],
+      File[$slurm::config::db_required_files],
     ],
   }
 }

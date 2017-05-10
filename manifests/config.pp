@@ -195,8 +195,8 @@ class slurm::config (
   }
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin
-  if  ($slurm::config::auth_type == 'auth/munge') or
-      ($slurm::config::crypto_type == 'crypto/munge') {
+  if  ($auth_type == 'auth/munge') or
+      ($crypto_type == 'crypto/munge') {
     service{'munge':
       ensure    => running,
       enable    => true,
@@ -204,4 +204,41 @@ class slurm::config (
       subscribe => File['munge homedir','/etc/munge/munge.key'],
     }
   }
+
+  $common_config_files = [
+    '/etc/slurm/cgroup.conf',
+    '/etc/slurm/plugstack.conf',
+    '/etc/slurm/slurm.conf',
+  ]
+
+  $openssl_credential_files = [
+    $job_credential_private_key,
+    $job_credential_public_certificate,
+  ]
+
+  if $crypto_type == 'crypto/openssl' {
+    $db_required_files = [
+      $common_config_files,
+      '/etc/slurm/acct_gather.conf',
+      $openssl_credential_files,
+    ]
+
+    $hnwn_required_files = [
+      $common_config_files,
+      '/etc/slurm/topology.conf',
+      $openssl_credential_files,
+    ]
+  }
+  else {
+    $db_required_files = [
+      $common_config_files,
+      '/etc/slurm/acct_gather.conf',
+    ]
+
+    $hnwn_required_files = [
+      $common_config_files,
+      '/etc/slurm/topology.conf',
+    ]
+  }
+
 }

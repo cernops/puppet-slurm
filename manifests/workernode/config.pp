@@ -13,31 +13,13 @@
 
 class slurm::workernode::config inherits slurm::config {
 
-  $required_files = [
-    '/etc/slurm/cgroup.conf',
-    '/etc/slurm/plugstack.conf',
-    '/etc/slurm/slurm.conf',
-    '/etc/slurm/topology.conf',
-  ]
-
-  if $slurm::config::crypto_type == 'crypto/openssl' {
-    $files = [
-      $required_files,
-      $slurm::config::job_credential_private_key,
-      $slurm::config::job_credential_public_certificate,
-    ]
-  }
-  else {
-    $files = $required_files
-  }
-
   service{'slurmd':
     ensure    => running,
     enable    => true,
     hasstatus => true,
     subscribe => [
       Package['slurm'],
-      File[$files],
+      File[$slurm::config::hnwn_required_files],
     ],
   }
 }
