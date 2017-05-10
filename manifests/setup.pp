@@ -35,7 +35,7 @@ class slurm::setup (
   String $munge_log_file      = '/var/log/munge',
   String $munge_home_loc      = '/var/lib/munge',
   String $munge_run_loc       = '/run/munge',
-) inherits slurm::config {
+) {
 
   # install MUNGE packages only if MUNGE will be used as auth and/or crypto plugin
   $slurm_packages = [
