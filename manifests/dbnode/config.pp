@@ -11,7 +11,7 @@
 # @param storage_user Define the name of the user we are going to connect to the database with to store the job accounting data
 # @param storage_loc Specify the name of the database as the location where accounting records are written
 #
-# version 20170505
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -27,7 +27,7 @@ class slurm::dbnode::config (
   Integer $storage_port = 1234,
   String $storage_user  = 'user',
   String $storage_loc   = 'accountingdb',
-) inherits slurm::config {
+) {
 
   teigi::secret::sub_file{ '/etc/slurm/slurmdbd.conf':
     teigi_keys => ['slurmdbpass'],

@@ -15,7 +15,7 @@
 # @param munge_home_loc Location of MUNGE's home folder
 # @param munge_run_loc Location of MUNGE's run folder
 #
-# version 20170505
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

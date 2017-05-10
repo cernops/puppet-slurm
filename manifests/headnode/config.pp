@@ -3,7 +3,7 @@
 # Ensures that the slurmctld service is running and restarted if the
 # configuration file is modified
 #
-# version 20170505
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -11,7 +11,7 @@
 # License: GNU GPL v3 or later.
 #
 
-class slurm::headnode::config inherits slurm::config {
+class slurm::headnode::config {
 
   service{'slurmctld':
     ensure    => running,

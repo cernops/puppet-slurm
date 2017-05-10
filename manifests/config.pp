@@ -62,7 +62,7 @@
 # @param workernodes Array of hashes containing the information about the workernodes.
 # @param partitions Array of hashes containing the information about the paritions.
 #
-# version 20170505
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

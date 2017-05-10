@@ -3,7 +3,7 @@
 # Ensures that the slurmd service is running and restarted if the
 # configuration file is modified
 #
-# version 20170505
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -11,7 +11,7 @@
 # License: GNU GPL v3 or later.
 #
 
-class slurm::workernode::config inherits slurm::config {
+class slurm::workernode::config {
 
   service{'slurmd':
     ensure    => running,
