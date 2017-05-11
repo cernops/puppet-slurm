@@ -11,7 +11,7 @@
 # @param storage_user Define the name of the user we are going to connect to the database with to store the job accounting data
 # @param storage_loc Specify the name of the database as the location where accounting records are written
 #
-# version 20170427
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -21,8 +21,8 @@
 
 class slurm::dbnode::config (
   String $dbd_host      = 'localhost',
-  Integer $dbd_port     = 6819,
-  String $slurm_user    = 'slurm',
+  Integer $dbd_port     = $slurm::config::accounting_storage_port,
+  String $slurm_user    = $slurm::config::slurm_user,
   String $storage_host  = 'db_instance.example.org',
   Integer $storage_port = 1234,
   String $storage_user  = 'user',
@@ -46,11 +46,7 @@ class slurm::dbnode::config (
       Teigi_sub_file[
         '/etc/slurm/slurmdbd.conf',
       ],
-      File[
-        '/etc/slurm/cgroup.conf',
-        '/etc/slurm/plugstack.conf',
-        '/etc/slurm/slurm.conf',
-      ],
+      File[$slurm::config::db_required_files],
     ],
   }
 }

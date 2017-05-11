@@ -63,7 +63,7 @@
 # @param workernodes Array of hashes containing the information about the workernodes.
 # @param partitions Array of hashes containing the information about the paritions.
 #
-# version 20170427
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -196,11 +196,51 @@ class slurm::config (
     require => User['slurm'],
   }
 
-  # Authentication service for SLURM
-  service{'munge':
-    ensure    => running,
-    enable    => true,
-    hasstatus => true,
-    subscribe => File['munge homedir','/etc/munge/munge.key'],
+  # Authentication service for SLURM if MUNGE is used as authentication plugin
+  if  ($auth_type == 'auth/munge') or
+      ($crypto_type == 'crypto/munge') {
+    service{'munge':
+      ensure    => running,
+      enable    => true,
+      hasstatus => true,
+      subscribe => File['munge homedir','/etc/munge/munge.key'],
+    }
   }
+
+  $common_config_files = [
+    '/etc/slurm/cgroup.conf',
+    '/etc/slurm/plugstack.conf',
+    '/etc/slurm/slurm.conf',
+  ]
+
+  $openssl_credential_files = [
+    $job_credential_private_key,
+    $job_credential_public_certificate,
+  ]
+
+  if $crypto_type == 'crypto/openssl' {
+    $db_required_files = [
+      $common_config_files,
+      '/etc/slurm/acct_gather.conf',
+      $openssl_credential_files,
+    ]
+
+    $hnwn_required_files = [
+      $common_config_files,
+      '/etc/slurm/topology.conf',
+      $openssl_credential_files,
+    ]
+  }
+  else {
+    $db_required_files = [
+      $common_config_files,
+      '/etc/slurm/acct_gather.conf',
+    ]
+
+    $hnwn_required_files = [
+      $common_config_files,
+      '/etc/slurm/topology.conf',
+    ]
+  }
+
 }

@@ -3,7 +3,7 @@
 # Ensures that the slurmd service is running and restarted if the
 # configuration file is modified
 #
-# version 20170427
+# version 20170510
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -19,12 +19,7 @@ class slurm::workernode::config {
     hasstatus => true,
     subscribe => [
       Package['slurm'],
-      File[
-        '/etc/slurm/cgroup.conf',
-        '/etc/slurm/plugstack.conf',
-        '/etc/slurm/slurm.conf',
-        '/etc/slurm/topology.conf',
-      ],
+      File[$slurm::config::hnwn_required_files],
     ],
   }
 }
