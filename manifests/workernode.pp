@@ -18,8 +18,5 @@ class slurm::workernode {
   include ::slurm::config
   include ::slurm::workernode::config
 
-  Class['::slurm::setup']->
-  Class['::slurm::workernode::setup']->
-  Class['::slurm::config']->
-  Class['::slurm::workernode::config']
+  Class['::slurm::setup'] -> Class['::slurm::workernode::setup'] -> Class['::slurm::config'] -> Class['::slurm::workernode::config']
 }

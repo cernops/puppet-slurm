@@ -18,8 +18,5 @@ class slurm::dbnode {
   include ::slurm::config
   include ::slurm::dbnode::config
 
-  Class['::slurm::setup']->
-  Class['::slurm::dbnode::setup']->
-  Class['::slurm::config']->
-  Class['::slurm::dbnode::config']
+  Class['::slurm::setup'] -> Class['::slurm::dbnode::setup'] -> Class['::slurm::config'] -> Class['::slurm::dbnode::config']
 }
