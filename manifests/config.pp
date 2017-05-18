@@ -222,6 +222,7 @@ class slurm::config (
     $db_required_files = [
       $common_config_files,
       '/etc/slurm/acct_gather.conf',
+      '/etc/slurm/slurmdbd.conf',
       $openssl_credential_files,
     ]
 
@@ -235,6 +236,7 @@ class slurm::config (
     $db_required_files = [
       $common_config_files,
       '/etc/slurm/acct_gather.conf',
+      '/etc/slurm/slurmdbd.conf',
     ]
 
     $hnwn_required_files = [

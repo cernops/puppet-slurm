@@ -7,11 +7,12 @@
 # @param dbd_port The port number that the Slurm Database Daemon (slurmdbd) listens to for work
 # @param slurm_user The name of the user that the slurmctld daemon executes as
 # @param storage_host Define the name of the host the database is running where we are going to store the data
+# @param storage_pass The password to access the database
 # @param storage_port The port number that the Slurm Database Daemon (slurmdbd) communicates with the database
 # @param storage_user Define the name of the user we are going to connect to the database with to store the job accounting data
 # @param storage_loc Specify the name of the database as the location where accounting records are written
 #
-# version 20170510
+# version 20170517
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -25,16 +26,18 @@ class slurm::dbnode::config (
   String $slurm_user    = $slurm::config::slurm_user,
   String $storage_host  = 'db_instance.example.org',
   Integer $storage_port = 1234,
+  String $storage_pass  = 'your_secure_password',
   String $storage_user  = 'user',
   String $storage_loc   = 'accountingdb',
 ) {
 
-  teigi::secret::sub_file{ '/etc/slurm/slurmdbd.conf':
-    teigi_keys => ['slurmdbpass'],
-    content    => template('slurm/slurmdbd.conf.erb'),
-    owner      => 'slurm',
-    group      => 'slurm',
-    mode       => '0644',
+  file{ '/etc/slurm/slurmdbd.conf':
+    ensure  => file,
+    content => template('slurm/slurmdbd.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
   }
 
   service{'slurmdbd':
@@ -43,9 +46,6 @@ class slurm::dbnode::config (
     hasstatus => true,
     subscribe => [
       Package['slurm-slurmdbd'],
-      Teigi_sub_file[
-        '/etc/slurm/slurmdbd.conf',
-      ],
       File[$slurm::config::db_required_files],
     ],
   }

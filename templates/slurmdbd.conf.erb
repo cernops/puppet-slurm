@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Parameters for SLURM db node                                             -%>
 <%#                                                                          -%>
-<%# version 20170327                                                         -%>
+<%# version 20170517                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -47,6 +47,6 @@ PidFile=/var/run/slurmdbd.pid
 StorageType=accounting_storage/mysql
 StorageHost=<%= @storage_host %>
 StoragePort=<%= @storage_port %>
-StoragePass=%TEIGI__slurmdbpass__%
+StoragePass=<%= @storage_pass %>
 StorageUser=<%= @storage_user %>
 StorageLoc=<%= @storage_loc %>
