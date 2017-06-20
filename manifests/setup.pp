@@ -1,21 +1,20 @@
 # slurm/setup.pp
 #
-# Creates the basic folders, user/group and security for SLURM, common to
-# headnodes and workernodes
+# Creates the basic folders, user/group and security for SLURM, common to headnodes and workernodes.
 #
-# @param slurm_gid Group id for slurm group
-# @param slurm_uid User id for slurm user
-# @param slurm_home_loc Location of SLURM's home folder
-# @param slurm_log_file Location of SLURM's log folder
-# @param slurm_plugstack_loc Location of SLURM's plugstack folder
-# @param munge_gid Group id for munge group
-# @param munge_uid User id for munge user
-# @param munge_loc Location of MUNGE's root folder
-# @param munge_log_file Location of MUNGE's log folder
-# @param munge_home_loc Location of MUNGE's home folder
-# @param munge_run_loc Location of MUNGE's run folder
+# @param slurm_gid Group id for slurm group.
+# @param slurm_uid User id for slurm user.
+# @param slurm_home_loc Location of SLURM's home folder.
+# @param slurm_log_file Location of SLURM's log folder.
+# @param slurm_plugstack_loc Location of SLURM's plugstack folder.
+# @param munge_gid Group id for munge group.
+# @param munge_uid User id for munge user.
+# @param munge_loc Location of MUNGE's root folder.
+# @param munge_log_file Location of MUNGE's log folder.
+# @param munge_home_loc Location of MUNGE's home folder.
+# @param munge_run_loc Location of MUNGE's run folder.
 #
-# version 20170510
+# version 20170615
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -96,16 +95,6 @@ class slurm::setup (
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
-    require => User['slurm'],
-  }
-
-  # Stuck CG job alert
-  file{ '/etc/slurm/job_stuck_alert.sh':
-    ensure  => file,
-    content => template('slurm/job_stuck_alert.sh.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
     require => User['slurm'],
   }
 
