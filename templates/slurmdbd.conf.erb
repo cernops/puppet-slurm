@@ -1,8 +1,8 @@
 <%# slurmdb.conf.erb                                                         -%>
 <%#                                                                          -%>
-<%# Parameters for SLURM db node                                             -%>
+<%# Parameters for SLURM db node.                                            -%>
 <%#                                                                          -%>
-<%# version 20170517                                                         -%>
+<%# version 20170620                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -14,39 +14,67 @@
 # Configuration file containing parameters for dbnode.
 #
 
-# Archive info
-#ArchiveJobs=yes
-#ArchiveDir="/tmp"
-#ArchiveSteps=yes
-#ArchiveScript=
-#JobPurge=12
-#StepPurge=1
-
-# Authentication info
-AuthType=auth/munge
-AuthInfo=/var/run/munge/munge.socket.2
-
-# slurmDBD info
-#
-# DbdHost name, used as an argument to the gethostbyname() function
-#DbdAddr=
-# name of the machine where the Slurm Database Daemon runs
+# SLURMDBD HOSTS
 DbdHost=<%= @dbd_host %>
+DbdAddr=<%= @dbd_addr %>
+<%= @dbd_backup_host.empty? ? '#DbdBackupHost=' : ('DbdBackupHost=' + @dbd_backup_host) %>
 DbdPort=<%= @dbd_port %>
-SlurmUser=<%= @slurm_user %>
-#MessageTimeout=300
-DebugLevel=4
-#DefaultQOS=normal,standby
-LogFile=/var/log/slurm/slurmdbd.log
-PidFile=/var/run/slurmdbd.pid
-#PluginDir=/usr/lib/slurm
-#PrivateData=accounts,users,usage,jobs
-#TrackWCKey=yes
 
-# Database info
-StorageType=accounting_storage/mysql
+
+# SECURITY
+AuthType=<%= @auth_type %>
+<%= @auth_info.empty? ? '#AuthInfo=' : ('AuthInfo=' + @auth_info) %>
+
+
+# GENERAL OPTIONS
+<%= @default_qos.empty? ? '#DefaultQOS=' : ('DefaultQOS=' + @default_qos) %>
+MessageTimeout=<%= @message_timeout %>
+PidFile=<%= @pid_file %>
+PluginDir=<%= @plugin_dir %>
+<%= @private_data.empty? ? '#PrivateData=' : ('PrivateData=' + @private_data) %>
+SlurmUser=<%= @slurm_user %>
+TCPTimeout=<%= @tcp_timeout %>
+TrackWCKey=<%= @track_wc_key %>
+TrackSlurmctldDown=<%= @track_slurmctld_down %>
+
+
+# DATABASE
+StorageType=<%= @storage_type %>
 StorageHost=<%= @storage_host %>
+<%= @storage_backup_host.empty? ? '#StorageBackupHost=' : ('StorageBackupHost=' + @storage_backup_host) %>
 StoragePort=<%= @storage_port %>
-StoragePass=<%= @storage_pass %>
 StorageUser=<%= @storage_user %>
+StoragePass=<%= @storage_pass %>
 StorageLoc=<%= @storage_loc %>
+
+
+# ARCHIVE
+ArchiveDir=<%= @archive_dir %>
+<%= @archive_script.empty? ? '#ArchiveScript=' : ('ArchiveScript=' + @archive_script) %>
+ArchiveEvents=<%= @archive_events %>
+<%= @purge_event_after.empty? ? '#PurgeEventAfter=' : ('PurgeEventAfter=' + @purge_event_after) %>
+ArchiveJobs=<%= @archive_jobs %>
+<%= @purge_job_after.empty? ? '#PurgeJobAfter=' : ('PurgeJobAfter=' + @purge_job_after) %>
+ArchiveResvs=<%= @archive_resvs %>
+<%= @purge_resv_after.empty? ? '#PurgeResvAfter=' : ('PurgeResvAfter=' + @purge_resv_after) %>
+ArchiveSteps=<%= @archive_steps %>
+<%= @purge_step_after.empty? ? '#PurgeStepAfter=' : ('PurgeStepAfter=' + @purge_step_after) %>
+ArchiveSuspend=<%= @archive_suspend %>
+<%= @purge_suspend_after.empty? ? '#PurgeSuspendAfter=' : ('PurgeSuspendAfter=' + @purge_suspend_after) %>
+ArchiveTXN=<%= @archive_txn %>
+<%= @purge_txnafter.empty? ? '#PurgeTXNAfter=' : ('PurgeTXNAfter=' + @purge_txnafter) %>
+ArchiveUsage=<%= @archive_usage %>
+<%= @purge_usage_after.empty? ? '#PurgeUsageAfter=' : ('PurgeUsageAfter=' + @purge_usage_after) %>
+
+
+# LOGGING
+DebugLevel=<%= @debug_level %>
+<%# comment out if empty, expand array otherwise                             -%>
+<% if @debug_flags.empty? -%>
+#DebugFlags=
+<% else -%>
+DebugFlags=<%= @debug_flags.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+<%= @log_file.empty? ? '#LogFile=' : ('LogFile=' + @log_file) %>
+LogTimeFormat=<%= @log_time_format %>
