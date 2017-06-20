@@ -4,7 +4,7 @@
 #
 # @param node_type Specifies the node type which defines the configuration that will be applied to that node.
 #
-# version 20170602
+# version 20170621
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -35,7 +35,7 @@ class slurm (
     }
 
     'none': {
-      notify{'The slurm module is included in your hostgroup but you did not provide any role in hiera. If it is intentionnal please do not consider this message.':}
+      notify{'The slurm module is included in your hostgroup but you did not provide any role in hiera. If it is intentional please do not consider this message.':}
     }
 
     default: {}

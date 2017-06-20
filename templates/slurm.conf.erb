@@ -64,7 +64,13 @@ PowerParameters=<%= @power_parameters.join(',') %>
 <% end -%>
 <%#                                                                          -%>
 PreemptType=<%= @preempt_type %>
-PreemptMode=<%= @preempt_mode %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @preempt_mode.empty? -%>
+#PreemptMode=
+<% else -%>
+PreemptMode=<%= @preempt_mode.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 <%# comment out if empty, expand array if not                                -%>
 <% if @private_data.empty? -%>
 #PrivateData=
@@ -162,7 +168,7 @@ EpilogMsgTime=<%= @epilog_msg_time %>
 GetEnvTimeout=<%= @get_env_timeout %>
 GroupUpdateTime=<%= @group_update_time %>
 InactiveLimit=<%= @inactive_limit %>
-<%= @keep_alive_time==0 ? '#KeepAliveTime=' : ('KeepAliveTime=' + @keep_alive_time) %>
+<%= @keep_alive_time==0 ? '#KeepAliveTime=' : ('KeepAliveTime=' + @keep_alive_time.to_s) %>
 KillWait=<%= @kill_wait %>
 MessageTimeout=<%= @message_timeout %>
 MinJobAge=<%= @min_job_age %>
@@ -176,8 +182,8 @@ Waittime=<%= @wait_time %>
 
 
 # SCHEDULING
-<%= @def_mem_per_cpu==0 ? '#DefMemPerCPU=' : ('DefMemPerCPU=' + @def_mem_per_cpu) %>
-<%= @def_mem_per_node==0 ? '#DefMemPerNode=' : ('DefMemPerNode=' + @def_mem_per_node) %>
+<%= @def_mem_per_cpu==0 ? '#DefMemPerCPU=' : ('DefMemPerCPU=' + @def_mem_per_cpu.to_s) %>
+<%= @def_mem_per_node==0 ? '#DefMemPerNode=' : ('DefMemPerNode=' + @def_mem_per_node.to_s) %>
 <%= @epilog.empty? ? '#Epilog=' : ('Epilog=' + @epilog) %>
 <%= @epilog_slurmctld.empty? ? '#EpilogSlurmctld=' : ('EpilogSlurmctld=' + @epilog_slurmctld) %>
 FastSchedule=<%= @fast_schedule %>
@@ -336,11 +342,11 @@ TreeWidth=<%= @tree_width %>
 
 
 # COMPUTE NODES
-<% @workernodes.each do |workernode| %>
+<% @workernodes.each do |workernode| -%>
 <%= workernode.map{|pair| pair.join('=')}.join(' ') %>
-<% end -%>
+<% end %>
 
 # PARTITIONS
-<% @partitions.each do |partition| %>
+<% @partitions.each do |partition| -%>
 <%= partition.map{|pair| pair.join('=')}.join(' ') %>
-<% end -%>
+<% end %>

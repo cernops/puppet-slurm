@@ -1,8 +1,8 @@
 # slurm/headnode.pp
 #
-# Puts SLURM on headnode
+# Puts SLURM on headnode.
 #
-# version 20170301
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

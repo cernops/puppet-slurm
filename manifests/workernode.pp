@@ -1,8 +1,8 @@
 # slurm/workernode.pp
 #
-# Puts SLURM on workernode
+# Puts SLURM on workernode.
 #
-# version 20170301
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

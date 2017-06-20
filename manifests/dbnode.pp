@@ -1,8 +1,8 @@
 # slurm/dbnode.pp
 #
-# Puts SLURM on dbnode
+# Puts SLURM on dbnode.
 #
-# version 20170301
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

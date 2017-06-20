@@ -1,10 +1,10 @@
 # slurm/headnode/firewall.pp
 #
-# Common firewall rules for the headnode
+# Common firewall rules for the headnode.
 #
-# @param slurmctld_port The port number that the Slurm controller, slurmctld, listens to for work
+# @param slurmctld_port The port number that the Slurm controller, slurmctld, listens to.
 #
-# version 20170327
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

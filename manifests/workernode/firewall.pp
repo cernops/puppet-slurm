@@ -1,10 +1,10 @@
 # slurm/workernode/firewall.pp
 #
-# Firewall rules for the workernode
+# Firewall rules for the workernode.
 #
-# @param slurmd_port The port number that the Slurm compute node daemon, slurmd, listens to for work
+# @param slurmd_port The port number that the Slurm compute node daemon, slurmd, listens to.
 #
-# version 20170327
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>

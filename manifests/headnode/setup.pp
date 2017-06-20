@@ -7,7 +7,7 @@
 # @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written
 # @param packages Packages to install
 #
-# version 20170327
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -16,10 +16,10 @@
 #
 
 class slurm::headnode::setup (
-  String $slurmctld_spool_dir = '/var/spool/slurmctld',
-  String $state_save_location = '/var/spool/slurmctld/slurm.state',
-  String $slurmctld_log_file  = '/var/log/slurm/slurmctld.log',
-  Array $packages = [
+  String[1,default] $slurmctld_spool_dir = '/var/spool/slurmctld',
+  String[1,default] $state_save_location = '/var/spool/slurmctld/slurm.state',
+  String[1,default] $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
+  Array[String] $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',

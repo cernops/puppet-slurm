@@ -14,7 +14,7 @@
 # @param munge_home_loc Location of MUNGE's home folder.
 # @param munge_run_loc Location of MUNGE's run folder.
 #
-# version 20170615
+# version 20170621
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -23,17 +23,17 @@
 #
 
 class slurm::setup (
-  Integer $slurm_gid          = 950,
-  Integer $slurm_uid          = 950,
-  String $slurm_home_loc      = '/usr/local/slurm',
-  String $slurm_log_file      = '/var/log/slurm',
-  String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
-  Integer $munge_gid          = 951,
-  Integer $munge_uid          = 951,
-  String $munge_loc           = '/etc/munge',
-  String $munge_log_file      = '/var/log/munge',
-  String $munge_home_loc      = '/var/lib/munge',
-  String $munge_run_loc       = '/run/munge',
+  Integer[0,default] $slurm_gid = 950,
+  Integer[0,default] $slurm_uid = 950,
+  String[1,default] $slurm_home_loc      = '/usr/local/slurm',
+  String[1,default] $slurm_log_file = '/var/log/slurm',
+  String[1,default] $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  Integer[0,default] $munge_gid = 951,
+  Integer[0,default] $munge_uid = 951,
+  String[1,default] $munge_loc = '/etc/munge',
+  String[1,default] $munge_log_file = '/var/log/munge',
+  String[1,default] $munge_home_loc = '/var/lib/munge',
+  String[1,default] $munge_run_loc = '/run/munge',
 ) inherits slurm::config {
 
   # install MUNGE packages only if MUNGE will be used as auth and/or crypto plugin

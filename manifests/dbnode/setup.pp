@@ -1,11 +1,11 @@
 # slurm/dbnode/setup.pp
 #
-# Creates folders/logfiles and installs packages specific to dbnode
+# Creates folders/logfiles and installs packages specific to dbnode.
 #
-# @param slurmdbd_log_file Fully qualified pathname of a file into which the slurmd data base daemon will log entries
-# @param packages Packages to install
+# @param slurmdbd_log_file Fully qualified pathname of a file into which the slurmd data base daemon will log entries.
+# @param packages Packages to install.
 #
-# version 20170327
+# version 20170602
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -14,8 +14,8 @@
 #
 
 class slurm::dbnode::setup (
-  String $slurmdbd_log_file  = '/var/log/slurm/slurmdbd.log',
-  Array $packages = [
+  String[1,default] $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
+  Array[String] $packages = [
     'slurm-plugins',
     'slurm-slurmdbd',
     'slurm-sql',
