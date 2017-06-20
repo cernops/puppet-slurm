@@ -1,69 +1,10 @@
 # slurm/config.pp
 #
-# Creates the common configuration files
+# Creates the common configuration files.
 #
-# @param control_machine The short, or long, hostname of the machine where Slurm control functions are executed.
-# @param backup_controller The short, or long, name of the machine where Slurm control functions are to be executed in the event that control_machine fails.
-# @param auth_type The authentication method for communications between Slurm components.
-# @param checkpoint_type The system-initiated checkpoint method to be used for user jobs.
-# @param crypto_type The cryptographic signature tool to be used in the creation of job step credentials.
-# @param job_checkpoint_dir Specifies the default directory for storing or reading job checkpoint information.
-# @param job_credential_private_key Fully qualified pathname of a file containing a private key used for authentication by Slurm daemons.
-# @param job_credential_public_certificate Fully qualified pathname of a file containing a public key used for authentication by Slurm daemons.
-# @max_tasks_per_node Maximum number of tasks Slurm will allow a job step to spawn on a single node.
-# @param mpi_default Identifies the default type of MPI to be used.
-# @param max_job_count The maximum number of jobs Slurm can have in its active database at one time.
-# @param plugin_dir Identifies the places in which to look for Slurm plugins.
-# @param plug_stack_config Location of the config file for Slurm stackable plugins that use the Stackable Plugin Architecture for Node job (K)control (SPANK).
-# @param private_data This controls what type of information is hidden from regular users.
-# @param proctrack_type Identifies the plugin to be used for process tracking on a job step basis.
-# @param slurmctld_port The port number that the Slurm controller, slurmctld, listens to for work.
-# @param slurmd_port The port number that the Slurm compute node daemon, slurmd, listens to for work.
-# @param slurmd_spool_dir Fully qualified pathname of a directory into which the slurmd daemon's state information and batch job script information are written.
-# @param state_save_location Fully qualified pathname of a directory into which the Slurm controller, slurmctld, saves its state.
-# @param $task_plugin Identifies the type of task launch plugin, typically used to provide resource management within a node (e.g. pinning tasks to specific processors).
-# @param $task_plugin_param Optional parameters for the task plugin.
-# @param $topology_plugin Identifies the plugin to be used for determining the network topology and optimizing job allocations to minimize network contention.
-# @param $tree_width Slurmd daemons use a virtual tree network for communications. TreeWidth specifies the width of the tree (i.e. the fanout). Optimal system performance can typically be achieved if TreeWidth is set to the square root of the number of nodes in the cluster for systems having no more than 2500 nodes or the cube root for larger systems.
-# @param $unkillable_step_program If the processes in a job step are determined to be unkillable for a period of time specified by the UnkillableStepTimeout variable, the program specified by UnkillableStepProgram will be executed.
-# @param $def_mem_per_cpu Default real memory size available per allocated CPU in megabytes.
-# @param $scheduler_type Identifies the type of scheduler to be used.
-# @param $select_type Identifies the type of resource selection algorithm to be used.
-# @param $select_type_parameters The permitted values of SelectTypeParameters depend upon the configured value of SelectType.
-# @param priority_type This specifies the plugin to be used in establishing a job's scheduling priority.
-# @param priority_flags Flags to modify priority behavior.
-# @param priority_calc_period The period of time in minutes in which the half-life decay will be re-calculated.
-# @param priority_decay_half_life This controls how long prior resource use is considered in determining how over- or under-serviced an association is (user, bank account and cluster) in determining job priority.
-# @param priority_favor_small Specifies that small jobs should be given preferential scheduling priority.
-# @param priority_max_age Specifies the job age which will be given the maximum age factor in computing priority.
-# @param priority_usage_reset_period At this interval the usage of associations will be reset to 0.
-# @param priority_weight_age An integer value that sets the degree to which the queue wait time component contributes to the job's priority.
-# @param priority_weight_fairshare An integer value that sets the degree to which the fair-share component contributes to the job's priority.
-# @param priority_weight_job_size An integer value that sets the degree to which the job size component contributes to the job's priority.
-# @param priority_weight_partition Partition factor used by priority/multifactor plugin in calculating job priority.
-# @param priority_weight_qos An integer value that sets the degree to which the Quality Of Service component contributes to the job's priority.
-# @param priority_weight_tres A comma separated list of TRES Types and weights that sets the degree that each TRES Type contributes to the job's priority.
-# @param slurm_user The name of the user that the slurmctld daemon executes as.
-# @param accounting_storage_host The name of the machine hosting the accounting storage database.
-# @param accounting_storage_loc The fully qualified file name where accounting records are written when the AccountingStorageType is "accounting_storage/filetxt" or else the name of the database where accounting records are stored when the AccountingStorageType is a database.
-# @param accounting_storage_port The listening port of the accounting storage database server.
-# @param $accounting_storage_type The accounting storage mechanism type.
-# @param accounting_storage_user The user account for accessing the accounting storage database.
-# @param cluster_name The name by which this Slurm managed cluster is known in the accounting database.
-# @param $job_acct_gather_frequency The job accounting and profiling sampling intervals.
-# @param $acct_gather_node_freq The AcctGather plugins sampling interval for node accounting.
-# @param $acct_gather_energy_type Identifies the plugin to be used for energy consumption accounting.
-# @param $acct_gather_infiniband_type Identifies the plugin to be used for infiniband network traffic accounting.
-# @param $acct_gather_filesystem_type Identifies the plugin to be used for filesystem traffic accounting.
-# @param $acct_gather_profile_type Identifies the plugin to be used for detailed job profiling.
-# @param $slurmctld_debug The level of detail to provide slurmctld daemon's logs.
-# @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written.
-# @param $slurmd_debug The level of detail to provide slurmd daemon's logs.
-# @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written.
-# @param workernodes Array of hashes containing the information about the workernodes.
-# @param partitions Array of hashes containing the information about the paritions.
+# For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurm.conf.html
 #
-# version 20170510
+# version 20170620
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -72,77 +13,215 @@
 #
 
 class slurm::config (
-  String $control_machine                   = 'headnode1.example.org',
-  String $backup_controller                 = 'headnode2.example.org',
-  String $auth_type                         = 'auth/munge',
-  String $checkpoint_type                   = 'checkpoint/none',
-  String $crypto_type                       = 'crypto/munge',
-  String $job_checkpoint_dir                = '/var/slurm/checkpoint',
-  String $job_credential_private_key        = '/usr/local/slurm/credentials/slurm.key',
-  String $job_credential_public_certificate = '/usr/local/slurm/credentials/slurm.cert',
-  Integer $max_tasks_per_node               = 32,
-  String $mpi_default                       = 'pmi2',
-  Integer $max_job_count                    = 5000,
-  String $plugin_dir                        = '/usr/lib64/slurm',
-  String $plug_stack_config                 = '/etc/slurm/plugstack.conf',
-  String $private_data                      = 'cloud',
-  String $proctrack_type                    = 'proctrack/pgid',
-  Integer $slurmctld_port                   = 6817,
-  Integer $slurmd_port                      = 6818,
-  String $slurmd_spool_dir                  = '/var/spool/slurmd',
-  String $state_save_location               = '/var/spool/slurmctld/slurm.state',
-  String $task_plugin                       = 'task/none',
-  String $task_plugin_param                 = 'Sched',
-  String $topology_plugin                   = 'topology/none',
-  Integer $tree_width                       = 50,
-  String $unkillable_step_program           = '/usr/bin/echo',
-  Integer $def_mem_per_cpu                  = 4000,
-  String $scheduler_type                    = 'sched/backfill',
-  String $select_type                       = 'select/linear',
-  String $select_type_parameters            = 'CR_Memory',
-  String $priority_type                     = 'priority/basic',
-  String $priority_flags                    = 'SMALL_RELATIVE_TO_TIME',
-  Integer $priority_calc_period             = 5,
-  String $priority_decay_half_life          = '7-0',
-  String $priority_favor_small              = 'NO',
-  String $priority_max_age                  = '7-0',
-  String $priority_usage_reset_period       = 'NONE',
-  Integer $priority_weight_age              = 0,
-  Integer $priority_weight_fairshare        = 0,
-  Integer $priority_weight_job_size         = 0,
-  Integer $priority_weight_partition        = 0,
-  Integer $priority_weight_qos              = 0,
-  String $priority_weight_tres              = 'CPU=0,Mem=0',
-  String $slurm_user                        = 'slurm',
-  String $accounting_storage_host           = 'accountingdb.example.org',
-  String $accounting_storage_loc            = 'slurm_acct_db',
-  String $accounting_storage_pass           = '/var/run/munge/munge.socket.2',
-  Integer $accounting_storage_port          = 6819,
-  String $accounting_storage_type           = 'accounting_storage/none',
-  String $accounting_storage_user           = 'slurm',
-  String $cluster_name                      = 'mycluster',
-  String $job_acct_gather_frequency         = 'task=30,energy=0,network=0,filesystem=0',
-  String $job_acct_gather_type              = 'jobacct_gather/none',
-  Integer $acct_gather_node_freq            = 0,
-  String $acct_gather_energy_type           = 'acct_gather_energy/none',
-  String $acct_gather_infiniband_type       = 'acct_gather_infiniband/none',
-  String $acct_gather_filesystem_type       = 'acct_gather_filesystem/none',
-  String $acct_gather_profile_type          = 'acct_gather_profile/none',
-  String $slurmctld_debug                   = 'info',
-  String $slurmctld_log_file                = '/var/log/slurm/slurmctld.log',
-  String $slurmd_debug                      = 'info',
-  String $slurmd_log_file                   = '/var/log/slurm/slurmd.log',
-  Array $workernodes = [{
+  String[1,default] $control_machine = 'headnode1.example.org',
+  String[0,default] $control_addr = $control_machine,
+  String[0,default] $backup_controller = '',
+  String[0,default] $backup_addr = $backup_controller,
+  Integer[0,1] $allow_spec_resources_usage = 0,
+  Enum['burst_buffer/none'] $burst_buffer_type = 'burst_buffer/none',
+  Enum['checkpoint/blcr','checkpoint/none','checkpoint/ompi','checkpoint/poe'] $checkpoint_type= 'checkpoint/none',
+  String[0,default] $chos_loc = '',
+  Enum['core_spec/cray','core_spec/none'] $core_spec_plugin = 'core_spec/none',
+  Enum['Conservative','OnDemand','Performance','PowerSave'] $cpu_freq_def = 'Performance',
+  Array[Enum['Conservative','OnDemand','Performance','PowerSave','UserSpace']] $cpu_freq_governors = ['OnDemand','Performance'],
+  Enum['NO','YES'] $disable_root_jobs = 'NO',
+  Enum['NO','YES'] $enforce_part_limits = 'NO',
+  Enum['ext_sensors/none','ext_sensors/rrd'] $ext_sensors_type = 'ext_sensors/none',
+  Integer[0,default] $ext_sensors_freq = 0,
+  Integer[1,default] $first_job_id = 1,
+  Integer[1,default] $max_job_id = 999999,
+  Array[String[1,default]] $gres_types = [],
+  Integer[0,1] $group_update_force = 0,
+  String[1,default] $job_checkpoint_dir = '/var/slurm/checkpoint',
+  Enum['job_container/cncu','job_container/none'] $job_container_type = 'job_container/none',
+  Integer[0,1] $job_file_append = 0,
+  Integer[0,1] $job_requeue = 0,
+  Array[String[1,default]] $job_submit_plugins = [],
+  Integer[0,1] $kill_on_bad_exit = 0,
+  Enum['launch/aprun','launch/poe','launch/runjob','launch/slurm'] $launch_type = 'launch/slurm',
+  Array[Enum['mem_sort','slurmstepd_memlock','slurmstepd_memlock_all','test_exec']] $launch_parameters = [],
+  Array[String[1,default]] $licenses = [],
+  Enum['node_features/knl_cray','node_features/knl_generic',''] $node_features_plugins = '',
+  String[1,default] $mail_prog = '/bin/mail',
+  String[0,default] $mail_domain = '',
+  Integer[1,default] $max_job_count = 10000,
+  Integer[1,default] $max_step_count = 40000,
+  Enum['no','yes'] $mem_limit_enforce = 'yes',
+  Hash[Enum['WindowMsgs','WindowTime'],Integer[1,default]] $msg_aggregation_params = {'WindowMsgs' => 1, 'WindowTime' => 100},
+  String[1,default] $plugin_dir = '/usr/local/lib/slurm',
+  String[0,default] $plug_stack_config = '',
+  Enum['power/cray','power/none'] $power_plugin = 'power/none',
+  Array[String[1,default]] $power_parameters = [],
+  Enum['preempt/none','preempt/partition_prio','preempt/qos'] $preempt_type = 'preempt/none',
+  Array[Enum['OFF','CANCEL','CHECKPOINT','GANG','REQUEUE','SUSPEND']] $preempt_mode = ['OFF'],
+  Array[Enum['accounts','cloud','jobs','nodes','partitions','reservations','usage','users']] $private_data = [],
+  Enum['proctrack/cgroup','proctrack/cray','proctrack/linuxproc','proctrack/lua','proctrack/sgi_job','proctrack/pgid',''] $proctrack_type = '',
+  Integer[0,2] $propagate_prio_process = 0,
+  Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']] $propagate_resource_limits = [],
+  Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']] $propagate_resource_limits_except = [],
+  String[0,default] $reboot_program = '',
+  Enum['KeepPartInfo','KeepPartState',''] $reconfig_flags = '',
+  String[0,default] $resv_epilog = '',
+  String[0,default] $resv_prolog = '',
+  Integer[0,2] $return_to_service = 0,
+  String[0,default] $salloc_default_command = '',
+  Hash[Enum['DestDir','Compression'],String[1,default]] $sbcast_parameters = {},
+  String[1,default] $slurmctld_pid_file = '/var/run/slurmctld.pid',
+  Array[String[1,default]] $slurmctld_plugstack = [],
+  Integer[1,default] $slurmctld_port= 6817,
+  String[1,default] $slurmd_pid_file = '/var/run/slurmd.pid',
+  Array[String[1,default]] $slurmd_plugstack = [],
+  Integer[1,default] $slurmd_port = 6818,
+  String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
+  String[1,default] $slurm_user = 'root',
+  String[1,default] $slurmd_user = 'root',
+  String[0,default] $srun_epilog = '',
+  String[0,default] $srun_prolog = '',
+  String[0,default] $srun_port_range = '',
+  String[1,default] $state_save_location = '/var/spool',
+  Enum['switch/none','switch/nrt'] $switch_type = 'switch/none',
+  Array[Enum['task/affinity','task/cgroup','task/none']] $task_plugin = ['task/none'],
+  Array[Enum['Boards','Cores','Cpusets','None','Sched','Sockets','Threads','Verbose','Autobind']] $task_plugin_param = ['Sched'],
+  String[0,default] $task_epilog = '',
+  String[0,default] $task_prolog = '',
+  Integer[1,default] $tcp_timeout = 2,
+  String[1,default] $tmp_fs = '/tmp',
+  Enum['no','yes'] $track_wckey = 'no',
+  String[0,default] $unkillable_step_program = '',
+
+  Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
+  String[0,default] $auth_info = '',
+  Enum['crypto/munge','crypto/openssl'] $crypto_type = 'crypto/munge',
+  String[0,default] $job_credential_private_key = '',
+  String[0,default] $job_credential_public_certificate = '',
+  Enum['mcs/account','mcs/group','mcs/none','mcs/user'] $mcs_plugin = 'mcs/none',
+  String[0,default] $mcs_parameters = '',
+  Integer[0,1] $use_pam = 0,
+
+  Integer[0,default] $batch_start_timeout = 10,
+  Integer[0,default] $complete_wait = 0,
+  Integer[0,default] $eio_timeout = 60,
+  Integer[0,default] $epilog_msg_time = 2000,
+  Integer[0,default] $get_env_timeout = 2,
+  Integer[0,default] $group_update_time = 600,
+  Integer[0,default] $inactive_limit = 0,
+  Integer[0,default] $keep_alive_time = 0,
+  Integer[0,default] $kill_wait = 30,
+  Integer[0,default] $message_timeout = 10,
+  Integer[2,default] $min_job_age = 300,
+  Integer[0,default] $over_time_limit = 0,
+  Integer[0,default] $prolog_epilog_timeout = 0,
+  Integer[0,default] $resv_over_run = 0,
+  Integer[0,default] $slurmctld_timeout = 120,
+  Integer[0,default] $slurmd_timeout = 300,
+  Integer[0,default] $unkillable_step_timeout = 60,
+  Integer[0,default] $wait_time = 0,
+
+  Integer[0,default] $def_mem_per_cpu = 0,
+  Integer[0,default] $def_mem_per_node = 0,
+  String[0,default] $epilog = '',
+  String[0,default] $epilog_slurmctld = '',
+  Integer[0,2] $fast_schedule = 1,
+  Integer[0,default] $max_array_size = 1001,
+  Integer[0,default] $max_mem_per_cpu = 0,
+  Integer[0,default] $max_mem_per_node = 0,
+  Integer[0,default] $max_tasks_per_node = 512,
+  Enum['lam','mpich1_p4','mpich1_shmem','mpichgm','mpichmx','mvapich','none','openmpi','pmi2'] $mpi_default = 'none',
+  Hash[Enum['ports'],String[1,default]] $mpi_params = {},
+  String[0,default] $prolog_slurmctld = '',
+  String[0,default] $prolog = '',
+  Array[Enum['Alloc','Contain','NoHold']] $prolog_flags = [],
+  String[0,default] $requeue_exit = '',
+  String[0,default] $requeue_exit_hold = '',
+  Integer[0,default] $scheduler_time_slice = 30,
+  Enum['sched/backfill','sched/builtin','sched/hold'] $scheduler_type = 'sched/backfill',
+  Array[String[1,default]] $scheduler_parameters = [],
+  Enum['select/bluegene','select/cons_res','select/cray','select/linear','select/serial'] $select_type = 'select/linear',
+  Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory',''] $select_type_parameters = '',
+  Integer[0,default] $vsize_factor = 0,
+
+  Enum['priority/basic','priority/multifactor'] $priority_type = 'priority/basic',
+  Array[Enum['ACCRUE_ALWAYS','CALCULATE_RUNNING','DEPTH_OBLIVIOUS','FAIR_TREE','INCR_ONLY','MAX_TRES','SMALL_RELATIVE_TO_TIME']] $priority_flags = [],
+  Integer[0,default] $priority_calc_period = 5,
+  String[0,default] $priority_decay_half_life = '7-0',
+  Enum['NO','YES'] $priority_favor_small = 'NO',
+  String[0,default] $priority_max_age = '7-0',
+  Enum['NONE','NOW','DAILY','WEEKLY','MONTHLY','QUARTERLY','YEARLY'] $priority_usage_reset_period = 'NONE',
+  Integer[0,default] $priority_weight_age = 0,
+  Integer[0,default] $priority_weight_fairshare = 0,
+  Integer[0,default] $fair_share_dampening_factor = 1,
+  Integer[0,default] $priority_weight_job_size = 0,
+  Integer[0,default] $priority_weight_partition = 0,
+  Integer[0,default] $priority_weight_qos = 0,
+  Hash[String[1,default],Integer[0,default]] $priority_weight_tres = {},
+
+  String[0,default] $cluster_name = '',
+  String[0,default] $default_storage_host = '',
+  Integer[0,default] $default_storage_port = 6819,
+  String[0,default] $default_storage_type = '',
+  String[0,default] $default_storage_user = '',
+  String[0,default] $default_storage_pass = '',
+  String[0,default] $default_storage_loc = '',
+  String[0,default] $accounting_storage_host = '',
+  String[0,default] $accounting_storage_backup_host = '',
+  Integer[0,default] $accounting_storage_port = 6819,
+  String[0,default] $accounting_storage_enforce = '',
+  Array[String[1,default]] $accounting_storage_tres = [],
+  Enum['accounting_storage/filetxt','accounting_storage/mysql','accounting_storage/none','accounting_storage/slurmdbd'] $accounting_storage_type = 'accounting_storage/none',
+  String[0,default] $accounting_storage_user = '',
+  String[0,default] $accounting_storage_pass = '',
+  String[0,default] $accounting_storage_loc = '',
+  Enum['NO','YES'] $accounting_store_jobhost = 'YES',
+  Enum['jobcomp/none','jobcomp/elasticsearch','jobcomp/filetxt','jobcomp/mysql','jobcomp/script'] $job_comp_type = 'jobcomp/none',
+  String[0,default] $job_comp_host = '',
+  Integer[0,default] $job_comp_port = 6819,
+  String[0,default] $job_comp_user = '',
+  String[0,default] $job_comp_pass = '',
+  String[0,default] $job_comp_loc = '',
+  Enum['jobacct_gather/linux','jobacct_gather/cgroup','jobacct_gather/none'] $job_acct_gather_type = 'jobacct_gather/none',
+  Array[Enum['NoShared','UsePss','NoOverMemoryKill']] $job_acct_gather_params = [],
+  Hash[Enum['task','energy','network','filesystem'],Integer[0,default]] $job_acct_gather_frequency = {'task' => 30,'energy' => 0,'network' => 0,'filesystem' => 0},
+  Integer[0,default] $acct_gather_node_freq = 0,
+  Enum['acct_gather_energy/none','acct_gather_energy/ipmi','acct_gather_energy/rapl'] $acct_gather_energy_type = 'acct_gather_energy/none',
+  Enum['acct_gather_infiniband/none','acct_gather_infiniband/ofed'] $acct_gather_infiniband_type = 'acct_gather_infiniband/none',
+  Enum['acct_gather_filesystem/none','acct_gather_filesystem/lustre'] $acct_gather_filesystem_type = 'acct_gather_filesystem/none',
+  Enum['acct_gather_profile/none','acct_gather_profile/hdf5'] $acct_gather_profile_type = 'acct_gather_profile/none',
+
+  Array[String[1,default]] $debug_flags = [],
+  Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmctld_debug = 'info',
+  String[0,default] $slurmctld_log_file = '',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmd_debug = 'info',
+  String[0,default] $slurmd_log_file = '',
+  Integer[0,1] $slurm_sched_log_level = 0,
+  String[0,default] $slurm_sched_log_file = '',
+
+  String[0,default] $health_check_program = '',
+  Enum['ALLOC','ANY','CYCLE','IDLE','MIXED'] $health_check_node_state = 'ANY',
+  Integer[0,default] $health_check_interval = 0,
+
+  String[0,default] $suspend_program = '',
+  Integer[0,default] $suspend_timeout = 30,
+  Integer[0,default] $suspend_rate = 60,
+  Integer[-1,default] $suspend_time = -1,
+  String[0,default] $suspend_exc_nodes = '',
+  String[0,default] $suspend_exc_parts = '',
+  String[0,default] $resume_program = '',
+  Integer[0,default] $resume_timeout = 60,
+  Integer[0,default] $resume_rate = 300,
+
+  Enum['topology/3d_torus','topology/node_rank','topology/none','topology/tree'] $topology_plugin= 'topology/none',
+  Array[Enum['Dragonfly','NoCtldInAddrAny','NoInAddrAny','TopoOptional']] $topology_param = ['NoCtldInAddrAny','NoInAddrAny'],
+  Enum['route/default','route/topology'] $route_plugin = 'route/default',
+  Integer[1,default] $tree_width = 50,
+
+  Array[Hash] $workernodes = [{
     'NodeName' => 'worker[00-10]',
     'CPUs' => '16',
   }],
-  Array $partitions = [{
+  Array[Hash] $partitions = [{
     'PartitionName' => 'workers',
     'MaxMemPerCPU' => '2000',
-  }],
-  Array $switches = [{
-    'SwitchName' => 's0',
-    'Nodes' => 'worker[00-10]',
   }],
 ) {
 
@@ -150,26 +229,6 @@ class slurm::config (
   file{'/etc/slurm/slurm.conf':
     ensure  => file,
     content => template('slurm/slurm.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
-  }
-
-  # AcctGatherEnergy plugin
-  file{'/etc/slurm/acct_gather.conf':
-    ensure  => file,
-    content => template('slurm/acct_gather.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
-  }
-
-  # Cgroup configuration
-  file{ '/etc/slurm/cgroup.conf':
-    ensure  => file,
-    content => template('slurm/cgroup.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
     mode    => '0644',
@@ -186,14 +245,27 @@ class slurm::config (
     require => User['slurm'],
   }
 
-  # Topology file
-  file{'/etc/slurm/topology.conf':
-    ensure  => file,
-    content => template('slurm/topology.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
+  # Cgroup configuration file
+  if  ('proctrack/cgroup' in $proctrack_type) or
+      ('task/cgroup' in $task_plugin) or
+      ('jobacct_gather/cgroup' in $job_acct_gather_type) {
+    class{ '::slurm::config::cgroup':}
+  }
+
+  # Accounting gatherer configuration file
+  if  ('acct_gather_energy/ipmi' in $acct_gather_energy_type) or
+      ('acct_gather_profile/hdf5' in $acct_gather_profile_type) or
+      ('acct_gather_infiniband/ofed' in $acct_gather_infiniband_type) {
+    class{ '::slurm::config::acct_gather':
+      with_energy_ipmi     => ('acct_gather_energy/ipmi' in $acct_gather_energy_type),
+      with_profile_hdf5    => ('acct_gather_profile/hdf5' in $acct_gather_profile_type),
+      with_infiniband_ofed => ('acct_gather_infiniband/ofed' in $acct_gather_infiniband_type),
+    }
+  }
+
+  # Topology plugin configuration file
+  if  ('topology/tree' in $topology_plugin) {
+    class{ '::slurm::config::topology':}
   }
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin

@@ -1,8 +1,8 @@
 <%# slurm.conf.erb                                                           -%>
 <%#                                                                          -%>
-<%# Common SLURM parameters for db, head and worker node                     -%>
+<%# Common SLURM parameters for db, head and worker node.                    -%>
 <%#                                                                          -%>
-<%# version 20170424                                                         -%>
+<%# version 20170620                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -14,108 +14,207 @@
 # Configuration file containing common parameters for headnode and workernode.
 #
 
+# SLURMCTLD HOSTS
 ControlMachine=<%= @control_machine %>
-#ControlAddr=
-BackupController=<%= @backup_controller %>
-#BackupAddr=
+ControlAddr=<%= @control_addr %>
+<%= @backup_controller.empty? ? '#BackupController=' : ('BackupController=' + @backup_controller) %>
+<%= @backup_addr.empty? ? '#BackupAddr=' : ('BackupAddr=' + @backup_addr) %>
 
-AuthType=<%= @auth_type %>
+
+# GENERAL OPTIONS
+AllowSpecResourcesUsage=<%= @allow_spec_resources_usage %>
+BurstBufferType=<%= @burst_buffer_type %>
 CheckpointType=<%= @checkpoint_type %>
-CryptoType=<%= @crypto_type %>
-#DisableRootJobs=NO
-EnforcePartLimits=ALL
-#Epilog=
-#EpilogSlurmctld=
-FirstJobId=1
-#MaxJobId=999999
-#GresTypes=
-#GroupUpdateForce=0
-#GroupUpdateTime=600
+<%= @chos_loc.empty? ? '#ChosLoc=' : ('ChosLoc=' + @chos_loc) %>
+CoreSpecPlugin=<%= @core_spec_plugin %>
+CpuFreqDef=<%= @cpu_freq_def %>
+CpuFreqGovernors=<%= @cpu_freq_governors.join(',') %>
+DisableRootJobs=<%= @disable_root_jobs %>
+EnforcePartLimits=<%= @enforce_part_limits %>
+ExtSensorsType=<%= @ext_sensors_type %>
+ExtSensorsFreq=<%= @ext_sensors_freq %>
+FirstJobId=<%= @first_job_id %>
+MaxJobId=<%= @max_job_id %>
+<%= @gres_types.empty? ? '#GresTypes=' : ('GresTypes=' + @gres_types) %>
+GroupUpdateForce=<%= @group_update_force %>
 JobCheckpointDir=<%= @job_checkpoint_dir %>
-JobCredentialPrivateKey=<%= @job_credential_private_key %>
-JobCredentialPublicCertificate=<%= @job_credential_public_certificate %>
-#JobFileAppend=0
-JobRequeue=0
-#JobSubmitPlugins=1
-KillOnBadExit=1
-#LaunchType=launch/slurm
-#Licenses=foo*4,bar
-#MailProg=/bin/mail
+JobContainerType=<%= @job_container_type %>
+JobFileAppend=<%= @job_file_append %>
+JobRequeue=<%= @job_requeue %>
+<%= @job_submit_plugins.empty? ? '#JobSubmitPlugins=' : ('JobSubmitPlugins=' + @job_submit_plugins) %>
+KillOnBadExit=<%= @kill_on_bad_exit %>
+LaunchType=<%= @launch_type %>
+<%= @launch_parameters.empty? ? '#LaunchParameters=' : ('LaunchParameters=' + @launch_parameters) %>
+<%= @licenses.empty? ? '#Licenses=' : ('Licenses=' + @licenses) %>
+<%= @node_features_plugins.empty? ? '#NodeFeaturesPlugins=' : ('NodeFeaturesPlugins=' + @node_features_plugins) %>
+MailProg=<%= @mail_prog %>
+<%= @mail_domain.empty? ? '#MailDomain=' : ('MailDomain=' + @mail_domain) %>
 MaxJobCount=<%= @max_job_count %>
-#MaxStepCount=40000
-MaxTasksPerNode=<%= @max_tasks_per_node %>
-MpiDefault=<%= @mpi_default %>
-#MpiParams=ports=#-#
+MaxStepCount=<%= @max_step_count %>
+MemLimitEnforce=<%= @mem_limit_enforce %>
+MsgAggregationParams=<%= @msg_aggregation_params.map{|pair| pair.join('=')}.join(',') %>
 PluginDir=<%= @plugin_dir %>
-PlugStackConfig=<%= @plug_stack_config %>
-PrivateData=<%= @private_data %>
-ProctrackType=<%= @proctrack_type %>
-#Prolog=
-#PrologFlags=
-#PrologSlurmctld=
-#PropagatePrioProcess=0
+<%= @plug_stack_config.empty? ? '#PlugStackConfig=' : ('PlugStackConfig=' + @plug_stack_config) %>
+PowerPlugin=<%= @power_plugin %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @power_parameters.empty? -%>
+#PowerParameters=
+<% else -%>
+PowerParameters=<%= @power_parameters.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+PreemptType=<%= @preempt_type %>
+PreemptMode=<%= @preempt_mode %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @private_data.empty? -%>
+#PrivateData=
+<% else -%>
+PrivateData=<%= @private_data.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+<%= @proctrack_type.empty? ? '#ProctrackType=' : ('ProctrackType=' + @proctrack_type) %>
+PropagatePrioProcess=<%= @propagate_prio_process %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @propagate_resource_limits.empty? -%>
 #PropagateResourceLimits=
-PropagateResourceLimitsExcept=ALL  # do not propagate headnode's resource limits
-RebootProgram=/usr/sbin/reboot
-ReturnToService=1
-#SallocDefaultCommand=
-SlurmctldPidFile=/var/run/slurmctld.pid
+<% else -%>
+PropagateResourceLimits=<%= @propagate_resource_limits.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+<%# comment out if empty, expand array if not                                -%>
+<% if @propagate_resource_limits_except.empty? -%>
+#PropagateResourceLimitsExcept=
+<% else -%>
+PropagateResourceLimitsExcept=<%= @propagate_resource_limits_except.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+<%= @reboot_program.empty? ? '#RebootProgram=' : ('RebootProgram=' + @reboot_program) %>
+<%= @reconfig_flags.empty? ? '#ReconfigFlags=' : ('ReconfigFlags=' + @reconfig_flags) %>
+<%= @resv_epilog.empty? ? '#ResvEpilog=' : ('ResvEpilog=' + @resv_epilog) %>
+<%= @resv_prolog.empty? ? '#ResvProlog=' : ('ResvProlog=' + @resv_prolog) %>
+ReturnToService=<%= @return_to_service %>
+<%= @salloc_default_command.empty? ? '#SallocDefaultCommand=' : ('SallocDefaultCommand=' + @salloc_default_command) %>
+<%# comment out if empty, expand hash if not                                 -%>
+<% if @sbcast_parameters.empty? -%>
+#SbcastParameters=
+<% else -%>
+SbcastParameters=<%= @sbcast_parameters.map{|pair| pair.join('=')}.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+SlurmctldPidFile=<%= @slurmctld_pid_file %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @slurmctld_plugstack.empty? -%>
+#SlurmctldPlugstack=
+<% else -%>
+SlurmctldPlugstack=<%= @slurmctld_plugstack.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 SlurmctldPort=<%= @slurmctld_port %>
-SlurmdPidFile=/var/run/slurmd.pid
+SlurmdPidFile=<%= @slurmd_pid_file %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @slurmd_plugstack.empty? -%>
+#SlurmdPlugstack=
+<% else -%>
+SlurmdPlugstack=<%= @slurmd_plugstack.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 SlurmdPort=<%= @slurmd_port %>
 SlurmdSpoolDir=<%= @slurmd_spool_dir %>
 SlurmUser=<%= @slurm_user %>
-#SlurmdUser=root
-#SrunEpilog=
-#SrunProlog=
+SlurmdUser=<%= @slurmd_user %>
+<%= @srun_epilog.empty? ? '#SrunEpilog=' : ('SrunEpilog=' + @srun_epilog) %>
+<%= @srun_prolog.empty? ? '#SrunProlog=' : ('SrunProlog=' + @srun_prolog) %>
+<%= @srun_port_range.empty? ? '#SrunPortRange=' : ('SrunPortRange=' + @srun_port_range) %>
 StateSaveLocation=<%= @state_save_location %>
-#SwitchType=switch/none
-#TaskEpilog=
-TaskPlugin=<%= @task_plugin %>
-TaskPluginParam=<%= @task_plugin_param %>
-#TaskProlog=
-TopologyPlugin=<%= @topology_plugin %>
-#TmpFS=/tmp
-#TrackWCKey=no
-TreeWidth=<%= @tree_width %>
-UnkillableStepProgram=<%= @unkillable_step_program %>
-#UsePAM=0
-#VSizeFactor=0
+SwitchType=<%= @switch_type %>
+TaskPlugin=<%= @task_plugin.join(',') %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @task_plugin_param.empty? -%>
+#TaskPluginParam=
+<% else -%>
+TaskPluginParam=<%= @task_plugin_param.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+<%= @task_epilog.empty? ? '#TaskEpilog=' : ('TaskEpilog=' + @task_epilog) %>
+<%= @task_prolog.empty? ? '#TaskProlog=' : ('TaskProlog=' + @task_prolog) %>
+TCPTimeout=<%= @tcp_timeout %>
+TmpFS=<%= @tmp_fs %>
+TrackWCKey=<%= @track_wckey %>
+<%= @unkillable_step_program.empty? ? '#UnkillableStepProgram=' : ('UnkillableStepProgram=' + @unkillable_step_program) %>
+
+
+# SECURITY
+AuthType=<%= @auth_type %>
+<%= @auth_info.empty? ? '#AuthInfo=' : ('AuthInfo=' + @auth_info) %>
+CryptoType=<%= @crypto_type %>
+<%= @job_credential_private_key.empty? ? '#JobCredentialPrivateKey=' : ('JobCredentialPrivateKey=' + @job_credential_private_key) %>
+<%= @job_credential_public_certificate.empty? ? '#JobCredentialPublicCertificate=' : ('JobCredentialPublicCertificate=' + @job_credential_public_certificate) %>
+MCSPlugin=<%= @mcs_plugin %>
+<%= @mcs_parameters.empty? ? '#MCSParameters=' : ('MCSParameters=' + @mcs_parameters) %>
+UsePAM=<%= @use_pam %>
 
 
 # TIMERS
-#BatchStartTimeout=10
-#CompleteWait=0
-#EpilogMsgTime=2000
-#GetEnvTimeout=2
-#HealthCheckInterval=0
-#HealthCheckProgram=
-InactiveLimit=0
-KillWait=30
-#MessageTimeout=10
-#ResvOverRun=0
-MinJobAge=300
-#OverTimeLimit=0
-SlurmctldTimeout=120
-SlurmdTimeout=300
-UnkillableStepTimeout=120
-#VSizeFactor=0
-Waittime=0
+BatchStartTimeout=<%= @batch_start_timeout %>
+CompleteWait=<%= @complete_wait %>
+EioTimeout=<%= @eio_timeout %>
+EpilogMsgTime=<%= @epilog_msg_time %>
+GetEnvTimeout=<%= @get_env_timeout %>
+GroupUpdateTime=<%= @group_update_time %>
+InactiveLimit=<%= @inactive_limit %>
+<%= @keep_alive_time==0 ? '#KeepAliveTime=' : ('KeepAliveTime=' + @keep_alive_time) %>
+KillWait=<%= @kill_wait %>
+MessageTimeout=<%= @message_timeout %>
+MinJobAge=<%= @min_job_age %>
+OverTimeLimit=<%= @over_time_limit %>
+PrologEpilogTimeout=<%= @prolog_epilog_timeout %>
+ResvOverRun=<%= @resv_over_run %>
+SlurmctldTimeout=<%= @slurmctld_timeout %>
+SlurmdTimeout=<%= @slurmd_timeout %>
+UnkillableStepTimeout=<%= @unkillable_step_timeout %>
+Waittime=<%= @wait_time %>
 
 
 # SCHEDULING
-DefMemPerCPU=<%= @def_mem_per_cpu %>
-FastSchedule=1
-#MaxMemPerCPU=
-#SchedulerTimeSlice=30
+<%= @def_mem_per_cpu==0 ? '#DefMemPerCPU=' : ('DefMemPerCPU=' + @def_mem_per_cpu) %>
+<%= @def_mem_per_node==0 ? '#DefMemPerNode=' : ('DefMemPerNode=' + @def_mem_per_node) %>
+<%= @epilog.empty? ? '#Epilog=' : ('Epilog=' + @epilog) %>
+<%= @epilog_slurmctld.empty? ? '#EpilogSlurmctld=' : ('EpilogSlurmctld=' + @epilog_slurmctld) %>
+FastSchedule=<%= @fast_schedule %>
+MaxArraySize=<%= @max_array_size %>
+MaxMemPerCPU=<%= @max_mem_per_cpu %>
+MaxMemPerNode=<%= @max_mem_per_node %>
+MaxTasksPerNode=<%= @max_tasks_per_node %>
+MpiDefault=<%= @mpi_default %>
+<%= @mpi_params.empty? ? '#MpiParams=' : ('MpiParams=' + @mpi_params) %>
+<%= @prolog_slurmctld.empty? ? '#PrologSlurmctld=' : ('PrologSlurmctld=' + @prolog_slurmctld) %>
+<%= @prolog.empty? ? '#Prolog=' : ('Prolog=' + @prolog) %>
+<%= @prolog_flags.empty? ? '#PrologFlags=' : ('PrologFlags=' + @prolog_flags) %>
+<%= @requeue_exit.empty? ? '#RequeueExit=' : ('RequeueExit=' + @requeue_exit) %>
+<%= @requeue_exit_hold.empty? ? '#RequeueExitHold=' : ('RequeueExitHold=' + @requeue_exit_hold) %>
+SchedulerTimeSlice=<%= @scheduler_time_slice %>
 SchedulerType=<%= @scheduler_type %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @scheduler_parameters.empty? -%>
+#SchedulerParameters=
+<% else -%>
+SchedulerParameters=<%= @scheduler_parameters.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 SelectType=<%= @select_type %>
-SelectTypeParameters=<%= @select_type_parameters %>
+<%= @select_type_parameters.empty? ? '#SelectTypeParameters=' : ('SelectTypeParameters=' + @select_type_parameters) %>
+VSizeFactor=<%= @vsize_factor %>
 
 
 # JOB PRIORITY
 PriorityType=<%= @priority_type %>
-PriorityFlags=<%= @priority_flags %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @priority_flags.empty? -%>
+#PriorityFlags=
+<% else -%>
+PriorityFlags=<%= @priority_flags.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 PriorityCalcPeriod=<%= @priority_calc_period %>
 PriorityDecayHalfLife=<%= @priority_decay_half_life %>
 PriorityFavorSmall=<%= @priority_favor_small %>
@@ -123,67 +222,125 @@ PriorityMaxAge=<%= @priority_max_age %>
 PriorityUsageResetPeriod=<%= @priority_usage_reset_period %>
 PriorityWeightAge=<%= @priority_weight_age %>
 PriorityWeightFairshare=<%= @priority_weight_fairshare %>
+FairShareDampeningFactor=<%= @fair_share_dampening_factor %>
 PriorityWeightJobSize=<%= @priority_weight_job_size %>
 PriorityWeightPartition=<%= @priority_weight_partition %>
 PriorityWeightQOS=<%= @priority_weight_qos %>
-PriorityWeightTRES=<%= @priority_weight_tres %>
+<%# comment out if empty, process hash otherwise                             -%>
+<% if @priority_weight_tres.empty? -%>
+#PriorityWeightTRES=
+<% else -%>
+PriorityWeightTRES=<%= @priority_weight_tres.map{|pair| pair.join('=')}.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 
 
-# LOGGING AND ACCOUNTING
-#AccountingStorageEnforce=0
-AccountingStorageHost=<%= @accounting_storage_host %>
-AccountingStorageLoc=<%= @accounting_storage_loc %>
-AccountingStoragePass=<%= @accounting_storage_pass %>
+# ACCOUNTING
+<%= @cluster_name.empty? ? '#ClusterName=' : ('ClusterName=' + @cluster_name) %>
+<%= @default_storage_host.empty? ? '#DefaultStorageHost=' : ('DefaultStorageHost=' + @default_storage_host) %>
+DefaultStoragePort=<%= @default_storage_port %>
+<%= @default_storage_type.empty? ? '#DefaultStorageType=' : ('DefaultStorageType=' + @default_storage_type) %>
+<%= @default_storage_user.empty? ? '#DefaultStorageUser=' : ('DefaultStorageUser=' + @default_storage_user) %>
+<%= @default_storage_pass.empty? ? '#DefaultStoragePass=' : ('DefaultStoragePass=' + @default_storage_pass) %>
+<%= @default_storage_loc.empty? ? '#DefaultStorageLoc=' : ('DefaultStorageLoc=' + @default_storage_loc) %>
+<%= @accounting_storage_host.empty? ? '#AccountingStorageHost=' : ('AccountingStorageHost=' + @accounting_storage_host) %>
+<%= @accounting_storage_backup_host.empty? ? '#AccountingStorageBackupHost=' : ('AccountingStorageBackupHost=' + @accounting_storage_backup_host) %>
 AccountingStoragePort=<%= @accounting_storage_port %>
+<%= @accounting_storage_enforce.empty? ? '#AccountingStorageEnforce=' : ('AccountingStorageEnforce=' + @accounting_storage_enforce) %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @accounting_storage_tres.empty? -%>
+#AccountingStorageTRES=
+<% else -%>
+AccountingStorageTRES=<%= @accounting_storage_tres.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 AccountingStorageType=<%= @accounting_storage_type %>
-AccountingStorageUser=<%= @accounting_storage_user %>
-#AccountingStoreJobComment=NO # YES
-ClusterName=<%= @cluster_name %>
-#DebugFlags=
-#JobCompHost=
-#JobCompLoc=
-#JobCompPass=
-#JobCompPort=
-#JobCompType=jobcomp/none
-#JobCompUser=
-#JobContainerType=job_container/none
-JobAcctGatherFrequency=<%= @job_acct_gather_frequency %>
+<%= @accounting_storage_user.empty? ? '#AccountingStorageUser=' : ('AccountingStorageUser=' + @accounting_storage_user) %>
+<%= @accounting_storage_pass.empty? ? '#AccountingStoragePass=' : ('AccountingStoragePass=' + @accounting_storage_pass) %>
+<%= @accounting_storage_loc.empty? ? '#AccountingStorageLoc=' : ('AccountingStorageLoc=' + @accounting_storage_loc) %>
+AccountingStoreJobComment=<%= @accounting_store_jobhost %>
+JobCompType=<%= @job_comp_type %>
+<%= @job_comp_host.empty? ? '#JobCompHost=' : ('JobCompHost=' + @job_comp_host) %>
+JobCompPort=<%= @job_comp_port %>
+<%= @job_comp_user.empty? ? '#JobCompUser=' : ('JobCompUser=' + @job_comp_user) %>
+<%= @job_comp_pass.empty? ? '#JobCompPass=' : ('JobCompPass=' + @job_comp_pass) %>
+<%= @job_comp_loc.empty? ? '#JobCompLoc=' : ('JobCompLoc=' + @job_comp_loc) %>
 JobAcctGatherType=<%= @job_acct_gather_type %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @job_acct_gather_params.empty? -%>
+#JobAcctGatherParams=
+<% else -%>
+JobAcctGatherParams=<%= @job_acct_gather_params.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+<%# comment out if empty, process hash otherwise                             -%>
+<% if @job_acct_gather_frequency.empty? -%>
+#JobAcctGatherFrequency=
+<% else -%>
+JobAcctGatherFrequency=<%= @job_acct_gather_frequency.map{|pair| pair.join('=')}.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 AcctGatherNodeFreq=<%= @acct_gather_node_freq %>
 AcctGatherEnergyType=<%= @acct_gather_energy_type %>
 AcctGatherInfinibandType=<%= @acct_gather_infiniband_type %>
 AcctGatherFilesystemType=<%= @acct_gather_filesystem_type %>
 AcctGatherProfileType=<%= @acct_gather_profile_type %>
+
+
+# LOGGING
+<%# comment out if empty, expand array if not                                -%>
+<% if @debug_flags.empty? -%>
+#DebugFlags=
+<% else -%>
+DebugFlags=<%= @debug_flags.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+LogTimeFormat=<%= @log_time_format %>
 SlurmctldDebug=<%= @slurmctld_debug %>
-SlurmctldLogFile=<%= @slurmctld_log_file %>
+<%= @slurmctld_log_file.empty? ? '#SlurmctldLogFile=' : ('SlurmctldLogFile=' + @slurmctld_log_file) %>
 SlurmdDebug=<%= @slurmd_debug %>
-SlurmdLogFile=<%= @slurmd_log_file %>
-# Note, these two were commented and the loglevel is named differently. Check if works.
-#SlurmSchedLogFile=
-#SlurmSchedLogLevel=
+<%= @slurmd_log_file.empty? ? '#SlurmdLogFile=' : ('SlurmdLogFile=' + @slurmd_log_file) %>
+SlurmSchedLogLevel=<%= @slurm_sched_log_level %>
+<%= @slurm_sched_log_file.empty? ? '#SlurmSchedLogFile=' : ('SlurmSchedLogFile=' + @slurm_sched_log_file) %>
 
 
-# POWER SAVE SUPPORT FOR IDLE NODES (optional)
-#SuspendProgram=
-#ResumeProgram=
-#SuspendTimeout=
-#ResumeTimeout=
-#ResumeRate=
-#SuspendExcNodes=
-#SuspendExcParts=
-#SuspendRate=
-#SuspendTime=
+# HEALTH CHECK
+<%= @health_check_program.empty? ? '#HealthCheckProgram=' : ('HealthCheckProgram=' + @health_check_program) %>
+HealthCheckNodeState=<%= @health_check_node_state %>
+HealthCheckInterval=<%= @health_check_interval %>
+
+
+# POWER SAVE SUPPORT FOR IDLE NODES
+<%= @suspend_program.empty? ? '#SuspendProgram=' : ('SuspendProgram=' + @suspend_program) %>
+SuspendTimeout=<%= @suspend_timeout %>
+SuspendRate=<%= @suspend_rate %>
+SuspendTime=<%= @suspend_time %>
+<%= @suspend_exc_nodes.empty? ? '#SuspendExcNodes=' : ('SuspendExcNodes=' + @suspend_exc_nodes) %>
+<%= @suspend_exc_parts.empty? ? '#SuspendExcParts=' : ('SuspendExcParts=' + @suspend_exc_parts) %>
+<%= @resume_program.empty? ? '#ResumeProgram=' : ('ResumeProgram=' + @resume_program) %>
+ResumeTimeout=<%= @resume_timeout %>
+ResumeRate=<%= @resume_rate %>
+
+
+# TOPOLOGY
+TopologyPlugin=<%= @topology_plugin %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @topology_param.empty? -%>
+#TopologyParam=
+<% else -%>
+TopologyParam=<%= @topology_param.join(',') %>
+<% end -%>
+<%#                                                                          -%>
+RoutePlugin=<%= @route_plugin %>
+TreeWidth=<%= @tree_width %>
+
 
 # COMPUTE NODES
 <% @workernodes.each do |workernode| %>
-<% workernode.each_pair do |key, value| -%>
-<%= key %>=<%= value -%><%= ' '-%>
-<% end %>
-<% end %>
+<%= workernode.map{|pair| pair.join('=')}.join(' ') %>
+<% end -%>
 
 # PARTITIONS
 <% @partitions.each do |partition| %>
-<% partition.each_pair do |key,value| -%>
-<%= key %>=<%= value -%><%= ' ' -%>
-<% end %>
-<% end %>
+<%= partition.map{|pair| pair.join('=')}.join(' ') %>
+<% end -%>
