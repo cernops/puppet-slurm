@@ -85,7 +85,7 @@ This feature is currently not available since the main project, i.e. BLCR, has b
 The database for SLURM is used solely for accounting purposes. The module supports a setup with a database node either separate from or combined with a headnode. The database configuration is done in the [dbnode](manifests/dbnode) manifests.
 
 The main configuration values (as defined in [slurm.conf](#slurm.conf.erb) and [slurmdbd.conf](#slurmdbd.conf.erb) for the database are the following:
-```
+```ruby
 # class slurm::config
 String $accounting_storage_host     = 'accountingdb.example.org',                 # DB node hostname
 String $accounting_storage_loc      = 'slurm_acct_db',                            # DB name (inside the MySQL DB)
@@ -182,7 +182,7 @@ Please refer to the official [SLURM documentation](https://slurm.schedmd.com/).
 # References
 
 ## slurm
-```
+```ruby
 class slurm (
   String $node_type = '',
 )
@@ -191,7 +191,7 @@ This is the main class which switches through the type classes according to node
 
 
 ## slurm::setup
-```
+```ruby
 class slurm::setup (
   Integer[0,default] $slurm_gid = 950,
   Integer[0,default] $slurm_uid = 950,
@@ -210,7 +210,7 @@ This is the setup class, common to all types of nodes, which sets up all the fol
 
 
 ## slurm::config
-```
+```ruby
 class slurm::config (
   String[1,default] $control_machine = 'headnode1.example.org',
   String[0,default] $control_addr = $control_machine,
@@ -428,7 +428,7 @@ This is the configuration class, common to all types of nodes, which creates the
 
 
 ### slurm::config::acct_gather
-```
+```ruby
 class slurm::config::acct_gather (
   Boolean $with_energy_ipmi = false,
   Integer[0,default] $energy_ipmi_frequency = 10,
@@ -446,7 +446,7 @@ class slurm::config::acct_gather (
 
 
 ### slurm::config::cgroup
-```
+```ruby
 class slurm::config::cgroup (
   Enum['no','yes'] $cgroup_automount = 'no',
   String[1,default] $cgroup_mountpoint = '/sys/fs/cgroup',
@@ -470,7 +470,7 @@ class slurm::config::cgroup (
 
 
 ### slurm::config::topology
-```
+```ruby
 class slurm::config::topology (
   Array[Hash[String, String]] $switches = [{
     'SwitchName' => 's0',
@@ -481,14 +481,14 @@ class slurm::config::topology (
 
 
 ## slurm::dbnode
-```
+```ruby
 class slurm::dbnode ()
 ```
 Setup, configure and install the dbnode.
 
 
 ### slurm::dbnode::setup
-```
+```ruby
 class slurm::dbnode::setup (
   String[1,default] $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
   Array[String] $packages = [
@@ -502,7 +502,7 @@ Setup the dbnode.
 
 
 ### slurm::dbnode::config
-```
+```ruby
 class slurm::dbnode::config (
   String[1,default] $file_name = 'slurmdbd.conf',
   String[1,default] $dbd_host = 'localhost',
@@ -553,21 +553,21 @@ Configure the dbnode.
 
 
 ### slurm::dbnode::firewall
-```
+```ruby
 class slurm::dbnode::firewall ()
 ```
 Open the port used for DB communication on the DB node.
 
 
 ## slurm::headnode
-```
+```ruby
 class slurm::headnode ()
 ```
 Setup, configure and install the headnode.
 
 
 ### slurm::headnode::setup
-```
+```ruby
 class slurm::headnode::setup (
   String[1,default] $slurmctld_spool_dir = '/var/spool/slurmctld',
   String[1,default] $state_save_location = '/var/spool/slurmctld/slurm.state',
@@ -584,27 +584,27 @@ Setup the headnode.
 
 
 ### slurm::headnode::config
-```
+```ruby
 class slurm::headnode::config ()
 ```
 Configure the headnode.
 
 ### slurm::headnode::firewall
-```
+```ruby
 class slurm::headnode::firewall ()
 ```
 Setup the firewall for the headnode.
 
 
 ## slurm::workernode
-```
+```ruby
 class slurm::workernode ()
 ```
 Setup, configure and installs the workernode.
 
 
 ### slurm::workernode::setup
-```
+```ruby
 class slurm::workernode::setup (
   String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
   String[1,default] $slurmd_log_file = '/var/log/slurm/slurmd.log',
@@ -620,14 +620,14 @@ Setup the workernode.
 
 
 ### slurm::workernode::config
-```
+```ruby
 class slurm::workernode::config ()
 ```
 Configure the workernode.
 
 
 ### slurm::workernode::firewall
-```
+```ruby
 class slurm::workernode::firewall ()
 ```
 Setup the firewall for the workernode.
