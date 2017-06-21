@@ -25,7 +25,7 @@
 class slurm::setup (
   Integer[0,default] $slurm_gid = 950,
   Integer[0,default] $slurm_uid = 950,
-  String[1,default] $slurm_home_loc      = '/usr/local/slurm',
+  String[1,default] $slurm_home_loc = '/usr/local/slurm',
   String[1,default] $slurm_log_file = '/var/log/slurm',
   String[1,default] $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
   Integer[0,default] $munge_gid = 951,

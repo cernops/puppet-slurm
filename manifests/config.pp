@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurm.conf.html
 #
-# version 20170620
+# version 20170621
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -78,7 +78,7 @@ class slurm::config (
   String[0,default] $srun_epilog = '',
   String[0,default] $srun_prolog = '',
   String[0,default] $srun_port_range = '',
-  String[1,default] $state_save_location = '/var/spool',
+  String[1,default] $state_save_location = '/var/spool/slurmctld',
   Enum['switch/none','switch/nrt'] $switch_type = 'switch/none',
   Array[Enum['task/affinity','task/cgroup','task/none']] $task_plugin = ['task/none'],
   Array[Enum['Boards','Cores','Cpusets','None','Sched','Sockets','Threads','Verbose','Autobind']] $task_plugin_param = ['Sched'],
