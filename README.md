@@ -189,114 +189,296 @@ class slurm (
 ```
 This is the main class which switches through the type classes according to node_type parameter.
 
+
 ## slurm::setup
 ```
 class slurm::setup (
-  Integer $slurm_gid          = 950,
-  Integer $slurm_uid          = 950,
-  String $slurm_home_loc      = '/usr/local/slurm',
-  String $slurm_log_file      = '/var/log/slurm',
-  String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
-  String $slurm_private_key   = 'slurmkey',
-  String $slurm_public_key    = 'slurmcert',
-  Integer $munge_gid          = 951,
-  Integer $munge_uid          = 951,
-  String $munge_loc           = '/etc/munge',
-  String $munge_log_file      = '/var/log/munge',
-  String $munge_home_loc      = '/var/lib/munge',
-  String $munge_run_loc       = '/run/munge',
-  String $munge_shared_key    = 'mungekey',
-  Array $packages = [
-    'slurm',
-    'slurm-devel',
-    'slurm-munge',
-    'munge',
-    'munge-libs',
-    'munge-devel',
-  ],
-)
+  Integer[0,default] $slurm_gid = 950,
+  Integer[0,default] $slurm_uid = 950,
+  String[1,default] $slurm_home_loc      = '/usr/local/slurm',
+  String[1,default] $slurm_log_file = '/var/log/slurm',
+  String[1,default] $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  Integer[0,default] $munge_gid = 951,
+  Integer[0,default] $munge_uid = 951,
+  String[1,default] $munge_loc = '/etc/munge',
+  String[1,default] $munge_log_file = '/var/log/munge',
+  String[1,default] $munge_home_loc = '/var/lib/munge',
+  String[1,default] $munge_run_loc = '/run/munge',
+) inherits slurm::config
 ```
-
 This is the setup class, common to all types of nodes, which sets up all the folders and keys needed by SLURM to work correctly. For more details about each parameter, please refer to the header of [setup.pp](manifest/setup.pp).
+
 
 ## slurm::config
 ```
 class slurm::config (
-  String $control_machine                   = 'headnode1.example.org',
-  String $backup_controller                 = 'headnode2.example.org',
-  String $auth_type                         = 'auth/munge',
-  String $checkpoint_type                   = 'checkpoint/none',
-  String $crypto_type                       = 'crypto/munge',
-  String $job_checkpoint_dir                = '/var/slurm/checkpoint',
-  String $job_credential_private_key        = '/usr/local/slurm/credentials/slurm.key',
-  String $job_credential_public_certificate = '/usr/local/slurm/credentials/slurm.cert',
-  Integer $max_tasks_per_node               = 32,
-  String $mpi_default                       = 'pmi2',
-  Integer $max_job_count                    = 5000,
-  String $plugin_dir                        = '/usr/lib64/slurm',
-  String $plug_stack_config                 = '/etc/slurm/plugstack.conf',
-  String $private_data                      = 'cloud',
-  String $proctrack_type                    = 'proctrack/pgid',
-  Integer $slurmctld_port                   = 6817,
-  Integer $slurmd_port                      = 6818,
-  String $slurmd_spool_dir                  = '/var/spool/slurmd',
-  String $state_save_location               = '/var/spool/slurmctld/slurm.state',
-  String $task_plugin                       = 'task/none',
-  String $task_plugin_param                 = 'Sched',
-  String $topology_plugin                   = 'topology/none',
-  Integer $tree_width                       = 50,
-  String $unkillable_step_program           = '/usr/bin/echo',
-  Integer $def_mem_per_cpu                  = 4000,
-  String $scheduler_type                    = 'sched/backfill',
-  String $select_type                       = 'select/cons_res',
-  String $select_type_parameters            = 'CR_CPU_Memory',
-  String $priority_type                     = 'priority/basic',
-  String $priority_flags                    = 'SMALL_RELATIVE_TO_TIME',
-  Integer $priority_calc_period             = 5,
-  String $priority_decay_half_life          = '7-0',
-  String $priority_favor_small              = 'NO',
-  String $priority_max_age                  = '7-0',
-  String $priority_usage_reset_period       = 'NONE',
-  Integer $priority_weight_age              = 0,
-  Integer $priority_weight_fairshare        = 0,
-  Integer $priority_weight_job_size         = 0,
-  Integer $priority_weight_partition        = 0,
-  Integer $priority_weight_qos              = 0,
-  String $priority_weight_tres              = 'CPU=0,Mem=0',
-  String $slurm_user                        = 'slurm',
-  String $accounting_storage_host           = 'accountingdb.example.org',
-  String $accounting_storage_loc            = 'slurm_acct_db',
-  String $accounting_storage_pass           = '/var/run/munge/munge.socket.2',
-  Integer $accounting_storage_port          = 6819,
-  String $accounting_storage_type           = 'accounting_storage/none',
-  String $accounting_storage_user           = 'slurm',
-  String $cluster_name                      = 'mycluster',
-  String $job_acct_gather_frequency         = 'task=30,energy=0,network=0,filesystem=0',
-  String $job_acct_gather_type              = 'jobacct_gather/none',
-  Integer $acct_gather_node_freq            = 0,
-  String $acct_gather_energy_type           = 'acct_gather_energy/none',
-  String $acct_gather_infiniband_type       = 'acct_gather_infiniband/none',
-  String $acct_gather_filesystem_type       = 'acct_gather_filesystem/none',
-  String $acct_gather_profile_type          = 'acct_gather_profile/none',
-  String $slurmctld_debug                   = 'info',
-  String $slurmctld_log_file                = '/var/log/slurm/slurmctld.log',
-  String $slurmd_debug                      = 'info',
-  String $slurmd_log_file                   = '/var/log/slurm/slurmd.log',
-  Array $workernodes = [{
+  String[1,default] $control_machine = 'headnode1.example.org',
+  String[0,default] $control_addr = $control_machine,
+  String[0,default] $backup_controller = '',
+  String[0,default] $backup_addr = $backup_controller,
+  Integer[0,1] $allow_spec_resources_usage = 0,
+  Enum['burst_buffer/none'] $burst_buffer_type = 'burst_buffer/none',
+  Enum['checkpoint/blcr','checkpoint/none','checkpoint/ompi','checkpoint/poe'] $checkpoint_type= 'checkpoint/none',
+  String[0,default] $chos_loc = '',
+  Enum['core_spec/cray','core_spec/none'] $core_spec_plugin = 'core_spec/none',
+  Enum['Conservative','OnDemand','Performance','PowerSave'] $cpu_freq_def = 'Performance',
+  Array[Enum['Conservative','OnDemand','Performance','PowerSave','UserSpace']] $cpu_freq_governors = ['OnDemand','Performance'],
+  Enum['NO','YES'] $disable_root_jobs = 'NO',
+  Enum['NO','YES'] $enforce_part_limits = 'NO',
+  Enum['ext_sensors/none','ext_sensors/rrd'] $ext_sensors_type = 'ext_sensors/none',
+  Integer[0,default] $ext_sensors_freq = 0,
+  Integer[1,default] $first_job_id = 1,
+  Integer[1,default] $max_job_id = 999999,
+  Array[String[1,default]] $gres_types = [],
+  Integer[0,1] $group_update_force = 0,
+  String[1,default] $job_checkpoint_dir = '/var/slurm/checkpoint',
+  Enum['job_container/cncu','job_container/none'] $job_container_type = 'job_container/none',
+  Integer[0,1] $job_file_append = 0,
+  Integer[0,1] $job_requeue = 0,
+  Array[String[1,default]] $job_submit_plugins = [],
+  Integer[0,1] $kill_on_bad_exit = 0,
+  Enum['launch/aprun','launch/poe','launch/runjob','launch/slurm'] $launch_type = 'launch/slurm',
+  Array[Enum['mem_sort','slurmstepd_memlock','slurmstepd_memlock_all','test_exec']] $launch_parameters = [],
+  Array[String[1,default]] $licenses = [],
+  Enum['node_features/knl_cray','node_features/knl_generic',''] $node_features_plugins = '',
+  String[1,default] $mail_prog = '/bin/mail',
+  String[0,default] $mail_domain = '',
+  Integer[1,default] $max_job_count = 10000,
+  Integer[1,default] $max_step_count = 40000,
+  Enum['no','yes'] $mem_limit_enforce = 'yes',
+  Hash[Enum['WindowMsgs','WindowTime'],Integer[1,default]] $msg_aggregation_params = {'WindowMsgs' => 1, 'WindowTime' => 100},
+  String[1,default] $plugin_dir = '/usr/local/lib/slurm',
+  String[0,default] $plug_stack_config = '',
+  Enum['power/cray','power/none'] $power_plugin = 'power/none',
+  Array[String[1,default]] $power_parameters = [],
+  Enum['preempt/none','preempt/partition_prio','preempt/qos'] $preempt_type = 'preempt/none',
+  Array[Enum['OFF','CANCEL','CHECKPOINT','GANG','REQUEUE','SUSPEND']] $preempt_mode = ['OFF'],
+  Array[Enum['accounts','cloud','jobs','nodes','partitions','reservations','usage','users']] $private_data = [],
+  Enum['proctrack/cgroup','proctrack/cray','proctrack/linuxproc','proctrack/lua','proctrack/sgi_job','proctrack/pgid',''] $proctrack_type = '',
+  Integer[0,2] $propagate_prio_process = 0,
+  Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']] $propagate_resource_limits = [],
+  Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']] $propagate_resource_limits_except = [],
+  String[0,default] $reboot_program = '',
+  Enum['KeepPartInfo','KeepPartState',''] $reconfig_flags = '',
+  String[0,default] $resv_epilog = '',
+  String[0,default] $resv_prolog = '',
+  Integer[0,2] $return_to_service = 0,
+  String[0,default] $salloc_default_command = '',
+  Hash[Enum['DestDir','Compression'],String[1,default]] $sbcast_parameters = {},
+  String[1,default] $slurmctld_pid_file = '/var/run/slurmctld.pid',
+  Array[String[1,default]] $slurmctld_plugstack = [],
+  Integer[1,default] $slurmctld_port= 6817,
+  String[1,default] $slurmd_pid_file = '/var/run/slurmd.pid',
+  Array[String[1,default]] $slurmd_plugstack = [],
+  Integer[1,default] $slurmd_port = 6818,
+  String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
+  String[1,default] $slurm_user = 'root',
+  String[1,default] $slurmd_user = 'root',
+  String[0,default] $srun_epilog = '',
+  String[0,default] $srun_prolog = '',
+  String[0,default] $srun_port_range = '',
+  String[1,default] $state_save_location = '/var/spool',
+  Enum['switch/none','switch/nrt'] $switch_type = 'switch/none',
+  Array[Enum['task/affinity','task/cgroup','task/none']] $task_plugin = ['task/none'],
+  Array[Enum['Boards','Cores','Cpusets','None','Sched','Sockets','Threads','Verbose','Autobind']] $task_plugin_param = ['Sched'],
+  String[0,default] $task_epilog = '',
+  String[0,default] $task_prolog = '',
+  Integer[1,default] $tcp_timeout = 2,
+  String[1,default] $tmp_fs = '/tmp',
+  Enum['no','yes'] $track_wckey = 'no',
+  String[0,default] $unkillable_step_program = '',
+
+  Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
+  String[0,default] $auth_info = '',
+  Enum['crypto/munge','crypto/openssl'] $crypto_type = 'crypto/munge',
+  String[0,default] $job_credential_private_key = '',
+  String[0,default] $job_credential_public_certificate = '',
+  Enum['mcs/account','mcs/group','mcs/none','mcs/user'] $mcs_plugin = 'mcs/none',
+  String[0,default] $mcs_parameters = '',
+  Integer[0,1] $use_pam = 0,
+
+  Integer[0,default] $batch_start_timeout = 10,
+  Integer[0,default] $complete_wait = 0,
+  Integer[0,default] $eio_timeout = 60,
+  Integer[0,default] $epilog_msg_time = 2000,
+  Integer[0,default] $get_env_timeout = 2,
+  Integer[0,default] $group_update_time = 600,
+  Integer[0,default] $inactive_limit = 0,
+  Integer[0,default] $keep_alive_time = 0,
+  Integer[0,default] $kill_wait = 30,
+  Integer[0,default] $message_timeout = 10,
+  Integer[2,default] $min_job_age = 300,
+  Integer[0,default] $over_time_limit = 0,
+  Integer[0,default] $prolog_epilog_timeout = 0,
+  Integer[0,default] $resv_over_run = 0,
+  Integer[0,default] $slurmctld_timeout = 120,
+  Integer[0,default] $slurmd_timeout = 300,
+  Integer[0,default] $unkillable_step_timeout = 60,
+  Integer[0,default] $wait_time = 0,
+
+  Integer[0,default] $def_mem_per_cpu = 0,
+  Integer[0,default] $def_mem_per_node = 0,
+  String[0,default] $epilog = '',
+  String[0,default] $epilog_slurmctld = '',
+  Integer[0,2] $fast_schedule = 1,
+  Integer[0,default] $max_array_size = 1001,
+  Integer[0,default] $max_mem_per_cpu = 0,
+  Integer[0,default] $max_mem_per_node = 0,
+  Integer[0,default] $max_tasks_per_node = 512,
+  Enum['lam','mpich1_p4','mpich1_shmem','mpichgm','mpichmx','mvapich','none','openmpi','pmi2'] $mpi_default = 'none',
+  Hash[Enum['ports'],String[1,default]] $mpi_params = {},
+  String[0,default] $prolog_slurmctld = '',
+  String[0,default] $prolog = '',
+  Array[Enum['Alloc','Contain','NoHold']] $prolog_flags = [],
+  String[0,default] $requeue_exit = '',
+  String[0,default] $requeue_exit_hold = '',
+  Integer[0,default] $scheduler_time_slice = 30,
+  Enum['sched/backfill','sched/builtin','sched/hold'] $scheduler_type = 'sched/backfill',
+  Array[String[1,default]] $scheduler_parameters = [],
+  Enum['select/bluegene','select/cons_res','select/cray','select/linear','select/serial'] $select_type = 'select/linear',
+  Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory',''] $select_type_parameters = '',
+  Integer[0,default] $vsize_factor = 0,
+
+  Enum['priority/basic','priority/multifactor'] $priority_type = 'priority/basic',
+  Array[Enum['ACCRUE_ALWAYS','CALCULATE_RUNNING','DEPTH_OBLIVIOUS','FAIR_TREE','INCR_ONLY','MAX_TRES','SMALL_RELATIVE_TO_TIME']] $priority_flags = [],
+  Integer[0,default] $priority_calc_period = 5,
+  String[0,default] $priority_decay_half_life = '7-0',
+  Enum['NO','YES'] $priority_favor_small = 'NO',
+  String[0,default] $priority_max_age = '7-0',
+  Enum['NONE','NOW','DAILY','WEEKLY','MONTHLY','QUARTERLY','YEARLY'] $priority_usage_reset_period = 'NONE',
+  Integer[0,default] $priority_weight_age = 0,
+  Integer[0,default] $priority_weight_fairshare = 0,
+  Integer[0,default] $fair_share_dampening_factor = 1,
+  Integer[0,default] $priority_weight_job_size = 0,
+  Integer[0,default] $priority_weight_partition = 0,
+  Integer[0,default] $priority_weight_qos = 0,
+  Hash[String[1,default],Integer[0,default]] $priority_weight_tres = {},
+
+  String[0,default] $cluster_name = '',
+  String[0,default] $default_storage_host = '',
+  Integer[0,default] $default_storage_port = 6819,
+  String[0,default] $default_storage_type = '',
+  String[0,default] $default_storage_user = '',
+  String[0,default] $default_storage_pass = '',
+  String[0,default] $default_storage_loc = '',
+  String[0,default] $accounting_storage_host = '',
+  String[0,default] $accounting_storage_backup_host = '',
+  Integer[0,default] $accounting_storage_port = 6819,
+  String[0,default] $accounting_storage_enforce = '',
+  Array[String[1,default]] $accounting_storage_tres = [],
+  Enum['accounting_storage/filetxt','accounting_storage/mysql','accounting_storage/none','accounting_storage/slurmdbd'] $accounting_storage_type = 'accounting_storage/none',
+  String[0,default] $accounting_storage_user = '',
+  String[0,default] $accounting_storage_pass = '',
+  String[0,default] $accounting_storage_loc = '',
+  Enum['NO','YES'] $accounting_store_jobhost = 'YES',
+  Enum['jobcomp/none','jobcomp/elasticsearch','jobcomp/filetxt','jobcomp/mysql','jobcomp/script'] $job_comp_type = 'jobcomp/none',
+  String[0,default] $job_comp_host = '',
+  Integer[0,default] $job_comp_port = 6819,
+  String[0,default] $job_comp_user = '',
+  String[0,default] $job_comp_pass = '',
+  String[0,default] $job_comp_loc = '',
+  Enum['jobacct_gather/linux','jobacct_gather/cgroup','jobacct_gather/none'] $job_acct_gather_type = 'jobacct_gather/none',
+  Array[Enum['NoShared','UsePss','NoOverMemoryKill']] $job_acct_gather_params = [],
+  Hash[Enum['task','energy','network','filesystem'],Integer[0,default]] $job_acct_gather_frequency = {'task' => 30,'energy' => 0,'network' => 0,'filesystem' => 0},
+  Integer[0,default] $acct_gather_node_freq = 0,
+  Enum['acct_gather_energy/none','acct_gather_energy/ipmi','acct_gather_energy/rapl'] $acct_gather_energy_type = 'acct_gather_energy/none',
+  Enum['acct_gather_infiniband/none','acct_gather_infiniband/ofed'] $acct_gather_infiniband_type = 'acct_gather_infiniband/none',
+  Enum['acct_gather_filesystem/none','acct_gather_filesystem/lustre'] $acct_gather_filesystem_type = 'acct_gather_filesystem/none',
+  Enum['acct_gather_profile/none','acct_gather_profile/hdf5'] $acct_gather_profile_type = 'acct_gather_profile/none',
+
+  Array[String[1,default]] $debug_flags = [],
+  Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmctld_debug = 'info',
+  String[0,default] $slurmctld_log_file = '',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmd_debug = 'info',
+  String[0,default] $slurmd_log_file = '',
+  Integer[0,1] $slurm_sched_log_level = 0,
+  String[0,default] $slurm_sched_log_file = '',
+
+  String[0,default] $health_check_program = '',
+  Enum['ALLOC','ANY','CYCLE','IDLE','MIXED'] $health_check_node_state = 'ANY',
+  Integer[0,default] $health_check_interval = 0,
+
+  String[0,default] $suspend_program = '',
+  Integer[0,default] $suspend_timeout = 30,
+  Integer[0,default] $suspend_rate = 60,
+  Integer[-1,default] $suspend_time = -1,
+  String[0,default] $suspend_exc_nodes = '',
+  String[0,default] $suspend_exc_parts = '',
+  String[0,default] $resume_program = '',
+  Integer[0,default] $resume_timeout = 60,
+  Integer[0,default] $resume_rate = 300,
+
+  Enum['topology/3d_torus','topology/node_rank','topology/none','topology/tree'] $topology_plugin= 'topology/none',
+  Array[Enum['Dragonfly','NoCtldInAddrAny','NoInAddrAny','TopoOptional']] $topology_param = ['NoCtldInAddrAny','NoInAddrAny'],
+  Enum['route/default','route/topology'] $route_plugin = 'route/default',
+  Integer[1,default] $tree_width = 50,
+
+  Array[Hash] $workernodes = [{
     'NodeName' => 'worker[00-10]',
     'CPUs' => '16',
   }],
-  Array $partitions = [{
+  Array[Hash] $partitions = [{
     'PartitionName' => 'workers',
     'MaxMemPerCPU' => '2000',
   }],
-  Array $switches = [{
+)
+```
+This is the configuration class, common to all types of nodes, which creates the main slurm.conf configuration file and all the files needed by the different plugins. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html).
+
+
+### slurm::config::acct_gather
+```
+class slurm::config::acct_gather (
+  Boolean $with_energy_ipmi = false,
+  Integer[0,default] $energy_ipmi_frequency = 10,
+  Enum['no','yes'] $energy_ipmi_calc_adjustment = 'no',
+  Hash[String,String] $energy_ipmi_power_sensors = {},
+  String[0,default] $energy_ipmi_username = '',
+  String[0,default] $energy_ipmi_password = '',
+  Boolean $with_profile_hdf5 = false,
+  String[0,default] $profile_hdf5_dir = '',
+  String[1,default] $profile_hdf5_default = 'None',
+  Boolean $with_infiniband_ofed = false,
+  Integer[0,default] $infiniband_ofed_port = 1,
+)
+```
+
+
+### slurm::config::cgroup
+```
+class slurm::config::cgroup (
+  Enum['no','yes'] $cgroup_automount = 'no',
+  String[1,default] $cgroup_mountpoint = '/sys/fs/cgroup',
+  Enum['no','yes'] $constrain_cores = 'no',
+  Enum['no','yes'] $task_affinity = 'no',
+  Enum['no','yes'] $constrain_ram_space = 'no',
+  Float[0,100] $allowed_ram_space = 100.0,
+  Float[0,default] $min_ram_space = 30.0,
+  Float[0,100] $max_ram_percent = 100.0,
+  Enum['no','yes'] $constrain_swap_space = 'no',
+  Float[0,100] $allowed_swap_space = 0.0,
+  Float[0,100] $max_swap_percent = 100.0,
+  Enum['no','yes'] $constrain_kmem_space = 'yes',
+  Float[0,100] $allowed_kmem_space = 1.0,
+  Float[0,default] $min_kmem_space = 30.0,
+  Float[0,100] $max_kmem_percent = 100.0,
+  Enum['no','yes'] $constrain_devices = 'no',
+  String[1,default] $allowed_devices_file = '/etc/slurm/cgroup_allowed_devices_file.conf',
+)
+```
+
+
+### slurm::config::topology
+```
+class slurm::config::topology (
+  Array[Hash[String, String]] $switches = [{
     'SwitchName' => 's0',
     'Nodes' => 'worker[00-10]',
   }],
 )
 ```
-This is the configuration class, common to all types of nodes, which creates the main slurm.conf configuration file and all the files needed by the different plugins. For more details about each parameter, please refer to the header of [config.pp](manifest/config.pp).
+
 
 ## slurm::dbnode
 ```
@@ -308,8 +490,8 @@ Setup, configure and install the dbnode.
 ### slurm::dbnode::setup
 ```
 class slurm::dbnode::setup (
-  String $slurmdbd_log_file  = '/var/log/slurm/slurmdbd.log',
-  Array $packages = [
+  String[1,default] $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
+  Array[String] $packages = [
     'slurm-plugins',
     'slurm-slurmdbd',
     'slurm-sql',
@@ -322,24 +504,59 @@ Setup the dbnode.
 ### slurm::dbnode::config
 ```
 class slurm::dbnode::config (
-  String $dbd_host      = 'localhost',
-  Integer $dbd_port     = $slurm::config::accounting_storage_port,
-  String $slurm_user    = $slurm::config::slurm_user,
-  String $storage_host  = 'db_instance.example.org',
-  Integer $storage_port = 1234,
-  String $storage_user  = 'user',
-  String $storage_loc   = 'accountingdb',
+  String[1,default] $file_name = 'slurmdbd.conf',
+  String[1,default] $dbd_host = 'localhost',
+  String[1,default] $dbd_addr = $dbd_host,
+  String[0,default] $dbd_backup_host = '',
+  Integer[0,default] $dbd_port = $slurm::config::accounting_storage_port,
+  Enum['auth/none','auth/munge'] $auth_type = 'auth/none',
+  String[0,default] $auth_info = '',
+  String[0,default] $default_qos = '',
+  Integer[0,default] $message_timeout = 10,
+  String[1,default] $pid_file = '/var/run/slurmdbd.pid',
+  String[1,default] $plugin_dir = '/usr/local/lib/slurm' ,
+  String[0,default] $private_data = '',
+  String[1,default] $slurm_user = $slurm::config::slurm_user,
+  Integer[0,default] $tcp_timeout = 2,
+  Enum['no','yes'] $track_wc_key = 'no',
+  Enum['no','yes'] $track_slurmctld_down = 'no',
+  Enum['accounting_storage/mysql'] $storage_type = 'accounting_storage/mysql',
+  String[1,default] $storage_host = 'db_instance.example.org',
+  String[0,default] $storage_backup_host = '',
+  Integer[0,default] $storage_port = 1234,
+  String[1,default] $storage_user = 'user',
+  String[1,default] $storage_pass = 'CHANGEME__storage_pass',
+  String[1,default] $storage_loc = 'accountingdb',
+  String[1,default] $archive_dir = '/tmp',
+  String[0,default] $archive_script = '',
+  Enum['no','yes'] $archive_events = 'no',
+  String[0,default] $purge_event_after = '',
+  Enum['no','yes'] $archive_jobs = 'no',
+  String[0,default] $purge_job_after = '',
+  Enum['no','yes'] $archive_resvs = 'no',
+  String[0,default] $purge_resv_after = '',
+  Enum['no','yes'] $archive_steps = 'no',
+  String[0,default] $purge_step_after = '',
+  Enum['no','yes'] $archive_suspend = 'no',
+  String[0,default] $purge_suspend_after = '',
+  Enum['no','yes'] $archive_txn = 'no',
+  String[0,default] $purge_txnafter = '',
+  Enum['no','yes'] $archive_usage = 'no',
+  String[0,default] $purge_usage_after = '',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $debug_level = 'info',
+  Array[Enum['DB_ARCHIVE','DB_ASSOC','DB_EVENT','DB_JOB','DB_QOS','DB_QUERY','DB_RESERVATION','DB_RESOURCE','DB_STEP','DB_USAGE','DB_WCKEY']] $debug_flags = [],
+  String[0,default] $log_file = '',
+  Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
 )
 ```
 Configure the dbnode.
 
+
 ### slurm::dbnode::firewall
 ```
-class slurm::dbnode::firewall (
-  Integer $accounting_storage_port = $slurm::config::accounting_storage_port,
-)
+class slurm::dbnode::firewall ()
 ```
-Define the port used for DB communication on the DB node.
+Open the port used for DB communication on the DB node.
 
 
 ## slurm::headnode
@@ -352,10 +569,10 @@ Setup, configure and install the headnode.
 ### slurm::headnode::setup
 ```
 class slurm::headnode::setup (
-  String $slurmctld_spool_dir = '/var/spool/slurmctld',
-  String $state_save_location = '/var/spool/slurmctld/slurm.state',
-  String $slurmctld_log_file  = '/var/log/slurm/slurmctld.log',
-  Array $packages = [
+  String[1,default] $slurmctld_spool_dir = '/var/spool/slurmctld',
+  String[1,default] $state_save_location = '/var/spool/slurmctld/slurm.state',
+  String[1,default] $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
+  Array[String] $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',
@@ -374,9 +591,7 @@ Configure the headnode.
 
 ### slurm::headnode::firewall
 ```
-class slurm::headnode::firewall (
-  Integer $slurmctld_port = $slurm::config::slurmctld_port,
-)
+class slurm::headnode::firewall ()
 ```
 Setup the firewall for the headnode.
 
@@ -391,9 +606,9 @@ Setup, configure and installs the workernode.
 ### slurm::workernode::setup
 ```
 class slurm::workernode::setup (
-  String $slurmd_spool_dir = '/var/spool/slurmd',
-  String $slurmd_log_file  = '/var/log/slurm/slurmd.log',
-  Array $packages = [
+  String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
+  String[1,default] $slurmd_log_file = '/var/log/slurm/slurmd.log',
+  Array[String] $packages = [
     'slurm-auth-none',
     'slurm-perlapi',
     'slurm-plugins',
@@ -410,13 +625,13 @@ class slurm::workernode::config ()
 ```
 Configure the workernode.
 
+
 ### slurm::workernode::firewall
 ```
-class slurm::workernode::firewall (
-  Integer $slurmd_port = $slurm::config::slurmd_port,
-)
+class slurm::workernode::firewall ()
 ```
 Setup the firewall for the workernode.
+
 
 ## Files
 
