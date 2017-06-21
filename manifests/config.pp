@@ -18,7 +18,6 @@ class slurm::config (
   String[0,default] $backup_controller = '',
   String[0,default] $backup_addr = $backup_controller,
   Integer[0,1] $allow_spec_resources_usage = 0,
-  Enum['burst_buffer/none'] $burst_buffer_type = 'burst_buffer/none',
   Enum['checkpoint/blcr','checkpoint/none','checkpoint/ompi','checkpoint/poe'] $checkpoint_type= 'checkpoint/none',
   String[0,default] $chos_loc = '',
   Enum['core_spec/cray','core_spec/none'] $core_spec_plugin = 'core_spec/none',

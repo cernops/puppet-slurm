@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Common SLURM parameters for db, head and worker node.                    -%>
 <%#                                                                          -%>
-<%# version 20170620                                                         -%>
+<%# version 20170621                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -23,7 +23,6 @@ ControlAddr=<%= @control_addr %>
 
 # GENERAL OPTIONS
 AllowSpecResourcesUsage=<%= @allow_spec_resources_usage %>
-BurstBufferType=<%= @burst_buffer_type %>
 CheckpointType=<%= @checkpoint_type %>
 <%= @chos_loc.empty? ? '#ChosLoc=' : ('ChosLoc=' + @chos_loc) %>
 CoreSpecPlugin=<%= @core_spec_plugin %>
