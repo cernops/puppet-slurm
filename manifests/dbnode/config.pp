@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurmdbd.conf.html
 #
-# version 20170620
+# version 20170623
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -73,7 +73,7 @@ class slurm::dbnode::config (
     hasstatus => true,
     subscribe => [
       Package['slurm-slurmdbd'],
-      File[$slurm::config::db_required_files],
+      File[$slurm::config::required_files],
     ],
   }
 }

@@ -224,6 +224,25 @@ class slurm::config (
   }],
 ) {
 
+  # Authentication service for SLURM if MUNGE is used as authentication plugin
+  if  ($auth_type == 'auth/munge') or
+      ($crypto_type == 'crypto/munge') {
+    service{'munge':
+      ensure    => running,
+      enable    => true,
+      hasstatus => true,
+      subscribe => File['munge homedir','/etc/munge/munge.key'],
+    }
+  }
+
+  # If openssl will be used for the crypto plugin, the key pair is a required file
+  if $crypto_type == 'crypto/openssl' {
+    $openssl_credential_files = [$job_credential_private_key,$job_credential_public_certificate]
+  }
+  else {
+    $openssl_credential_files = []
+  }
+
   # Common SLURM configuration file
   file{'/etc/slurm/slurm.conf':
     ensure  => file,
@@ -244,13 +263,6 @@ class slurm::config (
     require => User['slurm'],
   }
 
-  # Cgroup configuration file
-  if  ('proctrack/cgroup' in $proctrack_type) or
-      ('task/cgroup' in $task_plugin) or
-      ('jobacct_gather/cgroup' in $job_acct_gather_type) {
-    class{ '::slurm::config::cgroup':}
-  }
-
   # Accounting gatherer configuration file
   if  ('acct_gather_energy/ipmi' in $acct_gather_energy_type) or
       ('acct_gather_profile/hdf5' in $acct_gather_profile_type) or
@@ -260,60 +272,39 @@ class slurm::config (
       with_profile_hdf5    => ('acct_gather_profile/hdf5' in $acct_gather_profile_type),
       with_infiniband_ofed => ('acct_gather_infiniband/ofed' in $acct_gather_infiniband_type),
     }
+
+    $acct_gather_conf_file = ['/etc/slurm/acct_gather.conf']
+  }
+  else {
+    $acct_gather_conf_file = []
+  }
+
+  # Cgroup configuration file
+  if  ('proctrack/cgroup' in $proctrack_type) or
+      ('task/cgroup' in $task_plugin) or
+      ('jobacct_gather/cgroup' in $job_acct_gather_type) {
+    class{ '::slurm::config::cgroup':}
+
+    $cgroup_conf_file = ['/etc/slurm/cgroup.conf']
+  }
+  else {
+    $cgroup_conf_file = []
   }
 
   # Topology plugin configuration file
   if  ('topology/tree' in $topology_plugin) {
     class{ '::slurm::config::topology':}
+    $topology_conf_file = ['/etc/slurm/topology.conf']
   }
-
-  # Authentication service for SLURM if MUNGE is used as authentication plugin
-  if  ($auth_type == 'auth/munge') or
-      ($crypto_type == 'crypto/munge') {
-    service{'munge':
-      ensure    => running,
-      enable    => true,
-      hasstatus => true,
-      subscribe => File['munge homedir','/etc/munge/munge.key'],
-    }
+  else {
+    $topology_conf_file = []
   }
 
   $common_config_files = [
-    '/etc/slurm/cgroup.conf',
     '/etc/slurm/plugstack.conf',
     '/etc/slurm/slurm.conf',
   ]
 
-  $openssl_credential_files = [
-    $job_credential_private_key,
-    $job_credential_public_certificate,
-  ]
-
-  if $crypto_type == 'crypto/openssl' {
-    $db_required_files = [
-      $common_config_files,
-      '/etc/slurm/acct_gather.conf',
-      '/etc/slurm/slurmdbd.conf',
-      $openssl_credential_files,
-    ]
-
-    $hnwn_required_files = [
-      $common_config_files,
-      '/etc/slurm/topology.conf',
-      $openssl_credential_files,
-    ]
-  }
-  else {
-    $db_required_files = [
-      $common_config_files,
-      '/etc/slurm/acct_gather.conf',
-      '/etc/slurm/slurmdbd.conf',
-    ]
-
-    $hnwn_required_files = [
-      $common_config_files,
-      '/etc/slurm/topology.conf',
-    ]
-  }
+  $required_files = flatten(merge($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $common_config_files))
 
 }
