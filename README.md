@@ -139,28 +139,32 @@ To use the module, first include it in your hostgroup manifest :
 ...
 
 # including slurm to be able to do some awesome scheduling on HPC machines
-  include 'slurm'
+include ::slurm
+
+# put my secret mungekey on all the machine for the MUNGE security plugin
+file{ '/etc/munge/munge.key':
+  ensure  => file,
+  content => 'YourIncrediblyStrongSymetricKey',
+  owner   => 'munge',
+  group   => 'munge',
+  mode    => '0400',
+}
 
 ...
 ```
-
-and then make sure you have all the necessary configuration options in data; without any data, the module will *not* work, puppet will trigger an error and nothing will be installed.
+and then make sure you have all the necessary configuration options in data; without any data, the module will *not* work, puppet will trigger a warning and nothing will be installed and/or configured.
 
 The following minimal configuration is required for the module to work
 ```
 # my_hostgroup.yaml
 
 slurm::config::control_machine: slurm-master.yourdomain.com
-slurm::config::backup_controller: slurm-2IC.yourdomain.com
 
 slurm::config::workernodes:
   -
     NodeName: slave[001-010]
-    CPUs: 32
-    CoresPerSocket: 8
-    Sockets: 2
-    ThreadsPerCore: 2
-    RealMemory: 128000
+    CPUs: 16
+    RealMemory: 64000
     State: UNKNOWN
 
 slurm::config::partitions:
@@ -168,12 +172,10 @@ slurm::config::partitions:
     PartitionName: Arena
     Nodes: ALL
     Default: YES
-    DefMemPerCPU: 4000
-    MaxMemPerCPU: 4000
-    DefaultTime: 'UNLIMITED'
     State: UP
 ...
 ```
+i.e. you need a master controller, at least one workernode and a partition containing the nodes.
 
 # Usage
 
@@ -184,10 +186,10 @@ Please refer to the official [SLURM documentation](https://slurm.schedmd.com/).
 ## slurm
 ```ruby
 class slurm (
-  String $node_type = '',
+  Enum['worker','head','db','db-head','none'] $node_type = 'none',
 )
 ```
-This is the main class which switches through the type classes according to node_type parameter.
+The main class is responsible to call the relevant node type classes according to node_type parameter or to warn the user that he did not specify any node type.
 
 
 ## slurm::setup
@@ -195,7 +197,7 @@ This is the main class which switches through the type classes according to node
 class slurm::setup (
   Integer[0,default] $slurm_gid = 950,
   Integer[0,default] $slurm_uid = 950,
-  String[1,default] $slurm_home_loc      = '/usr/local/slurm',
+  String[1,default] $slurm_home_loc = '/usr/local/slurm',
   String[1,default] $slurm_log_file = '/var/log/slurm',
   String[1,default] $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
   Integer[0,default] $munge_gid = 951,
@@ -206,7 +208,7 @@ class slurm::setup (
   String[1,default] $munge_run_loc = '/run/munge',
 ) inherits slurm::config
 ```
-This is the setup class, common to all types of nodes, which sets up all the folders and keys needed by SLURM to work correctly. For more details about each parameter, please refer to the header of [setup.pp](manifest/setup.pp).
+The setup class, common to all types of nodes, is responsible to set up all the folders and keys needed by SLURM to work correctly. For more details about each parameter, please refer to the header of [setup.pp](manifest/setup.pp).
 
 
 ## slurm::config
@@ -217,7 +219,6 @@ class slurm::config (
   String[0,default] $backup_controller = '',
   String[0,default] $backup_addr = $backup_controller,
   Integer[0,1] $allow_spec_resources_usage = 0,
-  Enum['burst_buffer/none'] $burst_buffer_type = 'burst_buffer/none',
   Enum['checkpoint/blcr','checkpoint/none','checkpoint/ompi','checkpoint/poe'] $checkpoint_type= 'checkpoint/none',
   String[0,default] $chos_loc = '',
   Enum['core_spec/cray','core_spec/none'] $core_spec_plugin = 'core_spec/none',
@@ -424,7 +425,7 @@ class slurm::config (
   }],
 )
 ```
-This is the configuration class, common to all types of nodes, which creates the main slurm.conf configuration file and all the files needed by the different plugins. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html).
+The configuration class, common to all types of nodes, is responsible to create the main slurm.conf configuration file. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html). Almost all default values are taken from SLURM's official documentation, except the control_machine, the workernodes and the partitions; they are provided as an example.
 
 
 ### slurm::config::acct_gather
@@ -443,6 +444,7 @@ class slurm::config::acct_gather (
   Integer[0,default] $infiniband_ofed_port = 1,
 )
 ```
+The acct_gather class is responsible to create the configuration file used by the AcctGather type plugins, namely EnergyIPMI, ProfileHDF5 and InfinibandOFED. Details about the parameters can be found on the [dedicated page](https://slurm.schedmd.com/acct_gather.conf.html) in the SLURM documentation.
 
 
 ### slurm::config::cgroup
@@ -467,7 +469,7 @@ class slurm::config::cgroup (
   String[1,default] $allowed_devices_file = '/etc/slurm/cgroup_allowed_devices_file.conf',
 )
 ```
-
+The cgroup class is responsible to create the configuration file used by all the plugins using cgroups, namely proctrack/cgroup, task/cgroup and jobacct_gather/cgroup. Details about the parameters can be found on the [dedicated page](https://slurm.schedmd.com/cgroup.conf.html) in the SLURM documentation.
 
 ### slurm::config::topology
 ```ruby
@@ -478,14 +480,13 @@ class slurm::config::topology (
   }],
 )
 ```
-
+The topology class is responsible to create the configuration file used by all the plugins using topology, namely topology/tree and route/topology. Details about the parameters can be found on the [dedicated page](https://slurm.schedmd.com/topology.conf.html) in the SLURM documentation.
 
 ## slurm::dbnode
 ```ruby
 class slurm::dbnode ()
 ```
-Setup, configure and install the dbnode.
-
+The database class is responsible to call the database specific setup, firewall and configure class.
 
 ### slurm::dbnode::setup
 ```ruby
@@ -498,8 +499,7 @@ class slurm::dbnode::setup (
   ],
 )
 ```
-Setup the dbnode.
-
+The database setup class is responsible to install the necessary packages and create all the necessary folders and files for the dbnode to work.
 
 ### slurm::dbnode::config
 ```ruby
@@ -549,21 +549,21 @@ class slurm::dbnode::config (
   Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
 )
 ```
-Configure the dbnode.
+The database configuration class is responsible to create the configuration file for the dbnode and start the slurmdbd daemon.
 
 
 ### slurm::dbnode::firewall
 ```ruby
 class slurm::dbnode::firewall ()
 ```
-Open the port used for DB communication on the DB node.
+The database firewall class is responsible to open the slurmdbd port defined in the main configuration class.
 
 
 ## slurm::headnode
 ```ruby
 class slurm::headnode ()
 ```
-Setup, configure and install the headnode.
+The headnode class is responsible to call the headnode specific setup, firewall and configure class.
 
 
 ### slurm::headnode::setup
@@ -580,27 +580,28 @@ class slurm::headnode::setup (
   ],
 )
 ```
-Setup the headnode.
+The headnode setup class is responsible to install the necessary packages and create all the necessary folders and files for the headnode to work.
 
 
 ### slurm::headnode::config
 ```ruby
 class slurm::headnode::config ()
 ```
-Configure the headnode.
+The headnode configuration class is responsible to start the slurmctld daemon.
+
 
 ### slurm::headnode::firewall
 ```ruby
 class slurm::headnode::firewall ()
 ```
-Setup the firewall for the headnode.
+The headnode firewall class is responsible to open the slurmctld port defined in the main configuration class.
 
 
 ## slurm::workernode
 ```ruby
 class slurm::workernode ()
 ```
-Setup, configure and installs the workernode.
+The workernode class is responsible to call the workernode specific setup, firewall and configure class.
 
 
 ### slurm::workernode::setup
@@ -616,21 +617,21 @@ class slurm::workernode::setup (
   ],
 )
 ```
-Setup the workernode.
+The workernode setup class is responsible to install the necessary packages and create all the necessary folders and files for the workernode to work.
 
 
 ### slurm::workernode::config
 ```ruby
 class slurm::workernode::config ()
 ```
-Configure the workernode.
+The workernode configuration class is responsible to start the slurmd daemon.
 
 
 ### slurm::workernode::firewall
 ```ruby
 class slurm::workernode::firewall ()
 ```
-Setup the firewall for the workernode.
+The workernode firewall class is responsible to open the slurmd port defined in the main configuration class.
 
 
 ## Files
