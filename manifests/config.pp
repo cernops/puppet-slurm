@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurm.conf.html
 #
-# version 20170621
+# version 20170623
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -305,6 +305,6 @@ class slurm::config (
     '/etc/slurm/slurm.conf',
   ]
 
-  $required_files = flatten(merge($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $common_config_files))
+  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $common_config_files)
 
 }
