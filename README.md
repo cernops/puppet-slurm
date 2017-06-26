@@ -35,36 +35,36 @@ It sets up, configures and installs all required binaries and configuration file
 To avoid version conflicts, all the following packages will be installed/replaced by the module :
 
 #### On all type of nodes
-```
- - 'slurm',
- - 'slurm-devel',
- - 'slurm-munge',
- - 'munge',
- - 'munge-libs',
- - 'munge-devel',
+```ruby
+- 'slurm',
+- 'slurm-devel',
+- 'slurm-munge',
+- 'munge',
+- 'munge-libs',
+- 'munge-devel',
 ```
 
 #### On the database nodes
-```
- - 'slurm-plugins',
- - 'slurm-slurmdbd',
- - 'slurm-sql',
+```ruby
+- 'slurm-plugins',
+- 'slurm-slurmdbd',
+- 'slurm-sql',
 ```
 
 #### On the headnodes
-```
- - 'slurm-auth-none',
- - 'slurm-perlapi',
- - 'slurm-plugins',
- - 'slurm-torque',
+```ruby
+- 'slurm-auth-none',
+- 'slurm-perlapi',
+- 'slurm-plugins',
+- 'slurm-torque',
 ```
 
 #### On the worker nodes
-```
- - 'slurm-auth-none',
- - 'slurm-perlapi',
- - 'slurm-plugins',
- - 'slurm-torque',
+```ruby
+- 'slurm-auth-none',
+- 'slurm-perlapi',
+- 'slurm-plugins',
+- 'slurm-torque',
 ```
 
 ### Dependencies
@@ -118,7 +118,7 @@ Further information can be found in the [official documentation](https://slurm.s
 ## Setup requirements
 
 If you use this module at CERN, it needs to be enabled in the pluginsync filter :
-```
+```yaml
 # my_hostgroup.yaml
 
 ...
@@ -133,7 +133,7 @@ pluginsync_filter:
 ## Beginning with slurm
 
 To use the module, first include it in your hostgroup manifest :
-```
+```yaml
 # my_hostgroup.pp
 
 ...
@@ -144,7 +144,7 @@ include ::slurm
 # put my secret mungekey on all the machine for the MUNGE security plugin
 file{ '/etc/munge/munge.key':
   ensure  => file,
-  content => 'YourIncrediblyStrongSymetricKey',
+  content => 'YourIncrediblyStrongSymmetricKey',
   owner   => 'munge',
   group   => 'munge',
   mode    => '0400',
@@ -154,11 +154,12 @@ file{ '/etc/munge/munge.key':
 ```
 and then make sure you have all the necessary configuration options in data; without any data, the module will *not* work, puppet will trigger a warning and nothing will be installed and/or configured.
 
-The following minimal configuration is required for the module to work
-```
+The following minimal configuration is required for the module to work, i.e. you need a master controller, at least one workernode and a partition containing the nodes.
+```yaml
 # my_hostgroup.yaml
 
-slurm::config::control_machine: slurm-master.yourdomain.com
+slurm::config::control_machine: slurm-master.yourdomain.com   # Only one controller is needed, backup is optional
+slurm::config::plugin_dir: /usr/lib64/slurm                   # Custom lib path
 
 slurm::config::workernodes:
   -
@@ -175,7 +176,19 @@ slurm::config::partitions:
     State: UP
 ...
 ```
-i.e. you need a master controller, at least one workernode and a partition containing the nodes.
+
+You also need to specify on the sub-hostgroups which type the node should be in the slurm configuration, e.g. head, worker or database node.
+```yaml
+# my_hostgroup/head.yaml
+
+slurm::node_type: head
+```
+
+```yaml
+# my_hostgroup/worker.yaml
+
+slurm::node_type: worker
+```
 
 # Usage
 
