@@ -5,7 +5,7 @@
 # @param slurmdbd_log_file Fully qualified pathname of a file into which the slurmd data base daemon will log entries.
 # @param packages Packages to install.
 #
-# version 20170602
+# version 20170627
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -16,7 +16,6 @@
 class slurm::dbnode::setup (
   String[1,default] $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
   Array[String] $packages = [
-    'slurm-plugins',
     'slurm-slurmdbd',
     'slurm-sql',
   ],

@@ -6,7 +6,7 @@
 # @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written
 # @param packages Packages to install
 #
-# version 20170621
+# version 20170627
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -18,9 +18,7 @@ class slurm::workernode::setup (
   String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
   String[1,default] $slurmd_log_file = '/var/log/slurm/slurmd.log',
   Array[String] $packages = [
-    'slurm-auth-none',
     'slurm-perlapi',
-    'slurm-plugins',
     'slurm-torque',
   ],
 ) {
