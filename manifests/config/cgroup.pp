@@ -20,7 +20,7 @@
 # @param constrain_devices If configured to "yes" then constrain the job's allowed devices based on GRES allocated resources.
 # @param allowed_devices_file If the ConstrainDevices field is set to "yes" then this file has to be used to declare the devices that need to be allowed by default for all the jobs.
 #
-# version 20170602
+# version 20170627
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -35,14 +35,14 @@ class slurm::config::cgroup (
   Enum['no','yes'] $task_affinity = 'no',
   Enum['no','yes'] $constrain_ram_space = 'no',
   Float[0,100] $allowed_ram_space = 100.0,
-  Float[0,default] $min_ram_space = 30.0,
+  Integer[0,default] $min_ram_space = 30,
   Float[0,100] $max_ram_percent = 100.0,
   Enum['no','yes'] $constrain_swap_space = 'no',
   Float[0,100] $allowed_swap_space = 0.0,
   Float[0,100] $max_swap_percent = 100.0,
   Enum['no','yes'] $constrain_kmem_space = 'yes',
   Float[0,100] $allowed_kmem_space = 1.0,
-  Float[0,default] $min_kmem_space = 30.0,
+  Integer[0,default] $min_kmem_space = 30,
   Float[0,100] $max_kmem_percent = 100.0,
   Enum['no','yes'] $constrain_devices = 'no',
   String[1,default] $allowed_devices_file = '/etc/slurm/cgroup_allowed_devices_file.conf',
