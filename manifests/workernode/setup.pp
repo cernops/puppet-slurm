@@ -23,7 +23,7 @@ class slurm::workernode::setup (
   ],
 ) {
 
-  ensure_packages($packages)
+  ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
   file{ 'slurmd spool folder':
     ensure => directory,

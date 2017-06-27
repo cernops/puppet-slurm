@@ -21,7 +21,7 @@ class slurm::dbnode::setup (
   ],
 ) {
 
-  ensure_packages($packages)
+  ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
   file{ 'slurmdbd log file':
     ensure => file,

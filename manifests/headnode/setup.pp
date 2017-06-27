@@ -23,7 +23,7 @@ class slurm::headnode::setup (
   ],
 ) {
 
-  ensure_packages($packages)
+  ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
   file{ 'slurmctld spool folder':
     ensure  => directory,

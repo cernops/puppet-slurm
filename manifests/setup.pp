@@ -2,11 +2,13 @@
 #
 # Creates the basic folders, user/group and security for SLURM, common to headnodes and workernodes.
 #
+# @param slurm_version Slurm version to install.
 # @param slurm_gid Group id for slurm group.
 # @param slurm_uid User id for slurm user.
 # @param slurm_home_loc Location of SLURM's home folder.
 # @param slurm_log_file Location of SLURM's log folder.
 # @param slurm_plugstack_loc Location of SLURM's plugstack folder.
+# @param slurm_version Munge version to install; can be empty.
 # @param munge_gid Group id for munge group.
 # @param munge_uid User id for munge user.
 # @param munge_loc Location of MUNGE's root folder.
@@ -23,11 +25,13 @@
 #
 
 class slurm::setup (
+  String[1,default] $slurm_version = '17.02.5',
   Integer[0,default] $slurm_gid = 950,
   Integer[0,default] $slurm_uid = 950,
   String[1,default] $slurm_home_loc = '/usr/local/slurm',
   String[1,default] $slurm_log_file = '/var/log/slurm',
   String[1,default] $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  String[0,default] $munge_version = '0.5.11',
   Integer[0,default] $munge_gid = 951,
   Integer[0,default] $munge_uid = 951,
   String[1,default] $munge_loc = '/etc/munge',
@@ -36,31 +40,18 @@ class slurm::setup (
   String[1,default] $munge_run_loc = '/run/munge',
 ) inherits slurm::config {
 
-  # install MUNGE packages only if MUNGE will be used as auth and/or crypto plugin
+################################################################################
+# SLURM
+################################################################################
+
   $slurm_packages = [
     'slurm',
     'slurm-devel',
     'slurm-munge',
     'slurm-plugins',
   ]
-  $munge_packages = [
-    'munge',
-    'munge-libs',
-    'munge-devel',
-  ]
-  if  ($slurm::config::auth_type == 'auth/munge') or
-      ($slurm::config::crypto_type == 'crypto/munge') {
-    $packages = [$slurm_packages, $munge_packages]
-  }
-  else {
-    $packages = $slurm_packages
-  }
+  ensure_packages($slurm_packages, {'ensure' => $slurm_version})
 
-  ensure_packages($packages)
-
-################################################################################
-# SLURM
-################################################################################
   group{ 'slurm':
     ensure => present,
     gid    => $slurm_gid,
@@ -105,6 +96,13 @@ class slurm::setup (
 ################################################################################
   if  ($slurm::config::auth_type == 'auth/munge') or
       ($slurm::config::crypto_type == 'crypto/munge') {
+
+    $munge_packages = [
+      'munge',
+      'munge-libs',
+      'munge-devel',
+    ]
+    ensure_packages($munge_packages, {'ensure' => $munge_version})
 
     group{ 'munge':
       ensure => present,
