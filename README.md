@@ -190,6 +190,11 @@ slurm::node_type: head
 slurm::node_type: worker
 ```
 
+### Version
+
+Currently, the module is configured to match versions 17.02.X. It has been tested and works with version 17.02.5.
+
+
 # Usage
 
 Please refer to the official [SLURM documentation](https://slurm.schedmd.com/).
@@ -672,7 +677,7 @@ TODO
 
 # Limitations
 
-It is tested and working on Centos 7.2/7.3 with Puppet 4.8.1. Not working with Puppet 3!
+It is tested and working on Centos 7.3 with Puppet 4.8.1. Not working with Puppet 3!
 
 
 # Development
