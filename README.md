@@ -32,13 +32,14 @@ It sets up, configures and installs all required binaries and configuration file
 
 ### Packages installed by the module
 
-To avoid version conflicts, all the following packages will be installed/replaced by the module :
+To avoid version conflicts, the following packages will be installed/replaced by the module in its default setup. You can override those lists in the setup classes if some packages are unnecessary/missing for your configuration, e.g. slurm-auth-none, slurm-pam_slurm, etc...
 
-#### On all type of nodes
+#### On all types of nodes
 ```ruby
 - 'slurm',
 - 'slurm-devel',
 - 'slurm-munge',
+- 'slurm-plugins',
 - 'munge',
 - 'munge-libs',
 - 'munge-devel',
@@ -46,24 +47,19 @@ To avoid version conflicts, all the following packages will be installed/replace
 
 #### On the database nodes
 ```ruby
-- 'slurm-plugins',
 - 'slurm-slurmdbd',
 - 'slurm-sql',
 ```
 
 #### On the headnodes
 ```ruby
-- 'slurm-auth-none',
 - 'slurm-perlapi',
-- 'slurm-plugins',
 - 'slurm-torque',
 ```
 
 #### On the worker nodes
 ```ruby
-- 'slurm-auth-none',
 - 'slurm-perlapi',
-- 'slurm-plugins',
 - 'slurm-torque',
 ```
 
@@ -74,12 +70,7 @@ The default (and only supported) authentication mechanism for SLURM is [MUNGE](h
 ```
 AuthType=auth/munge
 ```
-Other alternatives for this value is `auth/none` which requires the `auth-none` plugin to be built as part of SLURM. It is recommended to use MUNGE rather than unauthenticated communication.
-
-<!---
-#### Checkpointing
-This feature is currently not available since the main project, i.e. BLCR, has been discontinued since 2013. We are investigating alternatives like DMTCP, SCR and OpenMPI's build it checkpointing mechanism.
---->
+Another alternative for this value is `auth/none` which requires the `auth-none` plugin to be built as part of SLURM. It is recommended to use MUNGE rather than unauthenticated communication.
 
 #### Database configuration
 The database for SLURM is used solely for accounting purposes. The module supports a setup with a database node either separate from or combined with a headnode. The database configuration is done in the [dbnode](manifests/dbnode) manifests.
@@ -121,13 +112,10 @@ If you use this module at CERN, it needs to be enabled in the pluginsync filter 
 ```yaml
 # my_hostgroup.yaml
 
-...
-
 # enabling the slurm module
 pluginsync_filter:
  - slurm
 
-...
 ```
 
 ## Beginning with slurm
@@ -135,8 +123,6 @@ pluginsync_filter:
 To use the module, first include it in your hostgroup manifest :
 ```yaml
 # my_hostgroup.pp
-
-...
 
 # including slurm to be able to do some awesome scheduling on HPC machines
 include ::slurm
@@ -150,7 +136,6 @@ file{ '/etc/munge/munge.key':
   mode    => '0400',
 }
 
-...
 ```
 and then make sure you have all the necessary configuration options in data; without any data, the module will *not* work, puppet will trigger a warning and nothing will be installed and/or configured.
 
@@ -159,7 +144,7 @@ The following minimal configuration is required for the module to work, i.e. you
 # my_hostgroup.yaml
 
 slurm::config::control_machine: slurm-master.yourdomain.com   # Only one controller is needed, backup is optional
-slurm::config::plugin_dir: /usr/lib64/slurm                   # Custom lib path
+slurm::config::plugin_dir: /usr/lib64/slurm                   # Path to your SLURM installation
 
 slurm::config::workernodes:
   -
@@ -174,7 +159,6 @@ slurm::config::partitions:
     Nodes: ALL
     Default: YES
     State: UP
-...
 ```
 
 You also need to specify on the sub-hostgroups which type the node should be in the slurm configuration, e.g. head, worker or database node.
@@ -213,11 +197,13 @@ The main class is responsible to call the relevant node type classes according t
 ## slurm::setup
 ```ruby
 class slurm::setup (
+  String[1,default] $slurm_version = '17.02.5',
   Integer[0,default] $slurm_gid = 950,
   Integer[0,default] $slurm_uid = 950,
   String[1,default] $slurm_home_loc = '/usr/local/slurm',
   String[1,default] $slurm_log_file = '/var/log/slurm',
   String[1,default] $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  String[0,default] $munge_version = '0.5.11',
   Integer[0,default] $munge_gid = 951,
   Integer[0,default] $munge_uid = 951,
   String[1,default] $munge_loc = '/etc/munge',
@@ -474,14 +460,14 @@ class slurm::config::cgroup (
   Enum['no','yes'] $task_affinity = 'no',
   Enum['no','yes'] $constrain_ram_space = 'no',
   Float[0,100] $allowed_ram_space = 100.0,
-  Float[0,default] $min_ram_space = 30.0,
+  Integer[0,default] $min_ram_space = 30,
   Float[0,100] $max_ram_percent = 100.0,
   Enum['no','yes'] $constrain_swap_space = 'no',
   Float[0,100] $allowed_swap_space = 0.0,
   Float[0,100] $max_swap_percent = 100.0,
   Enum['no','yes'] $constrain_kmem_space = 'yes',
   Float[0,100] $allowed_kmem_space = 1.0,
-  Float[0,default] $min_kmem_space = 30.0,
+  Integer[0,default] $min_kmem_space = 30,
   Float[0,100] $max_kmem_percent = 100.0,
   Enum['no','yes'] $constrain_devices = 'no',
   String[1,default] $allowed_devices_file = '/etc/slurm/cgroup_allowed_devices_file.conf',
@@ -511,7 +497,6 @@ The database class is responsible to call the database specific setup, firewall 
 class slurm::dbnode::setup (
   String[1,default] $slurmdbd_log_file = '/var/log/slurm/slurmdbd.log',
   Array[String] $packages = [
-    'slurm-plugins',
     'slurm-slurmdbd',
     'slurm-sql',
   ],
@@ -588,12 +573,9 @@ The headnode class is responsible to call the headnode specific setup, firewall 
 ```ruby
 class slurm::headnode::setup (
   String[1,default] $slurmctld_spool_dir = '/var/spool/slurmctld',
-  String[1,default] $state_save_location = '/var/spool/slurmctld/slurm.state',
   String[1,default] $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
   Array[String] $packages = [
-    'slurm-auth-none',
     'slurm-perlapi',
-    'slurm-plugins',
     'slurm-torque',
   ],
 )
@@ -628,9 +610,7 @@ class slurm::workernode::setup (
   String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
   String[1,default] $slurmd_log_file = '/var/log/slurm/slurmd.log',
   Array[String] $packages = [
-    'slurm-auth-none',
     'slurm-perlapi',
-    'slurm-plugins',
     'slurm-torque',
   ],
 )
@@ -655,29 +635,26 @@ The workernode firewall class is responsible to open the slurmd port defined in 
 ## Files
 
 ### acct_gather.conf.erb
-TODO
+Slurm configuration file for the acct_gather plugins. More details in the [acct_gather.conf documentation](https://slurm.schedmd.com/acct_gather.conf.html).
 
 ### cgroup.conf.erb
-TODO
-
-### job_stuck_alert.sh.erb
-TODO
+Slurm configuration file for the cgroup support. More details in the [cgroup.conf documentation](https://slurm.schedmd.com/cgroup.conf.html).
 
 ### plugstack.conf.erb
-TODO
+Slurm configuration file for SPANK plugins. More details in the [SPANK documentation](https://slurm.schedmd.com/spank.html).
 
 ### slurm.conf.erb
-TODO
+Slurm configuration file, common to all the nodes in the cluster. More details in the [slurm.conf documentation](https://slurm.schedmd.com/slurm.conf.html).
 
 ### slurmdbd.conf.erb
-TODO
+Slurm Database Daemon (SlurmDBD) configuration file. More details in the [slurmdbd.conf documentation](https://slurm.schedmd.com/slurmdbd.conf.html).
 
 ### topology.conf.erb
-TODO
+Slurm configuration file for defining the network topology. More details in the [topology.conf documentation](https://slurm.schedmd.com/topology.conf.html).
 
 # Limitations
 
-It is tested and working on Centos 7.3 with Puppet 4.8.1. Not working with Puppet 3!
+It has been tested and works on Centos 7.3 with Puppet 4.8.1.
 
 
 # Development
