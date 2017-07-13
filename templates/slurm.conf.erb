@@ -2,7 +2,7 @@
 <%#                                                                          -%>
 <%# Common SLURM parameters for db, head and worker node.                    -%>
 <%#                                                                          -%>
-<%# version 20170621                                                         -%>
+<%# version 20170713                                                         -%>
 <%#                                                                          -%>
 <%# Copyright (c) CERN, 2016-2017                                            -%>
 <%# Authors: - Philippe Ganz <phganz@cern.ch>                                -%>
@@ -40,10 +40,22 @@ JobCheckpointDir=<%= @job_checkpoint_dir %>
 JobContainerType=<%= @job_container_type %>
 JobFileAppend=<%= @job_file_append %>
 JobRequeue=<%= @job_requeue %>
-<%= @job_submit_plugins.empty? ? '#JobSubmitPlugins=' : ('JobSubmitPlugins=' + @job_submit_plugins) %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @job_submit_plugins.empty? -%>
+#JobSubmitPlugins=
+<% else -%>
+JobSubmitPlugins=<%= @job_submit_plugins.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 KillOnBadExit=<%= @kill_on_bad_exit %>
 LaunchType=<%= @launch_type %>
-<%= @launch_parameters.empty? ? '#LaunchParameters=' : ('LaunchParameters=' + @launch_parameters) %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @launch_parameters.empty? -%>
+#LaunchParameters=
+<% else -%>
+LaunchParameters=<%= @launch_parameters.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 <%= @licenses.empty? ? '#Licenses=' : ('Licenses=' + @licenses) %>
 <%= @node_features_plugins.empty? ? '#NodeFeaturesPlugins=' : ('NodeFeaturesPlugins=' + @node_features_plugins) %>
 MailProg=<%= @mail_prog %>
@@ -194,7 +206,13 @@ MpiDefault=<%= @mpi_default %>
 <%= @mpi_params.empty? ? '#MpiParams=' : ('MpiParams=' + @mpi_params) %>
 <%= @prolog_slurmctld.empty? ? '#PrologSlurmctld=' : ('PrologSlurmctld=' + @prolog_slurmctld) %>
 <%= @prolog.empty? ? '#Prolog=' : ('Prolog=' + @prolog) %>
-<%= @prolog_flags.empty? ? '#PrologFlags=' : ('PrologFlags=' + @prolog_flags) %>
+<%# comment out if empty, expand array if not                                -%>
+<% if @prolog_flags.empty? -%>
+#PrologFlags=
+<% else -%>
+PrologFlags=<%= @prolog_flags.join(',') %>
+<% end -%>
+<%#                                                                          -%>
 <%= @requeue_exit.empty? ? '#RequeueExit=' : ('RequeueExit=' + @requeue_exit) %>
 <%= @requeue_exit_hold.empty? ? '#RequeueExitHold=' : ('RequeueExitHold=' + @requeue_exit_hold) %>
 SchedulerTimeSlice=<%= @scheduler_time_slice %>
