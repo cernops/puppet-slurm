@@ -14,9 +14,11 @@
 
 class slurm::headnode::firewall {
 
-  firewall{ '200 open slurmctld port':
-    action => 'accept',
-    dport  => $slurm::config::slurmctld_port,
-    proto  => 'tcp',
+  if ($slurm::config::open_firewall == 1) {
+    firewall{ '200 open slurmctld port':
+      action => 'accept',
+      dport  => $slurm::config::slurmctld_port,
+      proto  => 'tcp',
+    }
   }
 }

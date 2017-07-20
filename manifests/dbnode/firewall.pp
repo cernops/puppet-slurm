@@ -14,9 +14,11 @@
 
 class slurm::dbnode::firewall {
 
-  firewall{ '203 open slurmdbd port':
-    action => 'accept',
-    dport  => $slurm::config::accounting_storage_port,
-    proto  => 'tcp',
+  if ($slurm::config::open_firewall == 1) {
+    firewall{ '203 open slurmdbd port':
+      action => 'accept',
+      dport  => $slurm::config::accounting_storage_port,
+      proto  => 'tcp',
+    }
   }
 }

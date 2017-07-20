@@ -222,6 +222,8 @@ class slurm::config (
     'PartitionName' => 'workers',
     'MaxMemPerCPU' => '2000',
   }],
+
+  Integer[0,1] $open_firewall = 0,
 ) {
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin

@@ -145,6 +145,7 @@ The following minimal configuration is required for the module to work, i.e. you
 
 slurm::config::control_machine: slurm-master.yourdomain.com   # Only one controller is needed, backup is optional
 slurm::config::plugin_dir: /usr/lib64/slurm                   # Path to your SLURM installation
+slurm::config::open_firewall: 1                               # Open the SLURM ports using the puppet firewall module
 
 slurm::config::workernodes:
   -
@@ -427,6 +428,8 @@ class slurm::config (
     'PartitionName' => 'workers',
     'MaxMemPerCPU' => '2000',
   }],
+
+  Integer[0,1] $open_firewall = 0,
 )
 ```
 The configuration class, common to all types of nodes, is responsible to create the main slurm.conf configuration file. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html). Almost all default values are taken from SLURM's official documentation, except the control_machine, the workernodes and the partitions; they are provided as an example.

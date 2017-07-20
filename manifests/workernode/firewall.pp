@@ -14,9 +14,11 @@
 
 class slurm::workernode::firewall {
 
-  firewall{ '201 open slurmd port':
-    action => 'accept',
-    dport  => $slurm::config::slurmd_port,
-    proto  => 'tcp',
+  if ($slurm::config::open_firewall == 1) {
+    firewall{ '201 open slurmd port':
+      action => 'accept',
+      dport  => $slurm::config::slurmd_port,
+      proto  => 'tcp',
+    }
   }
 }
