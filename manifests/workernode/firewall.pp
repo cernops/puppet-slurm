@@ -14,7 +14,7 @@
 
 class slurm::workernode::firewall {
 
-  if ($slurm::config::open_firewall == 1) {
+  if ($slurm::config::open_firewall) {
     firewall{ '201 open slurmd port':
       action => 'accept',
       dport  => $slurm::config::slurmd_port,

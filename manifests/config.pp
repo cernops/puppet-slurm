@@ -223,7 +223,7 @@ class slurm::config (
     'MaxMemPerCPU' => '2000',
   }],
 
-  Integer[0,1] $open_firewall = 0,
+  Boolean[true,false] $open_firewall = false,
 ) {
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin
