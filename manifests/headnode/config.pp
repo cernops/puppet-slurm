@@ -2,7 +2,7 @@
 #
 # Ensures that the slurmctld service is running and restarted if the configuration file is modified.
 #
-# version 20170623
+# version 20170802
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -20,5 +20,13 @@ class slurm::headnode::config {
       Package['slurm'],
       File[$slurm::config::required_files],
     ],
+  }
+
+  if ($slurm::config::open_firewall) {
+    firewall{ '200 open slurmctld port':
+      action => 'accept',
+      dport  => $slurm::config::slurmctld_port,
+      proto  => 'tcp',
+    }
   }
 }

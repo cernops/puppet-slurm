@@ -145,7 +145,7 @@ The following minimal configuration is required for the module to work, i.e. you
 
 slurm::config::control_machine: slurm-master.yourdomain.com   # Only one controller is needed, backup is optional
 slurm::config::plugin_dir: /usr/lib64/slurm                   # Path to your SLURM installation
-slurm::config::open_firewall: 1                               # Open the SLURM ports using the puppet firewall module
+slurm::config::open_firewall: true                            # Open the SLURM ports using the puppet firewall module
 
 slurm::config::workernodes:
   -
@@ -177,7 +177,7 @@ slurm::node_type: worker
 
 ### Version
 
-Currently, the module is configured to match versions 17.02.X. It has been tested and works with version 17.02.5.
+Currently, the module is configured to match versions 17.02.X. It has been tested and works with version 17.02.6.
 
 
 # Usage
@@ -429,7 +429,7 @@ class slurm::config (
     'MaxMemPerCPU' => '2000',
   }],
 
-  Integer[0,1] $open_firewall = 0,
+  Boolean $open_firewall = false,
 )
 ```
 The configuration class, common to all types of nodes, is responsible to create the main slurm.conf configuration file. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html). Almost all default values are taken from SLURM's official documentation, except the control_machine, the workernodes and the partitions; they are provided as an example.
@@ -493,7 +493,7 @@ The topology class is responsible to create the configuration file used by all t
 ```ruby
 class slurm::dbnode ()
 ```
-The database class is responsible to call the database specific setup, firewall and configure class.
+The database class is responsible to call the database specific setup and configure class.
 
 ### slurm::dbnode::setup
 ```ruby
@@ -557,19 +557,11 @@ class slurm::dbnode::config (
 ```
 The database configuration class is responsible to create the configuration file for the dbnode and start the slurmdbd daemon.
 
-
-### slurm::dbnode::firewall
-```ruby
-class slurm::dbnode::firewall ()
-```
-The database firewall class is responsible to open the slurmdbd port defined in the main configuration class.
-
-
 ## slurm::headnode
 ```ruby
 class slurm::headnode ()
 ```
-The headnode class is responsible to call the headnode specific setup, firewall and configure class.
+The headnode class is responsible to call the headnode specific setup and configure class.
 
 
 ### slurm::headnode::setup
@@ -593,18 +585,11 @@ class slurm::headnode::config ()
 The headnode configuration class is responsible to start the slurmctld daemon.
 
 
-### slurm::headnode::firewall
-```ruby
-class slurm::headnode::firewall ()
-```
-The headnode firewall class is responsible to open the slurmctld port defined in the main configuration class.
-
-
 ## slurm::workernode
 ```ruby
 class slurm::workernode ()
 ```
-The workernode class is responsible to call the workernode specific setup, firewall and configure class.
+The workernode class is responsible to call the workernode specific setup and configure class.
 
 
 ### slurm::workernode::setup
@@ -627,12 +612,6 @@ class slurm::workernode::config ()
 ```
 The workernode configuration class is responsible to start the slurmd daemon.
 
-
-### slurm::workernode::firewall
-```ruby
-class slurm::workernode::firewall ()
-```
-The workernode firewall class is responsible to open the slurmd port defined in the main configuration class.
 
 
 ## Files

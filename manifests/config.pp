@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurm.conf.html
 #
-# version 20170623
+# version 20170802
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -223,7 +223,7 @@ class slurm::config (
     'MaxMemPerCPU' => '2000',
   }],
 
-  Boolean[true,false] $open_firewall = false,
+  Boolean $open_firewall = false,
 ) {
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin

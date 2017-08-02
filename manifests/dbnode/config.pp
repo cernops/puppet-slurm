@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurmdbd.conf.html
 #
-# version 20170623
+# version 20170802
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -75,5 +75,13 @@ class slurm::dbnode::config (
       Package['slurm-slurmdbd'],
       File[$slurm::config::required_files],
     ],
+  }
+
+  if ($slurm::config::open_firewall) {
+    firewall{ '203 open slurmdbd port':
+      action => 'accept',
+      dport  => $slurm::config::accounting_storage_port,
+      proto  => 'tcp',
+    }
   }
 }
