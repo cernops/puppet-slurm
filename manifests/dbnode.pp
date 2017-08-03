@@ -12,7 +12,6 @@
 
 class slurm::dbnode {
 
-  include ::slurm::dbnode::firewall
   include ::slurm::setup
   include ::slurm::dbnode::setup
   include ::slurm::config

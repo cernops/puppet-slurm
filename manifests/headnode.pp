@@ -12,7 +12,6 @@
 
 class slurm::headnode {
 
-  include ::slurm::headnode::firewall
   include ::slurm::setup
   include ::slurm::headnode::setup
   include ::slurm::config

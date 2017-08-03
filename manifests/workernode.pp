@@ -12,7 +12,6 @@
 
 class slurm::workernode {
 
-  include ::slurm::workernode::firewall
   include ::slurm::setup
   include ::slurm::workernode::setup
   include ::slurm::config
