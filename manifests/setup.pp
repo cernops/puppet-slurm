@@ -16,7 +16,7 @@
 # @param munge_home_loc Location of MUNGE's home folder.
 # @param munge_run_loc Location of MUNGE's run folder.
 #
-# version 20170627
+# version 20170804
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -25,7 +25,7 @@
 #
 
 class slurm::setup (
-  String[1,default] $slurm_version = '17.02.5',
+  String[1,default] $slurm_version = '17.02.6',
   Integer[0,default] $slurm_gid = 950,
   Integer[0,default] $slurm_uid = 950,
   String[1,default] $slurm_home_loc = '/usr/local/slurm',
