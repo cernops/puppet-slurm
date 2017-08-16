@@ -52,7 +52,7 @@ class slurm::setup (
     system  => true,
     uid     => $slurm_uid,
   }
-  file{ dirtree($slurm_home_loc) :
+  file{ dirtree($slurm_home_loc, $slurm_home_loc) :
     ensure  => directory,
   }
   -> file{ 'slurm folder':
@@ -63,7 +63,7 @@ class slurm::setup (
     mode    => '1755',
     require => User['slurm'],
   }
-  file{ dirtree($slurm_log_file) :
+  file{ dirtree($slurm_log_file, $slurm_log_file) :
     ensure  => directory,
   }
   -> file{ 'slurm log folder':
@@ -74,7 +74,7 @@ class slurm::setup (
     mode    => '1755',
     require => User['slurm'],
   }
-  file{ dirtree($slurm_plugstack_loc) :
+  file{ dirtree($slurm_plugstack_loc, $slurm_plugstack_loc) :
     ensure  => directory,
   }
   -> file{ 'slurm plugstack folder':

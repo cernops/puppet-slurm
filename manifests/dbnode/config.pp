@@ -59,7 +59,7 @@ class slurm::dbnode::config (
   Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
 ) {
 
-  file{ delete(dirtree($log_file), $log_file) :
+  file{ dirtree($log_file, $log_file) :
     ensure  => directory,
   }
   -> file{ 'slurmdbd log file':

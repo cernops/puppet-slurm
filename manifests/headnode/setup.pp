@@ -26,7 +26,7 @@ class slurm::headnode::setup (
 
   ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
-  file{ dirtree($slurm::config::state_save_location) :
+  file{ dirtree($slurm::config::state_save_location, $slurm::config::state_save_location) :
     ensure  => directory,
   }
   -> file{ 'slurm state save location folder':
@@ -38,7 +38,7 @@ class slurm::headnode::setup (
     require => User['slurm'],
   }
 
-  file{ delete(dirtree($slurmctld_log_file), $slurmctld_log_file) :
+  file{ dirtree($slurmctld_log_file, $slurmctld_log_file) :
     ensure  => directory,
   }
   -> file{ 'slurmctld log':

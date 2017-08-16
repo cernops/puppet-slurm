@@ -253,7 +253,7 @@ class slurm::config (
       system  => true,
       uid     => $munge_uid,
     }
-    file{ dirtree($munge_loc) :
+    file{ dirtree($munge_loc, $munge_loc) :
       ensure  => directory,
     }
     -> file{ 'munge folder':
@@ -264,7 +264,7 @@ class slurm::config (
       mode    => '1700',
       require => User['munge'],
     }
-    file{ dirtree($munge_home_loc) :
+    file{ dirtree($munge_home_loc, $munge_home_loc) :
       ensure  => directory,
     }
     -> file{ 'munge homedir':
@@ -275,7 +275,7 @@ class slurm::config (
       mode    => '1700',
       require => User['munge'],
     }
-    file{ dirtree($munge_log_file) :
+    file{ dirtree($munge_log_file, $munge_log_file) :
       ensure  => directory,
     }
     -> file{ 'munge log folder':
@@ -286,7 +286,7 @@ class slurm::config (
       mode    => '1700',
       require => User['munge'],
     }
-    file{ dirtree($munge_run_loc) :
+    file{ dirtree($munge_run_loc, $munge_run_loc) :
       ensure  => directory,
     }
     -> file{ 'munge run folder':

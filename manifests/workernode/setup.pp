@@ -26,7 +26,7 @@ class slurm::workernode::setup (
 
   ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
-  file{ dirtree($slurmd_spool_dir) :
+  file{ dirtree($slurmd_spool_dir, $slurmd_spool_dir) :
     ensure  => directory,
   }
   -> file{ 'slurmd spool folder':
@@ -37,7 +37,7 @@ class slurm::workernode::setup (
     owner  => 'slurm',
   }
 
-  file{ delete(dirtree($slurmd_log_file), $slurmd_log_file) :
+  file{ dirtree($slurmd_log_file, $slurmd_log_file) :
     ensure  => directory,
   }
   -> file{ 'slurmd log':
