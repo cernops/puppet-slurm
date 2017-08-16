@@ -6,17 +6,18 @@
 # @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written
 # @param packages Packages to install
 #
-# version 20170627
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 
 class slurm::headnode::setup (
-  String[1,default] $slurmctld_spool_dir = '/var/spool/slurmctld',
-  String[1,default] $slurmctld_log_file = '/var/log/slurm/slurmctld.log',
+  String $state_save_location = $slurm::config::state_save_location,
+  String $slurmctld_log_file = $slurm::config::slurmctld_log_file,
   Array[String] $packages = [
     'slurm-perlapi',
     'slurm-torque',
@@ -25,16 +26,22 @@ class slurm::headnode::setup (
 
   ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
-  file{ 'slurmctld spool folder':
+  file{ dirtree($slurm::config::state_save_location) :
     ensure  => directory,
-    path    => $slurmctld_spool_dir,
+  }
+  -> file{ 'slurm state save location folder':
+    ensure  => directory,
+    path    => $slurm::config::state_save_location,
+    owner   => 'slurm',
     group   => 'slurm',
     mode    => '1755',
-    owner   => 'slurm',
     require => User['slurm'],
   }
 
-  file{ 'slurmctld log':
+  file{ delete(dirtree($slurmctld_log_file), $slurmctld_log_file) :
+    ensure  => directory,
+  }
+  -> file{ 'slurmctld log':
     ensure  => file,
     path    => $slurmctld_log_file,
     group   => 'slurm',
@@ -42,8 +49,7 @@ class slurm::headnode::setup (
     owner   => 'slurm',
     require => User['slurm'],
   }
-
-  logrotate::file{ 'slurmctld':
+  -> logrotate::file{ 'slurmctld':
     log     => $slurmctld_log_file,
     options => ['weekly','copytruncate','rotate 26','compress'],
   }

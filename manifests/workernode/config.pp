@@ -2,11 +2,12 @@
 #
 # Ensures that the slurmd service is running and restarted if the configuration file is modified.
 #
-# version 20170802
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 

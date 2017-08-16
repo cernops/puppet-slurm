@@ -4,16 +4,17 @@
 #
 # @param node_type Specifies the node type which defines the configuration that will be applied to that node.
 #
-# version 20170621
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 
 class slurm (
-  Enum['worker','head','db','db-head','none'] $node_type = 'none',
+  Enum['worker','head','db','db-head','none'] $node_type,
 ) {
 
   case $node_type {

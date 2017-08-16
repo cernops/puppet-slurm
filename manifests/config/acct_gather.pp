@@ -11,26 +11,27 @@
 # @param profile_hdf5_default A comma delimited list of data types to be collected for each job submission.
 # @param infiniband_ofed_port This parameter represents the port number of the local Infiniband card that we are willing to monitor.
 #
-# version 20170602
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 
 class slurm::config::acct_gather (
   Boolean $with_energy_ipmi = false,
-  Integer[0,default] $energy_ipmi_frequency = 10,
+  Integer[0] $energy_ipmi_frequency = 10,
   Enum['no','yes'] $energy_ipmi_calc_adjustment = 'no',
-  Hash[String,String] $energy_ipmi_power_sensors = {},
-  String[0,default] $energy_ipmi_username = '',
-  String[0,default] $energy_ipmi_password = '',
+  Optional[Hash[String,String]] $energy_ipmi_power_sensors = undef,
+  Optional[String] $energy_ipmi_username = undef,
+  Optional[String] $energy_ipmi_password = undef,
   Boolean $with_profile_hdf5 = false,
-  String[0,default] $profile_hdf5_dir = '',
-  String[1,default] $profile_hdf5_default = 'None',
+  Optional[String] $profile_hdf5_dir = undef,
+  String $profile_hdf5_default = 'None',
   Boolean $with_infiniband_ofed = false,
-  Integer[0,default] $infiniband_ofed_port = 1,
+  Integer[0] $infiniband_ofed_port = 1,
 ) {
 
   # AcctGather* plugin configuration

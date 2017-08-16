@@ -6,17 +6,18 @@
 # @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written
 # @param packages Packages to install
 #
-# version 20170627
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 
 class slurm::workernode::setup (
-  String[1,default] $slurmd_spool_dir = '/var/spool/slurmd',
-  String[1,default] $slurmd_log_file = '/var/log/slurm/slurmd.log',
+  String $slurmd_spool_dir = $slurm::config::slurmd_spool_dir,
+  String $slurmd_log_file = $slurm::config::slurmd_log_file,
   Array[String] $packages = [
     'slurm-perlapi',
     'slurm-torque',
@@ -25,7 +26,10 @@ class slurm::workernode::setup (
 
   ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
 
-  file{ 'slurmd spool folder':
+  file{ dirtree($slurmd_spool_dir) :
+    ensure  => directory,
+  }
+  -> file{ 'slurmd spool folder':
     ensure => directory,
     path   => $slurmd_spool_dir,
     group  => 'slurm',
@@ -33,15 +37,17 @@ class slurm::workernode::setup (
     owner  => 'slurm',
   }
 
-  file{ 'slurmd log':
+  file{ delete(dirtree($slurmd_log_file), $slurmd_log_file) :
+    ensure  => directory,
+  }
+  -> file{ 'slurmd log':
     ensure => file,
     path   => $slurmd_log_file,
     group  => 'slurm',
     mode   => '0600',
     owner  => 'slurm',
   }
-
-  logrotate::file{ 'slurmd':
+  -> logrotate::file{ 'slurmd':
     log     => $slurmd_log_file,
     options => ['weekly','copytruncate','rotate 26','compress'],
   }

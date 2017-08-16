@@ -20,32 +20,33 @@
 # @param constrain_devices If configured to "yes" then constrain the job's allowed devices based on GRES allocated resources.
 # @param allowed_devices_file If the ConstrainDevices field is set to "yes" then this file has to be used to declare the devices that need to be allowed by default for all the jobs.
 #
-# version 20170627
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 
 class slurm::config::cgroup (
   Enum['no','yes'] $cgroup_automount = 'no',
-  String[1,default] $cgroup_mountpoint = '/sys/fs/cgroup',
+  String $cgroup_mountpoint = '/sys/fs/cgroup',
   Enum['no','yes'] $constrain_cores = 'no',
   Enum['no','yes'] $task_affinity = 'no',
   Enum['no','yes'] $constrain_ram_space = 'no',
   Float[0,100] $allowed_ram_space = 100.0,
-  Integer[0,default] $min_ram_space = 30,
+  Integer[0] $min_ram_space = 30,
   Float[0,100] $max_ram_percent = 100.0,
   Enum['no','yes'] $constrain_swap_space = 'no',
   Float[0,100] $allowed_swap_space = 0.0,
   Float[0,100] $max_swap_percent = 100.0,
   Enum['no','yes'] $constrain_kmem_space = 'yes',
   Float[0,100] $allowed_kmem_space = 1.0,
-  Integer[0,default] $min_kmem_space = 30,
+  Integer[0] $min_kmem_space = 30,
   Float[0,100] $max_kmem_percent = 100.0,
   Enum['no','yes'] $constrain_devices = 'no',
-  String[1,default] $allowed_devices_file = '/etc/slurm/cgroup_allowed_devices_file.conf',
+  String $allowed_devices_file = '/etc/slurm/cgroup_allowed_devices_file.conf',
 ) {
 
   # Cgroup configuration

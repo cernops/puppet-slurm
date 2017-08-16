@@ -4,19 +4,17 @@
 #
 # @param switches Array of hashes containing the information about the topology.
 #
-# version 20170602
+# version 20170816
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
 #          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
 # License: GNU GPL v3 or later.
 #
 
 class slurm::config::topology (
-  Array[Hash[String, String]] $switches = [{
-    'SwitchName' => 's0',
-    'Nodes' => 'worker[00-10]',
-  }],
+  Array[Hash[String, String]] $switches,
 ) {
 
   # Topology file
