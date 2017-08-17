@@ -59,19 +59,21 @@ class slurm::dbnode::config (
   Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
 ) {
 
-  file{ dirtree($log_file, $log_file) :
-    ensure  => directory,
-  }
-  -> file{ 'slurmdbd log file':
-    ensure => file,
-    path   => $log_file,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
-  }
-  -> logrotate::file{ 'slurmdbd':
-    log     => $log_file,
-    options => ['weekly','copytruncate','rotate 26','compress'],
+  if ($log_file != undef) {
+    file{ dirtree($log_file, $log_file) :
+      ensure  => directory,
+    }
+    -> file{ 'slurmdbd log file':
+      ensure => file,
+      path   => $log_file,
+      group  => 'slurm',
+      mode   => '0600',
+      owner  => 'slurm',
+    }
+    -> logrotate::file{ 'slurmdbd':
+      log     => $log_file,
+      options => ['weekly','copytruncate','rotate 26','compress'],
+    }
   }
 
   file{ "/etc/slurm/${file_name}":

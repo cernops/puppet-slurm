@@ -17,7 +17,7 @@
 
 class slurm::headnode::setup (
   String $state_save_location = $slurm::config::state_save_location,
-  String $slurmctld_log_file = $slurm::config::slurmctld_log_file,
+  Optional[String] $slurmctld_log_file = $slurm::config::slurmctld_log_file,
   Array[String] $packages = [
     'slurm-perlapi',
     'slurm-torque',
@@ -38,19 +38,21 @@ class slurm::headnode::setup (
     require => User['slurm'],
   }
 
-  file{ dirtree($slurmctld_log_file, $slurmctld_log_file) :
-    ensure  => directory,
-  }
-  -> file{ 'slurmctld log':
-    ensure  => file,
-    path    => $slurmctld_log_file,
-    group   => 'slurm',
-    mode    => '0600',
-    owner   => 'slurm',
-    require => User['slurm'],
-  }
-  -> logrotate::file{ 'slurmctld':
-    log     => $slurmctld_log_file,
-    options => ['weekly','copytruncate','rotate 26','compress'],
+  if ($slurmctld_log_file != undef) {
+    file{ dirtree($slurmctld_log_file, $slurmctld_log_file) :
+      ensure  => directory,
+    }
+    -> file{ 'slurmctld log':
+      ensure  => file,
+      path    => $slurmctld_log_file,
+      group   => 'slurm',
+      mode    => '0600',
+      owner   => 'slurm',
+      require => User['slurm'],
+    }
+    -> logrotate::file{ 'slurmctld':
+      log     => $slurmctld_log_file,
+      options => ['weekly','copytruncate','rotate 26','compress'],
+    }
   }
 }

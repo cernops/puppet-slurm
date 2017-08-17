@@ -17,7 +17,7 @@
 
 class slurm::workernode::setup (
   String $slurmd_spool_dir = $slurm::config::slurmd_spool_dir,
-  String $slurmd_log_file = $slurm::config::slurmd_log_file,
+  Optional[String] $slurmd_log_file = $slurm::config::slurmd_log_file,
   Array[String] $packages = [
     'slurm-perlapi',
     'slurm-torque',
@@ -37,18 +37,20 @@ class slurm::workernode::setup (
     owner  => 'slurm',
   }
 
-  file{ dirtree($slurmd_log_file, $slurmd_log_file) :
-    ensure  => directory,
-  }
-  -> file{ 'slurmd log':
-    ensure => file,
-    path   => $slurmd_log_file,
-    group  => 'slurm',
-    mode   => '0600',
-    owner  => 'slurm',
-  }
-  -> logrotate::file{ 'slurmd':
-    log     => $slurmd_log_file,
-    options => ['weekly','copytruncate','rotate 26','compress'],
+  if ($slurmd_log_file != undef) {
+    file{ dirtree($slurmd_log_file, $slurmd_log_file) :
+      ensure  => directory,
+    }
+    -> file{ 'slurmd log':
+      ensure => file,
+      path   => $slurmd_log_file,
+      group  => 'slurm',
+      mode   => '0600',
+      owner  => 'slurm',
+    }
+    -> logrotate::file{ 'slurmd':
+      log     => $slurmd_log_file,
+      options => ['weekly','copytruncate','rotate 26','compress'],
+    }
   }
 }
