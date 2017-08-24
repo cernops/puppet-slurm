@@ -10,23 +10,110 @@
 # Table of Contents
 
 1. [Description](#description)
-2. [Setup - The basics of getting started with slurm](#setup)
-    * [What slurm affects](#what-slurm-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with slurm](#beginning-with-slurm)
+2. [Structure] (#structure)
 3. [Usage](#usage)
-4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations](#limitations)
-6. [Development - Guide for contributing to the module](#development)
-7. [Contributors](#contributors)
+    * [Requirements](#requirements-for-usage-at-cern)
+    * [Beginning with slurm](#beginning-with-slurm)
+5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+    * [What slurm affects](#what-slurm-affects)
+    * [Class references] (#class-references)
+6. [Limitations](#limitations)
+7. [Development - Guide for contributing to the module](#development)
+8. [Contributors](#contributors)
 
 # Description
 
 This module installs the SLURM scheduler for running parallel programs on an HPC cluster.
 
-It sets up, configures and installs all required binaries and configuration files according to the parameters shown [below](#beginning-with-slurm). It relies on hiera data provided by the hostgroup it is included in.
+This module sets up, configures and installs all required binaries and configuration files. All the configuration parameters come from Hiera data, and therefore actual class parameters have been kept to a bare minimum.
+Jump [here](#beginning-with-slurm) for a quickstart. 
 
-# Setup
+This module supports and has been tested on Redhat-based systems and works out of the box on CentOS 7. Patches for other distributions are welcome.
+
+# Structure
+
+- The *slurm* `::slurm` class only takes one parameter, `node_type`, which maps to the node's role in the slurm cluster. This value can be either `head`, `worker`, `db`, `db-head` (for db+head) or `none`. The rest of the values should be set through Hiera.
+  - The *config* class `slurm::config` holds all the parameters available for various configuration files. All the parameter names map to those of the slurm documentation.
+  - The *setup* `slurm::setup` class contains the packages, directories, user names, uid and guid that are set up during installation.
+  - There are also role-specific config and setup classes; e.g. slurm::dbnode::config, slurm::workernode::setup. These contain role-specific parameters that can also be set through hiera.
+
+# Usage 
+
+## Requirements for usage at CERN
+
+This package should provide everything necessary for most SLURM deployments.
+
+If you use this module at CERN, it needs to be enabled in the pluginsync filter :
+```yaml
+# my_hostgroup.yaml
+
+# enabling the slurm module
+pluginsync_filter:
+ - slurm
+
+```
+
+## Beginning with slurm
+
+This Section provides examples for a minimal configuration to get started with a basic setup.
+
+To use the module, first include it in your hostgroup manifest :
+```yaml
+# my_hostgroup.pp
+
+# including slurm to be able to do some awesome scheduling on HPC machines
+include ::slurm
+
+# put my secret mungekey on all the machine for the MUNGE security plugin
+file{ '/etc/munge/munge.key':
+  ensure  => file,
+  content => 'YourIncrediblyStrongSymmetricKey',
+  owner   => 'munge',
+  group   => 'munge',
+  mode    => '0400',
+}
+
+```
+and then make sure you have all the necessary configuration options in data; without any Hiera data, the module will *not* work, puppet will trigger a warning and nothing will be installed and/or configured.
+
+The following minimal configuration is required for the module to work, i.e. you need a master controller, at least one workernode and a partition containing the nodes.
+```yaml
+# my_hostgroup.yaml
+
+slurm::config::control_machine: slurm-master.yourdomain.com   # Only one controller is needed, backup is optional
+slurm::config::plugin_dir: /usr/lib64/slurm                   # Path to your SLURM installation
+slurm::config::open_firewall: true                            # Open the SLURM ports using the puppet firewall module
+
+slurm::config::workernodes:
+  -
+    NodeName: slave[001-010]
+    CPUs: 16
+    RealMemory: 64000
+    State: UNKNOWN
+
+slurm::config::partitions:
+  -
+    PartitionName: Arena
+    Nodes: ALL
+    Default: YES
+    State: UP
+```
+
+You also need to specify on the sub-hostgroups which type the node should be in the slurm configuration, e.g. head, worker or database node.
+```yaml
+# my_hostgroup/head.yaml
+
+slurm::node_type: head
+```
+
+```yaml
+# my_hostgroup/worker.yaml
+
+slurm::node_type: worker
+```
+
+
+# References
 
 ## What slurm affects
 
@@ -75,118 +162,35 @@ Another alternative for this value is `auth/none` which requires the `auth-none`
 #### Database configuration
 The database for SLURM is used solely for accounting purposes. The module supports a setup with a database node either separate from or combined with a headnode. The database configuration is done in the [dbnode](manifests/dbnode) manifests.
 
-The main configuration values (as defined in [slurm.conf](#slurm.conf.erb) and [slurmdbd.conf](#slurmdbd.conf.erb) for the database are the following:
+The main configuration values correspond with the ones defined in [slurm.conf](#slurm.conf.erb) and [slurmdbd.conf](#slurmdbd.conf.erb). You should set `$accounting_storage_type` to suit your preferences. It is set to `accounting_storage/none` by default, and in this case no database configuration is required. Otherwise, you should consider setting the following parameters as well:
 ```ruby
 # class slurm::config
-String $accounting_storage_host     = 'accountingdb.example.org',                 # DB node hostname
-String $accounting_storage_loc      = 'slurm_acct_db',                            # DB name (inside the MySQL DB)
-String $accounting_storage_pass     = '/var/run/munge/munge.socket.2',            # DB authentication (password or munge)
-Integer $accounting_storage_port    = 6819,                                       # DB node port
-String $accounting_storage_type     = 'accounting_storage/none',                  # Type of storage (none, filetext, mysql, slurmdbd)
-String $accounting_storage_user     = 'slurm',                                    #
-String $cluster_name                = 'mycluster',                                #
-String $job_acct_gather_frequency   = 'task=30,energy=0,network=0,filesystem=0',  # Accounting sampling interval
-String $job_acct_gather_type        = 'jobacct_gather/none',                      # Accounting mechanism (none or linux)
-String $acct_gather_energy_type     = 'acct_gather_energy/none',                  # Energy accounting plugin (none, ipmi, rapl)
-String $acct_gather_infiniband_type = 'acct_gather_infiniband/none',              # Infiniband accounting plugin (none, ofed)
-String $acct_gather_filesystem_type = 'acct_gather_filesystem/none',              # Filesystem accounting plugin (none, lustre)
-String $acct_gather_profile_type    = 'acct_gather_profile/none',                 # Job profiling plugin (none, hdfs5)
+String $accounting_storage_host     # slurm.conf AccountingStorageHost
+String $accounting_storage_loc      # slurm.conf AccountingStorageLoc
+String $accounting_storage_pass     # slurm.conf AccountingStoragePass
+Integer $accounting_storage_port    # slurm.conf AccountingStoragePort [Default: 6819].
+String $accounting_storage_user     # slurm.conf AccountingStorageUser
+String $job_acct_gather_frequency   # slurm.conf JobAcctGatherFrequency [Default: {'task' => 30,'energy' => 0,'network' => 0,'filesystem' => 0}].
 
 # class slurm::dbnode::config
-String $dbd_host      = 'localhost',                                              # DB node hostname (either headnode or dbnode hostname. Preferably `localhost`.)
-Integer $dbd_port     = 6819,                                                     # DB node port
-String $slurm_user    = 'slurm',                                                  #
-String $storage_host  = 'db_instance.example.org',                                # Hostname of the node where MySQL instance is running
-Integer $storage_port = 1234,                                                     # MySQL instance port number
-String $storage_user  = 'user',                                                   #
-String $storage_loc   = 'accountingdb',                                           # DB name (inside the MySQL DB)
+String $dbd_host      # slurmdb.conf DbdHost [Default: 'localhost'].
+Integer $dbd_port     # slurmdb.conf DbdPort [Default: 6819].
+String $storage_host  # slurmdb.conf StorageHost
+Integer $storage_port # slurmdb.conf StoragePort [Default: 1234].
+String $storage_user  # slurmdb.conf StorageUser [Default: 'slurm'].
+String $storage_loc   # slurmdb.conf StorageLoc [Default: 'accountingdb'].
 ```
 
 If the database is running on a headnode, and locally, the hostnames can be set as `localhost`.
 Further information can be found in the [official documentation](https://slurm.schedmd.com/accounting.html).
 
 
-## Setup requirements
-
-If you use this module at CERN, it needs to be enabled in the pluginsync filter :
-```yaml
-# my_hostgroup.yaml
-
-# enabling the slurm module
-pluginsync_filter:
- - slurm
-
-```
-
-## Beginning with slurm
-
-To use the module, first include it in your hostgroup manifest :
-```yaml
-# my_hostgroup.pp
-
-# including slurm to be able to do some awesome scheduling on HPC machines
-include ::slurm
-
-# put my secret mungekey on all the machine for the MUNGE security plugin
-file{ '/etc/munge/munge.key':
-  ensure  => file,
-  content => 'YourIncrediblyStrongSymmetricKey',
-  owner   => 'munge',
-  group   => 'munge',
-  mode    => '0400',
-}
-
-```
-and then make sure you have all the necessary configuration options in data; without any data, the module will *not* work, puppet will trigger a warning and nothing will be installed and/or configured.
-
-The following minimal configuration is required for the module to work, i.e. you need a master controller, at least one workernode and a partition containing the nodes.
-```yaml
-# my_hostgroup.yaml
-
-slurm::config::control_machine: slurm-master.yourdomain.com   # Only one controller is needed, backup is optional
-slurm::config::plugin_dir: /usr/lib64/slurm                   # Path to your SLURM installation
-slurm::config::open_firewall: true                            # Open the SLURM ports using the puppet firewall module
-
-slurm::config::workernodes:
-  -
-    NodeName: slave[001-010]
-    CPUs: 16
-    RealMemory: 64000
-    State: UNKNOWN
-
-slurm::config::partitions:
-  -
-    PartitionName: Arena
-    Nodes: ALL
-    Default: YES
-    State: UP
-```
-
-You also need to specify on the sub-hostgroups which type the node should be in the slurm configuration, e.g. head, worker or database node.
-```yaml
-# my_hostgroup/head.yaml
-
-slurm::node_type: head
-```
-
-```yaml
-# my_hostgroup/worker.yaml
-
-slurm::node_type: worker
-```
-
 ### Version
 
 Currently, the module is configured to match versions 17.02.X. It has been tested and works with version 17.02.6.
 
-
-# Usage
-
-Please refer to the official [SLURM documentation](https://slurm.schedmd.com/).
-
-# References
-
-## slurm
+## Class references
+### slurm
 ```ruby
 class slurm (
   Enum['worker','head','db','db-head','none'] $node_type,
@@ -195,7 +199,7 @@ class slurm (
 The main class is responsible to call the relevant node type classes according to node_type parameter or to warn the user that he did not specify any node type.
 
 
-## slurm::setup
+### slurm::setup
 ```ruby
 class slurm::setup (
   String $slurm_version = '17.02.6',
@@ -209,7 +213,7 @@ class slurm::setup (
 The setup class, common to all types of nodes, is responsible to set up all the folders and keys needed by SLURM to work correctly. For more details about each parameter, please refer to the header of [setup.pp](manifest/setup.pp).
 
 
-## slurm::config
+### slurm::config
 ```ruby
 class slurm::config (
   String $control_machine,
@@ -429,7 +433,7 @@ class slurm::config (
 The configuration class, common to all types of nodes, is responsible to create the main slurm.conf configuration file. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html). Almost all default values are taken from SLURM's official documentation, except the control_machine, the workernodes and the partitions; they are provided as an example.
 
 
-### slurm::config::acct_gather
+#### slurm::config::acct_gather
 ```ruby
 class slurm::config::acct_gather (
   Boolean $with_energy_ipmi = false,
@@ -448,7 +452,7 @@ class slurm::config::acct_gather (
 The acct_gather class is responsible to create the configuration file used by the AcctGather type plugins, namely EnergyIPMI, ProfileHDF5 and InfinibandOFED. Details about the parameters can be found on the [dedicated page](https://slurm.schedmd.com/acct_gather.conf.html) in the SLURM documentation.
 
 
-### slurm::config::cgroup
+#### slurm::config::cgroup
 ```ruby
 class slurm::config::cgroup (
   Enum['no','yes'] $cgroup_automount = 'no',
@@ -472,7 +476,7 @@ class slurm::config::cgroup (
 ```
 The cgroup class is responsible to create the configuration file used by all the plugins using cgroups, namely proctrack/cgroup, task/cgroup and jobacct_gather/cgroup. Details about the parameters can be found on the [dedicated page](https://slurm.schedmd.com/cgroup.conf.html) in the SLURM documentation.
 
-### slurm::config::topology
+#### slurm::config::topology
 ```ruby
 class slurm::config::topology (
   Array[Hash[String, String]] $switches,
@@ -480,13 +484,13 @@ class slurm::config::topology (
 ```
 The topology class is responsible to create the configuration file used by all the plugins using topology, namely topology/tree and route/topology. Details about the parameters can be found on the [dedicated page](https://slurm.schedmd.com/topology.conf.html) in the SLURM documentation.
 
-## slurm::dbnode
+### slurm::dbnode
 ```ruby
 class slurm::dbnode ()
 ```
 The database class is responsible to call the database specific setup and configure class.
 
-### slurm::dbnode::setup
+#### slurm::dbnode::setup
 ```ruby
 class slurm::dbnode::setup (
   Array[String] $packages = [
@@ -497,7 +501,7 @@ class slurm::dbnode::setup (
 ```
 The database setup class is responsible to install the necessary packages and create all the necessary folders and files for the dbnode to work.
 
-### slurm::dbnode::config
+#### slurm::dbnode::config
 ```ruby
 class slurm::dbnode::config (
   String $file_name = 'slurmdbd.conf',
@@ -547,14 +551,14 @@ class slurm::dbnode::config (
 ```
 The database configuration class is responsible to create the configuration file for the dbnode and start the slurmdbd daemon.
 
-## slurm::headnode
+### slurm::headnode
 ```ruby
 class slurm::headnode ()
 ```
 The headnode class is responsible to call the headnode specific setup and configure class.
 
 
-### slurm::headnode::setup
+#### slurm::headnode::setup
 ```ruby
 class slurm::headnode::setup (
   String $state_save_location = $slurm::config::state_save_location,
@@ -568,21 +572,21 @@ class slurm::headnode::setup (
 The headnode setup class is responsible to install the necessary packages and create all the necessary folders and files for the headnode to work.
 
 
-### slurm::headnode::config
+#### slurm::headnode::config
 ```ruby
 class slurm::headnode::config ()
 ```
 The headnode configuration class is responsible to start the slurmctld daemon.
 
 
-## slurm::workernode
+### slurm::workernode
 ```ruby
 class slurm::workernode ()
 ```
 The workernode class is responsible to call the workernode specific setup and configure class.
 
 
-### slurm::workernode::setup
+#### slurm::workernode::setup
 ```ruby
 class slurm::workernode::setup (
   String $slurmd_spool_dir = $slurm::config::slurmd_spool_dir,
@@ -596,7 +600,7 @@ class slurm::workernode::setup (
 The workernode setup class is responsible to install the necessary packages and create all the necessary folders and files for the workernode to work.
 
 
-### slurm::workernode::config
+#### slurm::workernode::config
 ```ruby
 class slurm::workernode::config ()
 ```
@@ -604,24 +608,24 @@ The workernode configuration class is responsible to start the slurmd daemon.
 
 
 
-## Files
+### Files
 
-### acct_gather.conf.erb
+#### acct_gather.conf.erb
 Slurm configuration file for the acct_gather plugins. More details in the [acct_gather.conf documentation](https://slurm.schedmd.com/acct_gather.conf.html).
 
-### cgroup.conf.erb
+#### cgroup.conf.erb
 Slurm configuration file for the cgroup support. More details in the [cgroup.conf documentation](https://slurm.schedmd.com/cgroup.conf.html).
 
-### plugstack.conf.erb
+#### plugstack.conf.erb
 Slurm configuration file for SPANK plugins. More details in the [SPANK documentation](https://slurm.schedmd.com/spank.html).
 
-### slurm.conf.erb
+#### slurm.conf.erb
 Slurm configuration file, common to all the nodes in the cluster. More details in the [slurm.conf documentation](https://slurm.schedmd.com/slurm.conf.html).
 
-### slurmdbd.conf.erb
+#### slurmdbd.conf.erb
 Slurm Database Daemon (SlurmDBD) configuration file. More details in the [slurmdbd.conf documentation](https://slurm.schedmd.com/slurmdbd.conf.html).
 
-### topology.conf.erb
+#### topology.conf.erb
 Slurm configuration file for defining the network topology. More details in the [topology.conf documentation](https://slurm.schedmd.com/topology.conf.html).
 
 # Limitations
