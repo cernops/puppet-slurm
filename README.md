@@ -32,10 +32,15 @@ This module supports and has been tested on Redhat-based systems and works out o
 
 # Structure
 
-- The *slurm* `::slurm` class only takes one parameter, `node_type`, which maps to the node's role in the slurm cluster. This value can be either `head`, `worker`, `db`, `db-head` (for db+head) or `none`. The rest of the values should be set through Hiera.
-  - The *config* class `slurm::config` holds all the parameters available for various configuration files. All the parameter names map to those of the slurm documentation.
-  - The *setup* `slurm::setup` class contains the packages, directories, user names, uid and guid that are set up during installation.
-  - There are also role-specific config and setup classes; e.g. slurm::dbnode::config, slurm::workernode::setup. These contain role-specific parameters that can also be set through hiera.
+The module's class structure is described next. This is useful to the user to know which parameters go where in the class namespace.
+
+Please note that since this module supports over 300 parameters, these have not been arranged in the traditional fashion of having init.pp take all parameters and have them trickle down the hierarchy, but the parameters to each class has to be set through Hiera.
+
+- The main class *slurm* `::slurm` only takes one parameter, `node_type`, which maps to the node's role in the slurm cluster. This value can be either `head`, `worker`, `db`, `db-head` (for db+head) or `none`.
+  - The *setup* `slurm::setup` class contains some packages, directories, user names, uid and guid that are necessary before the actual installation and configuration.
+  - The *config* class `slurm::config` holds all the parameters available for various configuration files. All the parameter names map to those of the slurm documentation. This class also takes care of installing and configuring munge depending on the authentication method parameter.
+  - There are also role-specific config and setup classes; e.g. slurm::dbnode::config, slurm::workernode::setup. These contain role-specific parameters that can also be set through Hiera. These classes will take care of setting up and configuring necessary services for each role.
+
 
 # Usage 
 
@@ -64,7 +69,8 @@ To use the module, first include it in your hostgroup manifest :
 # including slurm to be able to do some awesome scheduling on HPC machines
 include ::slurm
 
-# put my secret mungekey on all the machine for the MUNGE security plugin
+# Put my secret mungekey on all the machine for the MUNGE security plugin
+# You can generate the content using `dd if=/dev/random bs=1 count=1024 >/etc/munge/munge.key`
 file{ '/etc/munge/munge.key':
   ensure  => file,
   content => 'YourIncrediblyStrongSymmetricKey',
