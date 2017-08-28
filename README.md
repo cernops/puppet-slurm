@@ -20,6 +20,7 @@
 6. [Limitations](#limitations)
 7. [Development - Guide for contributing to the module](#development)
 8. [Contributors](#contributors)
+9. [Credits] (#credits)
 
 # Description
 
@@ -327,3 +328,7 @@ Please document all changes in the CHANGELOG and update this README if necessary
   * Philippe Ganz (CERN) as creator and main maintainer
   * Carolina Lindqvist (CERN) as creator and main maintainer
   * Pablo Llopis (CERN) as main maintainer
+
+# Credits
+
+  * The dirtree function `dirtree.rb` was incorporated from https://github.com/puppetlabs/pltraining-dirtree
