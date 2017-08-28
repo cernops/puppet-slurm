@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurmdbd.conf.html
 #
-# version 20170816
+# version 20170828
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -31,12 +31,12 @@ class slurm::dbnode::config (
   Enum['no','yes'] $track_wc_key = 'no',
   Enum['no','yes'] $track_slurmctld_down = 'no',
   Enum['accounting_storage/mysql'] $storage_type = 'accounting_storage/mysql',
-  String $storage_host = 'db_instance.example.org',
+  Optional[String] $storage_host = undef,
   Optional[String] $storage_backup_host = undef,
-  Integer[0] $storage_port = 1234,
-  String $storage_user = 'user',
-  String $storage_pass = 'CHANGEME__storage_pass',
-  String $storage_loc = 'accountingdb',
+  Optional[Integer[0]] $storage_port = undef,
+  Optional[String] $storage_user = undef,
+  Optional[String] $storage_pass = undef,
+  Optional[String] $storage_loc = undef,
   String $archive_dir = '/tmp',
   Optional[String] $archive_script = undef,
   Enum['no','yes'] $archive_events = 'no',
