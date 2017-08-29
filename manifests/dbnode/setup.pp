@@ -14,7 +14,7 @@
 #
 
 class slurm::dbnode::setup (
-  Array[String] $slurmdbd_packages = slurm::params::slurmdbd_packages,
+  Array[String] $slurmdbd_packages = $slurm::params::slurmdbd_packages,
 ) inherits slurm::params {
 
   ensure_packages($slurmdbd_packages, {'ensure' => $slurm::setup::slurm_version})
