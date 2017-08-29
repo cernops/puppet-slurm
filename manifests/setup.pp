@@ -26,7 +26,7 @@ class slurm::setup (
   String $slurm_log_file = '/var/log/slurm',
   String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
   Array[String] $slurm_packages = $slurm::params::slurm_packages,
-) {
+) inherits slurm::params {
 
 ################################################################################
 # SLURM
