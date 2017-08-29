@@ -4,7 +4,7 @@
 #
 # @param packages Packages to install.
 #
-# version 20170816
+# version 20170829
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -14,12 +14,9 @@
 #
 
 class slurm::dbnode::setup (
-  Array[String] $packages = [
-    'slurm-slurmdbd',
-    'slurm-sql',
-  ],
-) {
+  Array[String] $slurmdbd_packages = slurm::params::slurmdbd_packages,
+) inherits slurm::params {
 
-  ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
+  ensure_packages($slurmdbd_packages, {'ensure' => $slurm::setup::slurm_version})
 
 }

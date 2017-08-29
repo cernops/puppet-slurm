@@ -9,7 +9,7 @@
 # @param slurm_log_file Location of SLURM's log folder.
 # @param slurm_plugstack_loc Location of SLURM's plugstack folder.
 #
-# version 20170816
+# version 20170829
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -25,18 +25,13 @@ class slurm::setup (
   String $slurm_home_loc = '/usr/local/slurm',
   String $slurm_log_file = '/var/log/slurm',
   String $slurm_plugstack_loc = '/etc/slurm/plugstack.conf.d',
+  Array[String] $slurm_packages = $slurm::params::slurm_packages,
 ) {
 
 ################################################################################
 # SLURM
 ################################################################################
 
-  $slurm_packages = [
-    'slurm',
-    'slurm-devel',
-    'slurm-munge',
-    'slurm-plugins',
-  ]
   ensure_packages($slurm_packages, {'ensure' => $slurm_version})
 
   group{ 'slurm':

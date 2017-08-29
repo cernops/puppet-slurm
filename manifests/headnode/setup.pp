@@ -6,7 +6,7 @@
 # @param slurmctld_log_file Fully qualified pathname of a file into which the slurmctld daemon's logs are written
 # @param packages Packages to install
 #
-# version 20170816
+# version 20170829
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -18,13 +18,10 @@
 class slurm::headnode::setup (
   String $state_save_location = $slurm::config::state_save_location,
   Optional[String] $slurmctld_log_file = $slurm::config::slurmctld_log_file,
-  Array[String] $packages = [
-    'slurm-perlapi',
-    'slurm-torque',
-  ],
-) {
+  Array[String] $extra_packages = $slurm::params::extra_packages,
+) inherits slurm::params {
 
-  ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
+  ensure_packages($extra_packages, {'ensure' => $slurm::setup::slurm_version})
 
   file{ dirtree($slurm::config::state_save_location, $slurm::config::state_save_location) :
     ensure  => directory,

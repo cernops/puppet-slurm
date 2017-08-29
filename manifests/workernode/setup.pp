@@ -6,7 +6,7 @@
 # @param slurmd_log_file Fully qualified pathname of a file into which the slurmd daemon's logs are written
 # @param packages Packages to install
 #
-# version 20170816
+# version 20170829
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -18,13 +18,10 @@
 class slurm::workernode::setup (
   String $slurmd_spool_dir = $slurm::config::slurmd_spool_dir,
   Optional[String] $slurmd_log_file = $slurm::config::slurmd_log_file,
-  Array[String] $packages = [
-    'slurm-perlapi',
-    'slurm-torque',
-  ],
-) {
+  Array[String] $extra_packages = slurm::params::extra_packages,
+) inherits slurm::params {
 
-  ensure_packages($packages, {'ensure' => $slurm::setup::slurm_version})
+  ensure_packages($extra_packages, {'ensure' => $slurm::setup::slurm_version})
 
   file{ dirtree($slurmd_spool_dir, $slurmd_spool_dir) :
     ensure  => directory,

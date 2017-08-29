@@ -4,7 +4,7 @@
 #
 # For details about the parameters, please refer to the SLURM documentation at https://slurm.schedmd.com/slurm.conf.html
 #
-# version 20170816
+# version 20170829
 #
 # Copyright (c) CERN, 2016-2017
 # Authors: - Philippe Ganz <phganz@cern.ch>
@@ -226,17 +226,13 @@ class slurm::config (
   Array[Hash,1] $partitions,
 
   Boolean $open_firewall = false,
-) {
+  Array[String] $munge_packages = $slurm::params::munge_packages,
+) inherits slurm::params {
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin
   if  ($auth_type == 'auth/munge') or
       ($crypto_type == 'crypto/munge') {
 
-    $munge_packages = [
-      'munge',
-      'munge-libs',
-      'munge-devel',
-    ]
     ensure_packages($munge_packages, {'ensure' => $munge_version})
 
     group{ 'munge':
