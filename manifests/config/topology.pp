@@ -15,7 +15,17 @@
 
 class slurm::config::topology (
   Array[Hash[String, String]] $switches,
+  Optinal[String] $autodiscover = undef,
 ) {
+
+  # Either the topology is autodiscovered through a fact,
+  # (we currently only support infiniband autodiscovery)
+  # or we use the topology supplied by hiera
+  case $autodiscover {
+    'infiniband': {
+      $switches = $facts['infiniband_topology']
+    }
+  }
 
   # Topology file
   file{'/etc/slurm/topology.conf':
