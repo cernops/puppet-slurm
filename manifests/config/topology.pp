@@ -29,6 +29,7 @@ class slurm::config::topology (
       $network_topology = $switches
     }
   }
+  notify {"autodiscover is ${autodiscover} network_topology ${network_topology}":}
 
   # Topology file
   file{'/etc/slurm/topology.conf':
