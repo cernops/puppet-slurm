@@ -16,6 +16,8 @@
 # switches, with an additional logical switch that connects the
 # leaf switches together.
 
+require 'yaml'
+
 $ibtopology = <<SCRIPT
 /usr/sbin/ibnetdiscover | /usr/bin/awk '
 BEGIN {
@@ -63,8 +65,8 @@ Facter.add(:infiniband_topology) do
   setcode do
     if File.file?('/usr/sbin/ibnetdiscover')
       begin
-        Facter::Core::Execution.execute($ibtopology)
-      rescue Facter::Core::Execution::ExecutionFailure
+        YAML.load(Facter::Core::Execution.execute($ibtopology))
+      rescue
         '{}'
       end
     else
