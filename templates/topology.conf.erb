@@ -15,6 +15,6 @@
 # Parameters for the topology plugin
 #
 
-<% @switches.each do |switch| -%>
+<% @network_topology.each do |switch| -%>
 <%= switch.map{|pair| pair.join('=')}.join(' ') %>
 <% end %>

@@ -23,7 +23,10 @@ class slurm::config::topology (
   # or we use the topology supplied by hiera
   case $autodiscover {
     'infiniband': {
-      $switches = $facts['infiniband_topology']
+      $network_topology = $facts['infiniband_topology']
+    }
+    default: {
+      $network_topology = $switches
     }
   }
 
