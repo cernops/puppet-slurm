@@ -67,10 +67,10 @@ Facter.add(:infiniband_topology) do
       begin
         YAML.load(Facter::Core::Execution.execute($ibtopology))
       rescue
-        '{}'
+        {}
       end
     else
-      '{}'
+      {}
     end
   end
 end
