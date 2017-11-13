@@ -15,7 +15,7 @@
 
 class slurm::config::topology (
   Array[Hash[String, String]] $switches,
-  Optinal[String] $autodiscover = undef,
+  Optional[String] $autodiscover = undef,
 ) {
 
   # Either the topology is autodiscovered through a fact,
