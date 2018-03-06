@@ -46,8 +46,8 @@ ProfileHDF5Default=<%= @profile_hdf5_default %>
 <% end -%>
 
 # Options used for AcctGatherInfinbandType/ofed
-<% if @with_infiniband_ofed -%>
-InfinibandOFEDPort=<%= @infiniband_ofed_port %>
+<% if @with_interconnect_ofed -%>
+InfinibandOFEDPort=<%= @interconnect_ofed_port %>
 <% else -%>
 #InfinibandOFEDPort=
 <% end %>

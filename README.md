@@ -133,8 +133,6 @@ To avoid version conflicts, the following packages will be installed/replaced by
 ```yaml
 - 'slurm',
 - 'slurm-devel',
-- 'slurm-munge',
-- 'slurm-plugins',
 - 'munge',
 - 'munge-libs',
 - 'munge-devel',
@@ -143,7 +141,6 @@ To avoid version conflicts, the following packages will be installed/replaced by
 #### On the database nodes
 ```yaml
 - 'slurm-slurmdbd',
-- 'slurm-sql',
 ```
 
 #### On the headnodes

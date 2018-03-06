@@ -306,7 +306,13 @@ JobAcctGatherFrequency=<%= @job_acct_gather_frequency.map{|pair| pair.join('=')}
 <%#                                                                          -%>
 AcctGatherNodeFreq=<%= @acct_gather_node_freq %>
 AcctGatherEnergyType=<%= @acct_gather_energy_type %>
-AcctGatherInfinibandType=<%= @acct_gather_infiniband_type %>
+<% if @acct_gather_interconnect_type =="acct_gather_infiniband/ofed" -%>
+AcctGatherInfinibandType=<%= @acct_gather_interconnect_type %>
+<% elsif @acct_gather_interconnect_type == "acct_gather_interconnect/ofed" -%>
+AcctGatherInterconnectType=<%= @acct_gather_interconnect_type %>
+<% else -%>
+AcctGatherInterconnectType=acct_gather_interconnect/none
+<% end -%>
 AcctGatherFilesystemType=<%= @acct_gather_filesystem_type %>
 AcctGatherProfileType=<%= @acct_gather_profile_type %>
 

@@ -21,7 +21,8 @@ class slurm::headnode::setup (
   Array[String] $extra_packages = $slurm::params::extra_packages,
 ) inherits slurm::params {
 
-  ensure_packages($extra_packages, {'ensure' => $slurm::setup::slurm_version})
+  ensure_packages($extra_packages, {'ensure' => $slurm::params::slurm_version})
+  ensure_packages($slurm::params::slurmctld_package, {'ensure' => $slurm::params::slurm_version})
 
   file{ dirtree($slurm::config::state_save_location, $slurm::config::state_save_location) :
     ensure  => directory,

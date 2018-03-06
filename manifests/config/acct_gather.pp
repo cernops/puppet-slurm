@@ -9,7 +9,7 @@
 # @param energy_ipmi_password Specify BMC Password.
 # @param profile_hdf5_dir This parameter is the path to the shared folder into which the acct_gather_profile plugin will write detailed data (usually as an HDF5 file).
 # @param profile_hdf5_default A comma delimited list of data types to be collected for each job submission.
-# @param infiniband_ofed_port This parameter represents the port number of the local Infiniband card that we are willing to monitor.
+# @param interconnect_ofed_port This parameter represents the port number of the local Infiniband card that we are willing to monitor.
 #
 # version 20170816
 #
@@ -30,8 +30,8 @@ class slurm::config::acct_gather (
   Boolean $with_profile_hdf5 = false,
   Optional[String] $profile_hdf5_dir = undef,
   String $profile_hdf5_default = 'None',
-  Boolean $with_infiniband_ofed = false,
-  Integer[0] $infiniband_ofed_port = 1,
+  Boolean $with_interconnect_ofed = false,
+  Integer[0] $interconnect_ofed_port = 1,
 ) {
 
   # AcctGather* plugin configuration

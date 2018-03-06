@@ -21,7 +21,8 @@ class slurm::workernode::setup (
   Array[String] $extra_packages = $slurm::params::extra_packages,
 ) inherits slurm::params {
 
-  ensure_packages($extra_packages, {'ensure' => $slurm::setup::slurm_version})
+  ensure_packages($extra_packages, {'ensure' => $slurm::params::slurm_version})
+  ensure_packages($slurm::params::slurmd_package, {'ensure' => $slurm::params::slurm_version})
 
   file{ dirtree($slurmd_spool_dir, $slurmd_spool_dir) :
     ensure  => directory,

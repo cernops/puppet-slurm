@@ -190,7 +190,7 @@ class slurm::config (
   Hash[Enum['task','energy','network','filesystem'],Integer[0]] $job_acct_gather_frequency = {'task' => 30,'energy' => 0,'network' => 0,'filesystem' => 0},
   Integer[0] $acct_gather_node_freq = 0,
   Enum['acct_gather_energy/none','acct_gather_energy/ipmi','acct_gather_energy/rapl'] $acct_gather_energy_type = 'acct_gather_energy/none',
-  Enum['acct_gather_infiniband/none','acct_gather_infiniband/ofed'] $acct_gather_infiniband_type = 'acct_gather_infiniband/none',
+  Enum['acct_gather_interconnect/none','acct_gather_interconnect/ofed','acct_gather_infiniband/ofed'] $acct_gather_interconnect_type = 'acct_gather_interconnect/none',
   Enum['acct_gather_filesystem/none','acct_gather_filesystem/lustre'] $acct_gather_filesystem_type = 'acct_gather_filesystem/none',
   Enum['acct_gather_profile/none','acct_gather_profile/hdf5'] $acct_gather_profile_type = 'acct_gather_profile/none',
 
@@ -333,11 +333,11 @@ class slurm::config (
   # Accounting gatherer configuration file
   if  ('acct_gather_energy/ipmi' in $acct_gather_energy_type) or
       ('acct_gather_profile/hdf5' in $acct_gather_profile_type) or
-      ('acct_gather_infiniband/ofed' in $acct_gather_infiniband_type) {
+      (['acct_gather_infiniband/ofed', 'acct_gather_interconnect/ofed'] in $acct_gather_interconnect_type) {
     class{ '::slurm::config::acct_gather':
-      with_energy_ipmi     => ('acct_gather_energy/ipmi' in $acct_gather_energy_type),
-      with_profile_hdf5    => ('acct_gather_profile/hdf5' in $acct_gather_profile_type),
-      with_infiniband_ofed => ('acct_gather_infiniband/ofed' in $acct_gather_infiniband_type),
+      with_energy_ipmi       => ('acct_gather_energy/ipmi' in $acct_gather_energy_type),
+      with_profile_hdf5      => ('acct_gather_profile/hdf5' in $acct_gather_profile_type),
+      with_interconnect_ofed => (['acct_gather_infiniband/ofed', 'acct_gather_interconnect/ofed'] in $acct_gather_interconnect_type),
     }
 
     $acct_gather_conf_file = ['/etc/slurm/acct_gather.conf']

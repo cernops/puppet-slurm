@@ -19,7 +19,6 @@
 #
 
 class slurm::setup (
-  String $slurm_version = '17.02.6',
   Integer[0] $slurm_gid = 950,
   Integer[0] $slurm_uid = 950,
   String $slurm_home_loc = '/usr/local/slurm',
@@ -32,7 +31,7 @@ class slurm::setup (
 # SLURM
 ################################################################################
 
-  ensure_packages($slurm_packages, {'ensure' => $slurm_version})
+  ensure_packages($slurm::params::slurm_packages, {'ensure' => $slurm::params::slurm_version})
 
   group{ 'slurm':
     ensure => present,
