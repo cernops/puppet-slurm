@@ -20,6 +20,7 @@ class slurm::params(
       $slurm_packages_common = [
         'slurm',
         'slurm-devel',
+        'slurm-libpmi',
       ]
       $munge_packages = [
         'munge',
