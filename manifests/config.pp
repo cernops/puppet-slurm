@@ -197,8 +197,10 @@ class slurm::config (
   Optional[Array[String]] $debug_flags = undef,
   Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
   Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmctld_debug = 'info',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmctld_syslog_debug = 'info',
   Optional[String] $slurmctld_log_file = undef,
   Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmd_debug = 'info',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $slurmd_syslog_debug = 'info',
   Optional[String] $slurmd_log_file = undef,
   Integer[0,1] $slurm_sched_log_level = 0,
   Optional[String] $slurm_sched_log_file = undef,
@@ -228,6 +230,13 @@ class slurm::config (
   Boolean $open_firewall = false,
   Array[String] $munge_packages = $slurm::params::munge_packages,
 ) inherits slurm::params {
+
+  # The following variables are version dependent
+  if $slurmctld_syslog_debug != undef or $slurmd_syslog_debug != undef {
+    if versioncmp('17.11', $slurm::params::slurm_version) > 0 {
+      fail('Parameters SlurmctldSyslogDebug,SlurmdSyslogDebug are supported from version 17.11 onwards.')
+    }
+  }
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin
   if  ($auth_type == 'auth/munge') or

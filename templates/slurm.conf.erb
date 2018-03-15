@@ -327,8 +327,14 @@ DebugFlags=<%= @debug_flags.join(',') %>
 <%#                                                                          -%>
 LogTimeFormat=<%= @log_time_format %>
 SlurmctldDebug=<%= @slurmctld_debug %>
+<% if @slurmctld_syslog_debug -%>
+SlurmctldSyslogDebug=<%= @slurmctld_syslog_debug %>
+<% end -%>
 <%= @slurmctld_log_file.nil? ? '#SlurmctldLogFile=' : ('SlurmctldLogFile=' + @slurmctld_log_file) %>
 SlurmdDebug=<%= @slurmd_debug %>
+<% if @slurmd_syslog_debug -%>
+SlurmdSyslogDebug=<%= @slurmd_syslog_debug %>
+<% end -%>
 <%= @slurmd_log_file.nil? ? '#SlurmdLogFile=' : ('SlurmdLogFile=' + @slurmd_log_file) %>
 SlurmSchedLogLevel=<%= @slurm_sched_log_level %>
 <%= @slurm_sched_log_file.nil? ? '#SlurmSchedLogFile=' : ('SlurmSchedLogFile=' + @slurm_sched_log_file) %>
