@@ -54,10 +54,15 @@ class slurm::dbnode::config (
   Enum['no','yes'] $archive_usage = 'no',
   Optional[String] $purge_usage_after = undef,
   Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $debug_level = 'info',
+  Enum['quiet','fatal','error','info','verbose','debug','debug2','debug3','debug4','debug5'] $debug_level_syslog = 'info',
   Optional[Array[Enum['DB_ARCHIVE','DB_ASSOC','DB_EVENT','DB_JOB','DB_QOS','DB_QUERY','DB_RESERVATION','DB_RESOURCE','DB_STEP','DB_USAGE','DB_WCKEY']]] $debug_flags = undef,
   Optional[String] $log_file = undef,
   Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
 ) {
+
+  if versioncmp('17.11', $slurm::params::slurm_version) > 0 {
+    fail('Parameter DebugLevelSyslog is supported from version 17.11 onwards.')
+  }
 
   if ($log_file != undef) {
     file{ dirtree($log_file, $log_file) :
