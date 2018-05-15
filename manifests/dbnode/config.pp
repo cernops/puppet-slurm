@@ -64,23 +64,6 @@ class slurm::dbnode::config (
     fail('Parameter DebugLevelSyslog is supported from version 17.11 onwards.')
   }
 
-  if ($log_file != undef) {
-    file{ dirtree($log_file, $log_file) :
-      ensure  => directory,
-    }
-    -> file{ 'slurmdbd log file':
-      ensure => file,
-      path   => $log_file,
-      group  => 'slurm',
-      mode   => '0600',
-      owner  => 'slurm',
-    }
-    -> logrotate::file{ 'slurmdbd':
-      log     => $log_file,
-      options => ['weekly','copytruncate','rotate 26','compress'],
-    }
-  }
-
   file{ "/etc/slurm/${file_name}":
     ensure  => file,
     content => template('slurm/slurmdbd.conf.erb'),

@@ -34,21 +34,4 @@ class slurm::workernode::setup (
     mode   => '1755',
     owner  => 'slurm',
   }
-
-  if ($slurmd_log_file != undef) {
-    file{ dirtree($slurmd_log_file, $slurmd_log_file) :
-      ensure  => directory,
-    }
-    -> file{ 'slurmd log':
-      ensure => file,
-      path   => $slurmd_log_file,
-      group  => 'slurm',
-      mode   => '0600',
-      owner  => 'slurm',
-    }
-    -> logrotate::file{ 'slurmd':
-      log     => $slurmd_log_file,
-      options => ['weekly','copytruncate','rotate 26','compress'],
-    }
-  }
 }

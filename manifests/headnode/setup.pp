@@ -35,22 +35,4 @@ class slurm::headnode::setup (
     mode    => '1755',
     require => User['slurm'],
   }
-
-  if ($slurmctld_log_file != undef) {
-    file{ dirtree($slurmctld_log_file, $slurmctld_log_file) :
-      ensure  => directory,
-    }
-    -> file{ 'slurmctld log':
-      ensure  => file,
-      path    => $slurmctld_log_file,
-      group   => 'slurm',
-      mode    => '0600',
-      owner   => 'slurm',
-      require => User['slurm'],
-    }
-    -> logrotate::file{ 'slurmctld':
-      log     => $slurmctld_log_file,
-      options => ['weekly','copytruncate','rotate 26','compress'],
-    }
-  }
 }
