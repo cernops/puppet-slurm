@@ -59,7 +59,7 @@ class slurm::config (
   Integer[0,2] $propagate_prio_process = 0,
   Optional[Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']]] $propagate_resource_limits = undef,
   Optional[Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']]] $propagate_resource_limits_except = undef,
-  String $reboot_program = '/usr/sbin/reboot',
+  String $reboot_program = '/usr/bin/false',
   Optional[Enum['KeepPartInfo','KeepPartState']] $reconfig_flags = undef,
   Optional[String] $resv_epilog = undef,
   Optional[String] $resv_prolog = undef,
