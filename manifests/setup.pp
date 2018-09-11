@@ -46,6 +46,14 @@ class slurm::setup (
     system  => true,
     uid     => $slurm_uid,
   }
+
+  file { '/etc/slurm':
+    ensure  => directory,
+    owner   => 'slurm',
+    group   => 'slurm',
+    require => [ User['slurm'], Group['slurm'] ],
+  }
+
   file{ dirtree($slurm_home_loc, $slurm_home_loc) :
     ensure  => directory,
   }
