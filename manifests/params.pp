@@ -1,20 +1,58 @@
-class slurm::params {
-  $slurm_version = hiera('slurm_version', '2.3.5-2.ai6')
-  $slurm_user_uid = hiera('slurm_user_uid', 3000)
-  # -> slurmctld.conf
-  $slurm_master_hostname = hiera('slurm_master_hostname', 'master.example.org')
-  $slurm_backup_hostname = hiera('slurm_backup_hostname', 'slave.example.org')
-  $slurmctld_port = hiera('slurmctld_port', '6810-6817')
-  $slurmd_port = hiera('slurmd_port', 6818)
-  # -> slurmdbd.conf
-  $slurmdbd_hostname = hiera('slurmdbd_hostname', 'db.example.org')
-  $slurmdbd_port = hiera('slurmdbd_port', 6819)
-  $slurmdbd_mysql_hostname = hiera('slurmdbd_mysql_hostname', 'localhost')
-  $slurmdbd_mysql_port = hiera('slurmdbd_mysql_port', 3306)
-  $slurmdbd_mysql_dbname = hiera('slurmdbd_mysql_dbname', 'slurm')
-  $slurmdbd_mysql_user = hiera('slurmdbd_mysql_user', 'slurm')
-  $slurmdbd_mysql_passwd = hiera('slurmdbd_mysql_passwd', 'slurm')
-  $slurm_partitionlist = hiera('partitions', '[]')
-  $slurm_worker_slot_multiplier = hiera('slurm_worker_slot_multiplier', 1)
-  $slurm_fastschedule = hiera('slurm_fastschedule', 2)
+# slurm/params.pp
+#
+# Handles distribution-specific parameters for slurm::config, slurm::setup,
+# workernode::setup, headnode::setup, and dbnode::setup
+#
+# version 20171205
+#
+# Copyright (c) CERN, 2016-2017
+# Authors: - Philippe Ganz <phganz@cern.ch>
+#          - Carolina Lindqvist <calindqv@cern.ch>
+#          - Pablo Llopis <pablo.llopis@cern.ch>
+# License: GNU GPL v3 or later.
+#
+
+class slurm::params(
+  String $slurm_version = '17.02.6',
+  ) {
+  case $facts['os']['family'] {
+    'RedHat': {
+      $slurm_packages_common = [
+        'slurm',
+        'slurm-devel',
+        'slurm-libpmi',
+      ]
+      $munge_packages = [
+        'munge',
+        'munge-libs',
+        'munge-devel',
+      ]
+      $slurmdbd_packages_common = [
+        'slurm-slurmdbd',
+      ]
+      $extra_packages = [
+        'slurm-perlapi',
+        'slurm-torque',
+      ]
+
+      if versioncmp($slurm_version, '17.2') <= 0 {
+        $slurm_packages_old = ['slurm-munge', 'slurm-plugins']
+        $slurmdbd_packages_old = ['slurm-sql']
+        $slurmd_package = []
+        $slurmctld_package = []
+      } else {
+        $slurm_packages_old = []
+        $slurmdbd_packages_old = []
+        $slurmd_package = ['slurm-slurmd']
+        $slurmctld_package = ['slurm-slurmctld']
+      }
+
+    $slurm_packages = $slurm_packages_common + $slurm_packages_old
+    $slurmdbd_packages = $slurmdbd_packages_common + $slurmdbd_packages_old
+
+    }
+    default: {
+      fail("OS family type ${facts['os']['family']} not supported.")
+    }
+  }
 }
