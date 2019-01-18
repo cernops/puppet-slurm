@@ -14,7 +14,7 @@
 #
 
 class slurm (
-  Enum['worker','head','db','db-head','none'] $node_type,
+  Enum['worker','head','db','db-head','client','none'] $node_type,
 ) {
 
   case $node_type {
@@ -33,6 +33,10 @@ class slurm (
     'db-head': {
       class{'::slurm::headnode':}
       class{'::slurm::dbnode':}
+    }
+
+    'client': {
+      class{'::slurm::client':}
     }
 
     'none': {
