@@ -42,7 +42,9 @@ MaxSwapPercent=<%= @max_swap_percent %>
 
 # Kernel Memory
 ConstrainKmemSpace=<%= @constrain_kmem_space %>
+<% unless @allowed_kmem_space.nil? -%>
 AllowedKmemSpace=<%= @allowed_kmem_space %>
+<% end -%>
 MinKmemSpace=<%= @min_kmem_space %>
 MaxKmemPercent=<%= @max_kmem_percent %>
 

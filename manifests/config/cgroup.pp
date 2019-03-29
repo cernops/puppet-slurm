@@ -14,7 +14,7 @@
 # @param allowed_swap_space Constrain the job cgroup swap space to this percentage of the allocated memory.
 # @param max_swap_percent Set an upper bound (in percent of total RAM) on the amount of RAM+Swap that may be used for a job.
 # @param constrain_kmem_space If configured to "yes" then constrain the job's Kmem RAM usage. In addition to RAM usage. Only takes effect if ConstrainRAMSpace is set to "yes".
-# @param allowed_kmem_space Constrain the job cgroup kernel memory to this percentage of the allocated memory.
+# @param allowed_kmem_space Constrain the job cgroup kernel memory this amount of the allocated memory, speficied in bytes.
 # @param min_kmem_space Set a lower bound (in MB) on the memory limits defined by AllowedKmemSpace.
 # @param max_kmem_percent Set an upper bound in percent of total Kmem for a job.
 # @param constrain_devices If configured to "yes" then constrain the job's allowed devices based on GRES allocated resources.
@@ -42,7 +42,7 @@ class slurm::config::cgroup (
   Float[0,100] $allowed_swap_space = 0.0,
   Float[0,100] $max_swap_percent = 100.0,
   Enum['no','yes'] $constrain_kmem_space = 'yes',
-  Float[0,100] $allowed_kmem_space = 1.0,
+  Optional[Float[0]] $allowed_kmem_space = undef,
   Integer[0] $min_kmem_space = 30,
   Float[0,100] $max_kmem_percent = 100.0,
   Enum['no','yes'] $constrain_devices = 'no',
