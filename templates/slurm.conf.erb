@@ -226,7 +226,7 @@ SchedulerParameters=<%= @scheduler_parameters.join(',') %>
 <% end -%>
 <%#                                                                          -%>
 SelectType=<%= @select_type %>
-<%= @select_type_parameters.nil? ? '#SelectTypeParameters=' : ('SelectTypeParameters=' + @select_type_parameters) %>
+<%= @select_type_parameters.nil? ? '#SelectTypeParameters=' : ('SelectTypeParameters=' + @select_type_parameters.join(',') %>
 VSizeFactor=<%= @vsize_factor %>
 
 
