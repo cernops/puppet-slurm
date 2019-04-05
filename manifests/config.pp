@@ -367,6 +367,16 @@ class slurm::config (
     $cgroup_conf_file = []
   }
 
+  # GRES configuration file
+  if  $gres_types {
+    class{ '::slurm::config::gres':}
+
+    $gres_conf_file = ['/etc/slurm/gres.conf']
+  }
+  else {
+    $gres_conf_file = []
+  }
+
   # Topology plugin configuration file
   if  ('topology/tree' in $topology_plugin) {
     class{ '::slurm::config::topology':}
@@ -381,6 +391,6 @@ class slurm::config (
     '/etc/slurm/slurm.conf',
   ]
 
-  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $common_config_files)
+  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
 
 }
