@@ -226,6 +226,7 @@ class slurm::config (
 
   Array[Hash,1] $workernodes,
   Array[Hash,1] $partitions,
+  Optional[Array[Hash,1]] $gres_definitions = undef,
 
   Boolean $open_firewall = false,
   Array[String] $munge_packages = $slurm::params::munge_packages,
@@ -370,8 +371,10 @@ class slurm::config (
   }
 
   # GRES configuration file
-  if  $gres_types {
-    class{ '::slurm::config::gres':}
+  if  $gres_definitions {
+    class{ '::slurm::config::gres':
+      gres_definitions => $gres_definitions,
+    }
 
     $gres_conf_file = ['/etc/slurm/gres.conf']
   }
