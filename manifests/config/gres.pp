@@ -6,7 +6,7 @@
 #
 # version 20190405
 #
-# Copyright (c) PSI (Paul Scherrer Institute), 2019
+# Copyright (c) PSI (Paul Scherrer Institute), CERN, 2019
 # Authors: - Marc Caubet Serrabou <marc.caubet@psi.ch>
 # License: GNU GPL v3 or later.
 #
