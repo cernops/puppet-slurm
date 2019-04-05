@@ -15,6 +15,6 @@
 # and Intel® Many Integrated Core (MIC) processors.
 #
 
-<% @gres_resources.each do |gres_resource| -%>
-<%= gres_resource.map{|pair| pair.join('=')}.join(' ') %>
+<% @gres_definitions.each do |gres_definition| -%>
+<%= gres_definition.map{|pair| pair.join('=')}.join(' ') %>
 <% end %>

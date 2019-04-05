@@ -2,7 +2,7 @@
 #
 # Creates the cgroup configuration files.
 #
-# @param gres_resources Contains a Hash with GRES resource definitions
+# @param gres_definitions Contains a Hash with GRES resource definitions
 #
 # version 20190405
 #
@@ -12,7 +12,7 @@
 #
 
 class slurm::config::gres (
-  Array[Hash,1] $gres_resources,
+  Array[Hash,1] $gres_definitions,
 ) {
 
   # Cgroup configuration
