@@ -226,6 +226,7 @@ class slurm::config (
 
   Array[Hash,1] $workernodes,
   Array[Hash,1] $partitions,
+  Optional[Array[Hash,1]] $gres_definitions = undef,
 
   Boolean $open_firewall = false,
   Array[String] $munge_packages = $slurm::params::munge_packages,
@@ -405,6 +406,18 @@ class slurm::config (
     $cgroup_conf_file = []
   }
 
+  # GRES configuration file
+  if  $gres_definitions {
+    class{ '::slurm::config::gres':
+      gres_definitions => $gres_definitions,
+    }
+
+    $gres_conf_file = ['/etc/slurm/gres.conf']
+  }
+  else {
+    $gres_conf_file = []
+  }
+
   # Topology plugin configuration file
   if  ('topology/tree' in $topology_plugin) {
     class{ '::slurm::config::topology':}
@@ -419,6 +432,6 @@ class slurm::config (
     '/etc/slurm/slurm.conf',
   ]
 
-  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $common_config_files)
+  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
 
 }
