@@ -213,6 +213,11 @@ MpiDefault=<%= @mpi_default %>
 <% else -%>
 PrologFlags=<%= @prolog_flags.join(',') %>
 <% end -%>
+<% if @x11_parameters.nil? -%>
+#X11Parameters=
+<% else -%>
+X11Parameters=<%= @x11_parameters.join(',') %>
+<% end -%>
 <%#                                                                          -%>
 <%= @requeue_exit.nil? ? '#RequeueExit=' : ('RequeueExit=' + @requeue_exit) %>
 <%= @requeue_exit_hold.nil? ? '#RequeueExitHold=' : ('RequeueExitHold=' + @requeue_exit_hold) %>
