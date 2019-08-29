@@ -14,6 +14,7 @@
 #
 
 class slurm::dbnode::config (
+  Boolean $refresh_service = true,
   String $file_name = 'slurmdbd.conf',
   String $dbd_host = 'localhost',
   String $dbd_addr = $dbd_host,
@@ -77,10 +78,9 @@ class slurm::dbnode::config (
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => [
-      Package['slurm-slurmdbd'],
-      File[$slurm::config::required_files],
-    ],
+    subscribe => $refresh_service ? { true  => [ Package['slurm-slurmdbd'], File[$slurm::config::required_files] ],
+                                      false => [ Package['slurm-slurmdbd']                                       ],
+                                    };
   }
 
   if ($slurm::config::open_firewall) {
