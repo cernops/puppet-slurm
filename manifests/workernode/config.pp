@@ -11,16 +11,17 @@
 # License: GNU GPL v3 or later.
 #
 
-class slurm::workernode::config {
+class slurm::workernode::config (
+  Boolean $refresh_service = true,
+) {
 
   service{'slurmd':
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => [
-      Package['slurm'],
-      File[$slurm::config::required_files],
-    ],
+    subscribe => $refresh_service ? { true  => [ Package['slurm'], File[$slurm::config::required_files] ],
+                                      false => [ Package['slurm']                                       ],
+                                    };
   }
 
   if ($slurm::config::open_firewall) {
