@@ -85,7 +85,7 @@ class slurm (
   $partitionlist          = [],
   $slurm_conf_template    = 'slurm/slurm.conf/slurm.conf.erb',
   $slurm_conf_source      = undef,
-  $partitionlist_template = 'slurm/slurm.conf/slurm-partitions.conf.erb',
+  $partitionlist_template = 'slurm/slurm.conf/partitions.conf.erb',
   $partitionlist_source   = undef,
   $node_template          = 'slurm/slurm.conf/node.conf.erb',
   $node_source            = undef,
@@ -234,15 +234,19 @@ class slurm (
     'AccountingStorageHost' => $control_machine,
     'AccountingStoragePort' => $slurmdbd_port,
     'ClusterName' => $cluster_name,
-    'ControlMachine' => $control_machine,
     'DefaultStorageHost' => $control_machine,
     'DefaultStoragePort' => $slurmdbd_port,
     'Epilog' => $epilog,
-    'HealthCheckProgram' => $health_check_program,
+    'EpilogSlurmctld' => undef, #TODO
+    'HealthCheckProgram' => $health_check_program, #TODO
     'JobCheckpointDir' => $job_checkpoint_dir,
     'PlugStackConfig' => $plugstack_conf_path,
     'Prolog' => $prolog,
+    'PrologSlurmctld' => undef, #TODO
+    'ResvEpilog' => undef, #TODO
+    'ResvProlog' => undef, #TODO
     'SlurmUser' => $slurm_user,
+    'SlurmctldHost' => [$control_machine],
     'SlurmctldLogFile' => $_slurmctld_log_file,
     'SlurmctldPort' => $slurmctld_port,
     'SlurmdLogFile' => $_slurmd_log_file,
@@ -250,9 +254,15 @@ class slurm (
     'SlurmdSpoolDir' => $slurmd_spool_dir,
     'SlurmSchedLogFile' => "${log_dir}/slurmsched.log",
     'SlurmdUser' => $slurmd_user,
+    'SrunEpilog' => undef, #TODO
+    'SrunProlog' => undef, #TODO
     'StateSaveLocation' => $state_save_location,
     'TaskEpilog' => $task_epilog,
     'TaskProlog' => $task_prolog,
+    'UsePAM' => $install_pam ? {
+      true    => '1',
+      default => '0',
+    },
   }
 
   $slurm_conf_defaults  = merge($::slurm::params::slurm_conf_defaults, $slurm_conf_local_defaults)

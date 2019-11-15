@@ -7,9 +7,17 @@
 <% slurm_conf = scope['slurm::slurm_conf'] -%>
 <% slurm_conf.keys.sort.each do |key| -%>
 <% value = slurm_conf[key] -%>
-<% next if value == :undef or ! value or value == 'UNSET' -%>
-<% if value.is_a?(Array) -%>
+<%- if value == :undef or ! value or value == 'UNSET' -%>
+# <%= key %>
+<%- elsif scope['slurm::params::slurm_conf_multiple'].include?(key) -%>
+<%- value.each do |v| -%>
+<%= key %>=<%= v %>
+<%- end -%>
+<%- elsif value.is_a?(Array) -%>
 <%= key %>=<%= value.join(',') %>
+<%- elsif value.is_a?(Hash) -%>
+<%- v = value.map {|k,v| "#{k}=#{v}" }.join(',') %>
+<%= key %>=<%= v %>
 <% else -%>
 <%= key %>=<%= value %>
 <% end -%>

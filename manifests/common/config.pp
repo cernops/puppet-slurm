@@ -45,6 +45,8 @@ class slurm::common::config {
       Concat::Fragment <<| tag == $slurm::slurm_nodelist_tag |>>
     }
 
+    # TODO: topology.conf
+
     file { 'plugstack.conf.d':
       ensure  => 'directory',
       path    => $slurm::plugstack_conf_d_path,
