@@ -43,20 +43,6 @@ class slurm::common::setup {
       group  => $_dir_group,
       mode   => '0700',
     }
-
-    file { $slurm::pid_dir:
-      ensure => 'directory',
-      owner  => $_dir_owner,
-      group  => $_dir_group,
-      mode   => '0700',
-    }
-
-    file { $slurm::shared_state_dir:
-      ensure => 'directory',
-      owner  => $_dir_owner,
-      group  => $_dir_group,
-      mode   => '0700',
-    }
   }
 
   if $slurm::manage_logrotate {
@@ -73,7 +59,7 @@ class slurm::common::setup {
       size          => '10M',
       create        => true,
       create_mode   => '0640',
-      create_owner  => $slurm::slurm_user,
+      create_owner  => $_dir_owner,
       create_group  => 'root',
       postrotate    => $slurm::_logrotate_postrotate,
     }

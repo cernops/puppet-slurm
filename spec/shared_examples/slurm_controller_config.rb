@@ -1,41 +1,18 @@
 shared_examples_for 'slurm::controller::config' do
   it do
-    is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
-                                                       owner: 'slurm',
-                                                       group: 'slurm',
-                                                       mode: '0700')
-  end
-
-  it do
-    is_expected.to contain_file('/var/run/slurm').with(ensure: 'directory',
-                                                       owner: 'slurm',
-                                                       group: 'slurm',
-                                                       mode: '0700')
-  end
-
-  it do
-    is_expected.to contain_file('/var/lib/slurm').with(ensure: 'directory',
-                                                       owner: 'slurm',
-                                                       group: 'slurm',
-                                                       mode: '0700')
-  end
-
-  it do
     is_expected.to contain_file('StateSaveLocation').with(ensure: 'directory',
-                                                          path: '/var/lib/slurm/state',
+                                                          path: '/var/spool/slurmctld.state',
                                                           owner: 'slurm',
                                                           group: 'slurm',
-                                                          mode: '0700',
-                                                          require: 'File[/var/lib/slurm]')
+                                                          mode: '0700')
   end
 
   it do
     is_expected.to contain_file('JobCheckpointDir').with(ensure: 'directory',
-                                                         path: '/var/lib/slurm/checkpoint',
+                                                         path: '/var/spool/slurmctld.checkpoint',
                                                          owner: 'slurm',
                                                          group: 'slurm',
-                                                         mode: '0700',
-                                                         require: 'File[/var/lib/slurm]')
+                                                         mode: '0700')
   end
 
   it { is_expected.not_to contain_mount('StateSaveLocation') }
@@ -46,7 +23,7 @@ shared_examples_for 'slurm::controller::config' do
 
     it do
       is_expected.to contain_mount('StateSaveLocation').with(ensure: 'mounted',
-                                                             name: '/var/lib/slurm/state',
+                                                             name: '/var/spool/slurmctld.state',
                                                              atboot: 'true',
                                                              device: nil,
                                                              fstype: 'nfs',
@@ -78,7 +55,7 @@ shared_examples_for 'slurm::controller::config' do
 
     it do
       is_expected.to contain_mount('JobCheckpointDir').with(ensure: 'mounted',
-                                                            name: '/var/lib/slurm/checkpoint',
+                                                            name: '/var/spool/slurmctld.checkpoint',
                                                             atboot: 'true',
                                                             device: nil,
                                                             fstype: 'nfs',

@@ -1,22 +1,19 @@
 # Private class
 class slurm::controller::config {
-
   file { 'StateSaveLocation':
-    ensure  => 'directory',
-    path    => $slurm::state_save_location,
-    owner   => $slurm::slurm_user,
-    group   => $slurm::slurm_user_group,
-    mode    => '0700',
-    require => File[$slurm::shared_state_dir],
+    ensure => 'directory',
+    path   => $slurm::state_save_location,
+    owner  => $slurm::slurm_user,
+    group  => $slurm::slurm_user_group,
+    mode   => '0700',
   }
 
   file { 'JobCheckpointDir':
-    ensure  => 'directory',
-    path    => $slurm::job_checkpoint_dir,
-    owner   => $slurm::slurm_user,
-    group   => $slurm::slurm_user_group,
-    mode    => '0700',
-    require => File[$slurm::shared_state_dir],
+    ensure => 'directory',
+    path   => $slurm::job_checkpoint_dir,
+    owner  => $slurm::slurm_user,
+    group  => $slurm::slurm_user_group,
+    mode   => '0700',
   }
 
   if $slurm::manage_state_dir_nfs_mount {

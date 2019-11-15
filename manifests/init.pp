@@ -71,10 +71,8 @@ class slurm (
   $control_machine    = 'slurm',
 
   # Managed directories
-  $conf_dir               = '/etc/slurm',
-  $log_dir                = '/var/log/slurm',
-  $pid_dir                = '/var/run/slurm',
-  $shared_state_dir       = '/var/lib/slurm',
+  Stdlib::Absolutepath $conf_dir = '/etc/slurm',
+  Stdlib::Absolutepath $log_dir  = '/var/log/slurm',
 
   # SPANK
   $plugstack_conf         = undef,
@@ -111,9 +109,9 @@ class slurm (
   $slurmd_spool_dir = '/var/spool/slurmd',
 
   # slurm.conf - controller
-  $job_checkpoint_dir     = '/var/lib/slurm/checkpoint',
+  $job_checkpoint_dir     = '/var/spool/slurmctld.checkpoint',
   Optional[Stdlib::Absolutepath] $slurmctld_log_file     = undef,
-  $state_save_location    = '/var/lib/slurm/state',
+  $state_save_location    = '/var/spool/slurmctld.state',
 
   # slurmdbd.conf
   Optional[Stdlib::Absolutepath] $slurmdbd_log_file      = undef,
@@ -246,10 +244,8 @@ class slurm (
     'Prolog' => $prolog,
     'SlurmUser' => $slurm_user,
     'SlurmctldLogFile' => $_slurmctld_log_file,
-    'SlurmctldPidFile' => "${pid_dir}/slurmctld.pid",
     'SlurmctldPort' => $slurmctld_port,
     'SlurmdLogFile' => $_slurmd_log_file,
-    'SlurmdPidFile' => "${pid_dir}/slurmd.pid",
     'SlurmdPort' => $slurmd_port,
     'SlurmdSpoolDir' => $slurmd_spool_dir,
     'SlurmSchedLogFile' => "${log_dir}/slurmsched.log",
@@ -266,7 +262,6 @@ class slurm (
     'DbdHost' => $::hostname,
     'DbdPort' => $slurmdbd_port,
     'LogFile' => $_slurmdbd_log_file,
-    'PidFile' => "${pid_dir}/slurmdbd.pid",
     'SlurmUser' => $slurm_user,
     'StorageHost' => $slurmdbd_storage_host,
     'StorageLoc' => $slurmdbd_storage_loc,

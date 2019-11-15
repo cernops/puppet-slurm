@@ -1,25 +1,4 @@
 shared_examples_for 'slurm::slurmdbd::config' do
-  it do
-    is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
-                                                       owner: 'slurm',
-                                                       group: 'slurm',
-                                                       mode: '0700')
-  end
-
-  it do
-    is_expected.to contain_file('/var/run/slurm').with(ensure: 'directory',
-                                                       owner: 'slurm',
-                                                       group: 'slurm',
-                                                       mode: '0700')
-  end
-
-  it do
-    is_expected.to contain_file('/var/lib/slurm').with(ensure: 'directory',
-                                                       owner: 'slurm',
-                                                       group: 'slurm',
-                                                       mode: '0700')
-  end
-
   it { is_expected.to contain_class('mysql::server') }
 
   it do
@@ -52,7 +31,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
                                  'DebugLevel=info',
                                  'LogFile=/var/log/slurm/slurmdbd.log',
                                  'MessageTimeout=10',
-                                 'PidFile=/var/run/slurm/slurmdbd.pid',
+                                 'PidFile=/var/run/slurmdbd.pid',
                                  'PluginDir=/usr/lib64/slurm',
                                  'SlurmUser=slurm',
                                  'StorageHost=localhost',

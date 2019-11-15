@@ -139,27 +139,6 @@ shared_examples_for 'slurm::node::config' do
   end
 
   it do
-    is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
-                                                       owner: 'root',
-                                                       group: 'root',
-                                                       mode: '0700')
-  end
-
-  it do
-    is_expected.to contain_file('/var/run/slurm').with(ensure: 'directory',
-                                                       owner: 'root',
-                                                       group: 'root',
-                                                       mode: '0700')
-  end
-
-  it do
-    is_expected.to contain_file('/var/lib/slurm').with(ensure: 'directory',
-                                                       owner: 'root',
-                                                       group: 'root',
-                                                       mode: '0700')
-  end
-
-  it do
     is_expected.to contain_file('SlurmdSpoolDir').with(ensure: 'directory',
                                                        path: '/var/spool/slurmd',
                                                        owner: 'root',

@@ -1,4 +1,23 @@
 shared_examples_for 'slurm::common::setup' do
+  let(:dir_owner) do
+    if param_override[:controller] || param_override[:slurmdbd]
+      'slurm'
+    else
+      'root'
+    end
+  end
+  let(:dir_group) do
+    if param_override[:controller] || param_override[:slurmdbd]
+      'slurm'
+    else
+      'root'
+    end
+  end
+
+  let(:log_dir) do
+    param_override[:controller] || param_override[:slurmdbd] || param_override[:node]
+  end
+
   it do
     is_expected.to contain_file('/etc/profile.d/slurm.sh').with(ensure: 'file',
                                                                 path: '/etc/profile.d/slurm.sh',
@@ -36,6 +55,17 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
+    if log_dir
+      is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
+                                                         owner: dir_owner,
+                                                         group: dir_group,
+                                                         mode: '0700')
+    else
+      is_expected.not_to contain_file('/var/log/slurm')
+    end
+  end
+
+  it do
     is_expected.to contain_logrotate__rule('slurm').with(path: '/var/log/slurm/*.log',
                                                          compress: 'true',
                                                          missingok: 'true',
@@ -47,7 +77,7 @@ shared_examples_for 'slurm::common::setup' do
                                                          size: '10M',
                                                          create: 'true',
                                                          create_mode: '0640',
-                                                         create_owner: 'slurm',
+                                                         create_owner: dir_owner,
                                                          create_group: 'root',
                                                          postrotate: [
                                                            'pkill -x --signal SIGUSR2 slurmctld',

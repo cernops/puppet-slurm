@@ -63,8 +63,10 @@ class slurm::params {
     'SchedulerType' => 'sched/backfill',
     'SelectType' => 'select/linear',
     'SlurmctldDebug' => 'info',
+    'SlurmctldPidFile' => '/var/run/slurmctld.pid',
     'SlurmctldTimeout' => '120',
     'SlurmdDebug' => 'info',
+    'SlurmdPidFile' => '/var/run/slurmd.pid',
     'SlurmdTimeout' => '300',
     'SlurmSchedLogLevel' => '0',
     'SwitchType' => 'switch/none',
@@ -88,6 +90,7 @@ class slurm::params {
     'AuthType' => 'auth/munge',
     'DebugLevel' => 'info',
     'MessageTimeout' => '10',
+    'PidFile' => '/var/run/slurmdbd.pid',
     'PluginDir' => '/usr/lib64/slurm',
     'TrackSlurmctldDown' => 'no',
   }
