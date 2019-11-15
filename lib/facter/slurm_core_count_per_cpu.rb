@@ -10,14 +10,14 @@
 require 'facter/util/slurm'
 
 Facter.add(:slurm_core_count_per_cpu) do
-  confine :kernel => :linux
+  confine kernel: :linux
 
   setcode do
     value = nil
     output = Facter::Util::Slurm.read_procfs('/proc/cpuinfo')
-    if ! output.nil?
-      result = output[/^cpu cores.*(\d+)/, 1]
-      if ! result.nil?
+    unless output.nil?
+      result = output[%r{^cpu cores.*(\d+)}, 1]
+      unless result.nil?
         value = result.to_i
       end
     end

@@ -2,7 +2,7 @@ require 'lib/module_spec_helper'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-Dir["#{dir}/shared_examples/*.rb"].sort.each {|f| require f}
+Dir["#{dir}/shared_examples/*.rb"].sort.each { |f| require f }
 
 def cpuinfo_fixtures(filename)
   fixtures('cpuinfo', filename)
@@ -13,7 +13,7 @@ def cpuinfo_fixture_read(filename)
 end
 
 def cpuinfo_fixture_readlines(filename)
-  cpuinfo_fixture_read(filename).split(/\n/)
+  cpuinfo_fixture_read(filename).split(%r{\n})
 end
 
 def meminfo_fixtures(filename)
@@ -25,12 +25,12 @@ def meminfo_fixture_read(filename)
 end
 
 def meminfo_fixture_readlines(filename)
-  meminfo_fixture_read(filename).split(/\n/)
+  meminfo_fixture_read(filename).split(%r{\n})
 end
 
 class String
   def camel_case
-    return self if self !~ /_/ && self =~ /[A-Z]+.*/
-    split('_').map{|e| e.capitalize}.join
+    return self if self !~ %r{_} && self =~ %r{[A-Z]+.*}
+    split('_').map { |e| e.capitalize }.join
   end
 end

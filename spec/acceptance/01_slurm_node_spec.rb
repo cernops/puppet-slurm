@@ -4,8 +4,8 @@ describe 'node' do
   context 'default parameters' do
     nodes = hosts_as('slurm_node')
 
-    it 'should run successfully' do
-      pp =<<-EOS
+    it 'runs successfully' do
+      pp = <<-EOS
       class { 'munge':
         munge_key_source => 'puppet:///modules/site_slurm/munge.key',
       }
@@ -27,19 +27,19 @@ describe 'node' do
       EOS
 
       nodes.each do |node|
-        apply_manifest_on(node, pp, :catch_failures => true)
-        apply_manifest_on(node, pp, :catch_changes => true)
+        apply_manifest_on(node, pp, catch_failures: true)
+        apply_manifest_on(node, pp, catch_changes: true)
       end
     end
 
     nodes.each do |node|
-      it_behaves_like "munge", node
-      it_behaves_like "slurm::common::user", node
-      it_behaves_like "slurm::common::install", node
-      it_behaves_like "slurm::common::setup", node
-      it_behaves_like "slurm::common::config", node
-      it_behaves_like "slurm::node::config", node
-      it_behaves_like "slurm::service - running", node
+      it_behaves_like 'munge', node
+      it_behaves_like 'slurm::common::user', node
+      it_behaves_like 'slurm::common::install', node
+      it_behaves_like 'slurm::common::setup', node
+      it_behaves_like 'slurm::common::config', node
+      it_behaves_like 'slurm::node::config', node
+      it_behaves_like 'slurm::service - running', node
     end
   end
 end
