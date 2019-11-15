@@ -1,0 +1,26 @@
+---
+.travis.yml:
+  user: treydock
+  secure: "DlHNXo5jMQGcdbHw32QwmPqvBzFa248FTt/ZAzKJoqMsRRHpk8YtxmumlrDPq8XkhpY22lqsMhFe2oa8KAkmuThd5pFuBm0gHqZIDRgKmRRHihttYNc6R/t4d3JuFbfDiZrqBdcHQsA92zcQ1GxHTF2EnEBcqlkdg/8zfNjEl3s="
+.gitlab-ci.yml:
+  delete: true
+appveyor.yml:
+  delete: true
+spec/acceptance/nodesets/centos-6.yml:
+  unmanaged: true
+spec/acceptance/nodesets/centos-7.yml:
+  unmanaged: true
+spec/acceptance/nodesets/centos-8.yml:
+  unmanaged: true
+spec/acceptance/nodesets/debian-8.yml:
+  delete: true
+spec/acceptance/nodesets/debian-9.yml:
+  delete: true
+spec/acceptance/nodesets/debian-10.yml:
+  delete: true
+spec/acceptance/nodesets/ubuntu-1404.yml:
+  delete: true
+spec/acceptance/nodesets/ubuntu-1604.yml:
+  delete: true
+spec/acceptance/nodesets/ubuntu-1804.yml:
+  delete: true

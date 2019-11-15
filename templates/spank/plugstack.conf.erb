@@ -1,4 +1,4 @@
 #
 # File managed by Puppet!
 #
-include <%= scope.lookupvar('slurm::plugstack_conf_d_path') %>/*.conf
+include <%= scope['slurm::plugstack_conf_d_path'] %>/*.conf

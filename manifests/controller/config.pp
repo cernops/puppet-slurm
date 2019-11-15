@@ -42,25 +42,4 @@ class slurm::controller::config {
       require => File['JobCheckpointDir'],
     }
   }
-
-  if $slurm::manage_logrotate {
-    #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
-    logrotate::rule { 'slurmctld':
-      path          => $slurm::slurmctld_log_file,
-      compress      => true,
-      missingok     => true,
-      copytruncate  => false,
-      delaycompress => false,
-      ifempty       => false,
-      rotate        => '10',
-      sharedscripts => true,
-      size          => '10M',
-      create        => true,
-      create_mode   => '0640',
-      create_owner  => $slurm::slurm_user,
-      create_group  => 'root',
-      postrotate    => $slurm::_logrotate_slurm_postrotate,
-    }
-  }
-
 }

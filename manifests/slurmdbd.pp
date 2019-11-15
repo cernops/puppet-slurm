@@ -1,24 +1,19 @@
 # Private class
 class slurm::slurmdbd {
 
-  include ::munge
-  include slurm::common::user
-  include slurm::common::install
-  include slurm::common::setup
-  include slurm::slurmdbd::config
-  include slurm::slurmdbd::service
+  contain ::munge
+  contain slurm::common::user
+  contain slurm::common::install
+  contain slurm::common::setup
+  contain slurm::slurmdbd::config
+  contain slurm::slurmdbd::service
 
-  anchor { 'slurm::slurmdbd::start': }
-  anchor { 'slurm::slurmdbd::end': }
-
-  Anchor['slurm::slurmdbd::start']->
   Class['::munge']->
   Class['slurm::common::user']->
   Class['slurm::common::install']->
   Class['slurm::common::setup']->
   Class['slurm::slurmdbd::config']->
-  Class['slurm::slurmdbd::service']->
-  Anchor['slurm::slurmdbd::end']
+  Class['slurm::slurmdbd::service']
 
   if $slurm::manage_firewall {
     firewall {'100 allow access to slurmdbd':

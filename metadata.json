@@ -4,32 +4,90 @@
   "author": "treydock",
   "summary": "SLURM Puppet module",
   "license": "Apache-2.0",
-  "source": "git://github.com/treydock/puppet-slurm.git",
-  "issues_url": "https://github.com/treydock/puppet-slurm/issues",
+  "source": "https://github.com/treydock/puppet-slurm",
   "project_page": "https://github.com/treydock/puppet-slurm",
-  "tags": [ "slurm", "hpc" ],
+  "issues_url": "https://github.com/treydock/puppet-slurm/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">=4.25.1 <7.0.0"
+    },
+    {
+      "name": "puppetlabs/firewall",
+      "version_requirement": ">=1.0.0 <3.0.0"
+    },
+    {
+      "name": "puppetlabs/concat",
+      "version_requirement": ">=1.0.0 <7.0.0"
+    },
+    {
+      "name": "puppetlabs/mysql",
+      "version_requirement": ">=2.3.0 <11.0.0"
+    },
+    {
+      "name": "stahnma/epel",
+      "version_requirement": ">= 0.0.6 <2.0.0"
+    },
+    {
+      "name": "herculesteam/augeasproviders_sysctl",
+      "version_requirement": ">= 2.0.0 <3.0.0"
+    },
+    {
+      "name": "saz/limits",
+      "version_requirement": ">= 2.3.0 <4.0.0"
+    },
+    {
+      "name": "puppet/logrotate",
+      "version_requirement": ">= 3.4.0 <5.0.0"
+    },
+    {
+      "name": "treydock/munge",
+      "version_requirement": ">= 1.1.0 <3.0.0"
+    },
+    {
+      "name": "camptocamp/systemd",
+      "version_requirement": ">= 1.1.0 <3.0.0"
+    },
+    {
+      "name": "saz/rsyslog",
+      "version_requirement": ">= 5.0.0 <6.0.0"
+    }
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "5", "6", "7" ]
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
     },
     {
       "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "5", "6", "7" ]
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
     },
     {
       "operatingsystem": "Scientific",
-      "operatingsystemrelease": [ "5", "6", "7" ]
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
     }
   ],
-  "dependencies": [
-    { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.0 <5.0.0" },
-    { "name": "puppetlabs/firewall", "version_requirement": ">=1.0.0 <2.0.0" },
-    { "name": "puppetlabs/concat", "version_requirement": ">=1.0.0 <2.0.0" },
-    { "name": "puppetlabs/mysql", "version_requirement": ">=2.3.0 <4.0.0" },
-    { "name": "stahnma/epel", "version_requirement": ">= 0.0.6 <2.0.0" },
-    { "name": "herculesteam/augeasproviders_sysctl", "version_requirement": "2.x" },
-    { "name": "saz/limits", "version_requirement": "2.x" },
-    { "name": "treydock/munge", "version_requirement": "0.x" }
-  ]
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.0.0 < 7.0.0"
+    }
+  ],
+  "tags": [
+    "slurm",
+    "hpc",
+    "batch"
+  ],
+  "pdk-version": "1.10.0",
+  "template-url": "https://github.com/treydock/pdk-templates.git#master",
+  "template-ref": "heads/master-0-g35f0335"
 }

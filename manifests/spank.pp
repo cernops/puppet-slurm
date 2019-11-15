@@ -17,6 +17,12 @@ define slurm::spank (
 
   $config_path_real = pick($config_path, "${slurm::plugstack_conf_d_path}/${title}.conf")
 
+  if $slurm::repo_baseurl {
+    $package_require = Yumrepo['slurm']
+  } else {
+    $package_require = undef
+  }
+
   if $restart_slurmd {
     $notify = Service['slurmd']
   } else {
@@ -29,7 +35,7 @@ define slurm::spank (
       name    => $package_name,
       before  => File["SLURM SPANK ${title} config"],
       notify  => $notify,
-      require => $slurm::package_require,
+      require => $package_require,
     }
   }
 

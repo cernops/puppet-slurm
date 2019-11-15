@@ -1,15 +1,15 @@
 <%
-name = scope.lookupvar('slurm::node_name')
-addr = scope.lookupvar('slurm::node_addr') || 'UNSET'
-cpus = scope.lookupvar('slurm::cpus') || 'UNSET'
-sockets = scope.lookupvar('slurm::sockets') || 'UNSET'
-cores_per_socket = scope.lookupvar('slurm::cores_per_socket') || 'UNSET'
-threads_per_core = scope.lookupvar('slurm::threads_per_core') || 'UNSET'
-real_memory = scope.lookupvar('slurm::real_memory') || 'UNSET'
-tmp_disk = scope.lookupvar('slurm::tmp_disk') || 'UNSET'
-weight = scope.lookupvar('slurm::node_weight') || 'UNSET'
-feature = scope.lookupvar('slurm::feature') || 'UNSET'
-state = scope.lookupvar('slurm::state')
+name = @node_name
+addr = @node_addr || 'UNSET'
+cpus = @cpus || 'UNSET'
+sockets = @sockets || 'UNSET'
+cores_per_socket = @cores_per_socket || 'UNSET'
+threads_per_core = @threads_per_core || 'UNSET'
+real_memory = @real_memory || 'UNSET'
+tmp_disk = @tmp_disk || 'UNSET'
+weight = @node_weight || 'UNSET'
+feature = @feature || 'UNSET'
+state = @state
 node = []
 node << "NodeName=#{name}"
 node << "NodeAddr=#{addr}" if addr != 'UNSET'

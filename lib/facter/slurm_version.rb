@@ -1,11 +1,17 @@
 # slurm_version.rb
 
 Facter.add(:slurm_version) do
+  confine :kernel => :linux
+
   setcode do
-    if sinfo = Facter::Util::Resolution.which("sinfo")
-      if sinfo_v = Facter::Util::Resolution.exec("sinfo -V 2>/dev/null").match(/^slurm (.*)$/)
-        result = sinfo_v[1]
+    value = nil
+    sinfo = Facter::Util::Resolution.which('sinfo')
+    if sinfo
+      output = Facter::Util::Resolution.exec("#{sinfo} -V 2>/dev/null")
+      if ! output.nil?
+        value = output[/^slurm (.*)$/, 1]
       end
     end
+    value
   end
 end

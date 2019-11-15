@@ -1,41 +1,21 @@
 # Private class
 class slurm::controller {
 
-  include ::munge
-  include slurm::common::user
-  include slurm::common::install
-  include slurm::common::setup
-  include slurm::common::config
-  include slurm::controller::config
-  include slurm::controller::service
+  contain ::munge
+  contain slurm::common::user
+  contain slurm::common::install
+  contain slurm::common::setup
+  contain slurm::common::config
+  contain slurm::controller::config
+  contain slurm::controller::service
 
-  anchor { 'slurm::controller::start': }
-  anchor { 'slurm::controller::end': }
-
-  if $slurm::include_blcr {
-    include ::blcr
-
-    Anchor['slurm::controller::start']->
-    Class['::munge']->
-    Class['::blcr']->
-    Class['slurm::common::user']->
-    Class['slurm::common::install']->
-    Class['slurm::common::setup']->
-    Class['slurm::common::config']->
-    Class['slurm::controller::config']->
-    Class['slurm::controller::service']->
-    Anchor['slurm::controller::end']
-  } else {
-    Anchor['slurm::controller::start']->
-    Class['::munge']->
-    Class['slurm::common::user']->
-    Class['slurm::common::install']->
-    Class['slurm::common::setup']->
-    Class['slurm::common::config']->
-    Class['slurm::controller::config']->
-    Class['slurm::controller::service']->
-    Anchor['slurm::controller::end']
-  }
+  Class['::munge']->
+  Class['slurm::common::user']->
+  Class['slurm::common::install']->
+  Class['slurm::common::setup']->
+  Class['slurm::common::config']->
+  Class['slurm::controller::config']->
+  Class['slurm::controller::service']
 
   if $slurm::manage_firewall {
     firewall { '100 allow access to slurmctld':

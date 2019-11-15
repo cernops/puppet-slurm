@@ -1,21 +1,54 @@
 ---
-sudo: false
+dist: xenial
 language: ruby
+cache: bundler
+before_install:
+  - bundle -v
+  - rm -f Gemfile.lock
+  - gem update --system $RUBYGEMS_VERSION
+  - gem --version
+  - bundle -v
+script:
+  - 'bundle exec rake $CHECK'
 bundler_args: --without system_tests
-before_install: rm Gemfile.lock || true
-script: bundle exec rake test
+rvm:
+  - 2.5.3
+stages:
+  - static
+  - spec
+  - acceptance
+  -
+    if: tag =~ ^v\d
+    name: deploy
 matrix:
   fast_finish: true
   include:
-    - rvm: 1.8.7
-      env: PUPPET_GEM_VERSION="~> 3.0" FACTER_GEM_VERSION="~> 1.7"
-    - rvm: 1.8.7
-      env: PUPPET_GEM_VERSION="~> 3.0" FACTER_GEM_VERSION="~> 2.0"
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 3.0" FACTER_GEM_VERSION="~> 1.7"
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 3.0" FACTER_GEM_VERSION="~> 2.0"
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 4.0" FACTER_GEM_VERSION="~> 2.0"
+    -
+      env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
+      stage: static
+    -
+      env: PUPPET_GEM_VERSION="~> 5.0" CHECK=parallel_spec
+      rvm: 2.4.5
+      stage: spec
+    -
+      env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
+      rvm: 2.5.3
+      stage: spec
+    -
+      env: DEPLOY_TO_FORGE=yes
+      stage: deploy
+branches:
+  only:
+    - master
+    - /^v\d/
 notifications:
-  email: false
+  email: treydock@gmail.com
+deploy:
+  provider: puppetforge
+  user: treydock
+  password:
+    secure: "DlHNXo5jMQGcdbHw32QwmPqvBzFa248FTt/ZAzKJoqMsRRHpk8YtxmumlrDPq8XkhpY22lqsMhFe2oa8KAkmuThd5pFuBm0gHqZIDRgKmRRHihttYNc6R/t4d3JuFbfDiZrqBdcHQsA92zcQ1GxHTF2EnEBcqlkdg/8zfNjEl3s="
+  on:
+    tags: true
+    all_branches: true
+    condition: "$DEPLOY_TO_FORGE = yes"

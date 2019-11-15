@@ -1,46 +1,6 @@
 # Private class
 class slurm::node::config {
 
-  if $slurm::manage_cgroup_release_agents {
-    file { $slurm::cgroup_release_agent_dir_real:
-      ensure => 'directory',
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_common":
-      ensure => 'file',
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-      source => $slurm::cgroup_release_common_source_real,
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_blkio":
-      ensure => 'link',
-      target => 'release_common',
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_cpuacct":
-      ensure => 'link',
-      target => 'release_common',
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_cpuset":
-      ensure => 'link',
-      target => 'release_common',
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_freezer":
-      ensure => 'link',
-      target => 'release_common',
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_memory":
-      ensure => 'link',
-      target => 'release_common',
-    }->
-    file { "${slurm::cgroup_release_agent_dir_real}/release_devices":
-      ensure => 'link',
-      target => 'release_common',
-    }
-  }
-
   if $slurm::manage_scripts {
     if $slurm::manage_epilog and $slurm::epilog {
       if '*' in $slurm::epilog {
@@ -130,25 +90,4 @@ class slurm::node::config {
     hard       => 'unlimited',
     soft       => 'unlimited',
   }
-
-  if $slurm::manage_logrotate {
-    #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
-    logrotate::rule { 'slurmd':
-      path          => $slurm::slurmd_log_file,
-      compress      => true,
-      missingok     => true,
-      copytruncate  => false,
-      delaycompress => false,
-      ifempty       => false,
-      rotate        => '10',
-      sharedscripts => true,
-      size          => '10M',
-      create        => true,
-      create_mode   => '0640',
-      create_owner  => $slurm::slurmd_user,
-      create_group  => 'root',
-      postrotate    => $slurm::_logrotate_slurm_postrotate,
-    }
-  }
-
 }

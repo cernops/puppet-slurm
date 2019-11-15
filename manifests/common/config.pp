@@ -34,16 +34,15 @@ class slurm::common::config {
         mode   => '0644',
       }
     } else {
-      datacat { 'slurm-nodes.conf':
+      concat { 'slurm-nodes.conf':
         ensure   => 'present',
         path     => $slurm::node_conf_path,
-        template => 'slurm/slurm.conf/nodes.conf.erb',
         owner    => 'root',
         group    => 'root',
         mode     => '0644',
       }
 
-      Datacat_fragment <<| tag == $slurm::slurm_nodelist_tag |>>
+      Concat::Fragment <<| tag == $slurm::slurm_nodelist_tag |>>
     }
 
     file { 'plugstack.conf.d':
@@ -74,20 +73,12 @@ class slurm::common::config {
       content => $slurm::cgroup_conf_content,
       source  => $slurm::_cgroup_conf_source,
     }
+  }
 
-    file { 'cgroup_allowed_devices_file.conf':
-      ensure  => 'file',
-      path    => $slurm::cgroup_allowed_devices_file_real,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      content => template($slurm::cgroup_allowed_devices_template),
+  if $slurm::tuning_net_core_somaxconn {
+    sysctl { 'net.core.somaxconn':
+      ensure => 'present',
+      value  => String($slurm::tuning_net_core_somaxconn),
     }
   }
-
-  sysctl { 'net.core.somaxconn':
-    ensure => present,
-    value  => '1024',
-  }
-
 }

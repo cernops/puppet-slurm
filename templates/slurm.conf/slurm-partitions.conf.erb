@@ -4,9 +4,9 @@
 # PARTITIONS
 #
 <% 
-scope.lookupvar('slurm::partitionlist').each do |part|
+scope['slurm::partitionlist'].each do |part|
   partition = []
-  scope.lookupvar('slurm::partition_keys').each do |key|
+  scope['slurm::partition_keys'].each do |key|
     partition << "#{key}=#{part[key]}" if part[key]
   end
 -%>

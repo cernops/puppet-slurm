@@ -4,7 +4,7 @@
 # See the slurmdbd.conf man page for more information.
 #
 
-<% slurmdbd_conf = scope.lookupvar('slurm::slurmdbd_conf') -%>
+<% slurmdbd_conf = scope['slurm::slurmdbd_conf'] -%>
 <% slurmdbd_conf.keys.sort.each do |key| -%>
 <% unless slurmdbd_conf[key] == :undef or ! slurmdbd_conf[key] or slurmdbd_conf[key] == 'UNSET' -%>
 <%= key %>=<%= slurmdbd_conf[key] %>
