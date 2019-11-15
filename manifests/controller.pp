@@ -9,13 +9,13 @@ class slurm::controller {
   contain slurm::controller::config
   contain slurm::controller::service
 
-  Class['::munge']->
-  Class['slurm::common::user']->
-  Class['slurm::common::install']->
-  Class['slurm::common::setup']->
-  Class['slurm::common::config']->
-  Class['slurm::controller::config']->
-  Class['slurm::controller::service']
+  Class['::munge']
+  -> Class['slurm::common::user']
+  -> Class['slurm::common::install']
+  -> Class['slurm::common::setup']
+  -> Class['slurm::common::config']
+  -> Class['slurm::controller::config']
+  -> Class['slurm::controller::service']
 
   if $slurm::manage_firewall {
     firewall { '100 allow access to slurmctld':

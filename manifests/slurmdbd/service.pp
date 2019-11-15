@@ -2,10 +2,10 @@
 class slurm::slurmdbd::service {
 
   file { '/etc/sysconfig/slurmdbd':
-    ensure => 'file',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     content => template('slurm/sysconfig/slurmdbd.erb'),
   }
 

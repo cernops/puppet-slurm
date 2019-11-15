@@ -9,22 +9,22 @@ class slurm::node {
   contain slurm::node::config
   contain slurm::node::service
 
-  Class['::munge']->
-  Class['slurm::common::user']->
-  Class['slurm::common::install']->
-  Class['slurm::common::setup']->
-  Class['slurm::common::config']->
-  Class['slurm::node::config']~>
-  Class['slurm::node::service']
+  Class['::munge']
+  -> Class['slurm::common::user']
+  -> Class['slurm::common::install']
+  -> Class['slurm::common::setup']
+  -> Class['slurm::common::config']
+  -> Class['slurm::node::config']
+  ~> Class['slurm::node::service']
 
-  Class['slurm::common::install']~>
-  Class['slurm::node::service']
+  Class['slurm::common::install']
+  ~> Class['slurm::node::service']
 
-  Class['slurm::common::setup']~>
-  Class['slurm::node::service']
+  Class['slurm::common::setup']
+  ~> Class['slurm::node::service']
 
-  Class['slurm::common::config']~>
-  Class['slurm::node::service']
+  Class['slurm::common::config']
+  ~> Class['slurm::node::service']
 
   @@slurm::node::conf { $::slurm::node_name:
     * => $::slurm::node_conf,

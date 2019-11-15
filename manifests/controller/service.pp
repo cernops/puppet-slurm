@@ -2,10 +2,10 @@
 class slurm::controller::service {
 
   file { '/etc/sysconfig/slurmctld':
-    ensure => 'file',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     content => template('slurm/sysconfig/slurmctld.erb'),
   }
 

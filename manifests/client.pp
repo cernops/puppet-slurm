@@ -7,10 +7,10 @@ class slurm::client {
   contain slurm::common::setup
   contain slurm::common::config
 
-  Class['::munge']->
-  Class['slurm::common::user']->
-  Class['slurm::common::install']->
-  Class['slurm::common::setup']->
-  Class['slurm::common::config']
+  Class['::munge']
+  -> Class['slurm::common::user']
+  -> Class['slurm::common::install']
+  -> Class['slurm::common::setup']
+  -> Class['slurm::common::config']
 
 }

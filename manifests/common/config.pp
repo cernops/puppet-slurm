@@ -35,11 +35,11 @@ class slurm::common::config {
       }
     } else {
       concat { 'slurm-nodes.conf':
-        ensure   => 'present',
-        path     => $slurm::node_conf_path,
-        owner    => 'root',
-        group    => 'root',
-        mode     => '0644',
+        ensure => 'present',
+        path   => $slurm::node_conf_path,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
       }
 
       Concat::Fragment <<| tag == $slurm::slurm_nodelist_tag |>>
