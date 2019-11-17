@@ -16,9 +16,7 @@ define slurm::node (
   $real_memory      = undef,
   $sockets          = undef,
   $sockets_per_board = undef,
-# TODO
-#  Slurm::NodeState $state = 'UNKNOWN',
-  Enum['CLOUD','FUTURE','DOWN','DRAIN','FAIL','FAILING','UNKNOWN'] $state = 'UNKNOWN',
+  Slurm::NodeState $state = 'UNKNOWN',
   $threads_per_core = undef,
   Optional[Integer] $tmp_disk = undef,
   $tres_weights     = undef,

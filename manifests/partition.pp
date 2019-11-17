@@ -28,21 +28,15 @@ define slurm::partition (
   $min_nodes = undef,
   $nodes = undef,
   Optional[Enum['EXCLUSIVE','FORCE','YES','NO']] $over_subscribe = undef,
-  Optional[Enum['OFF','CANCEL','CHECKPOINT','GANG','REQUEUE','SUSPEND']] $preempt_mode = undef,
-# TODO
-#  Optional[Slurm::PreemptMode] $preempt_mode = undef,
+  Optional[Slurm::PreemptMode] $preempt_mode = undef,
   $priority_job_factor = undef,
   $priority_tier = undef,
   $qos = undef,
   $req_resv = undef,
   Optional[Enum['YES','NO']] $root_only = undef,
-# TODO
-#  Optional[Slurm::SelectTypeParameters] $select_type_parameters = undef,
-  Optional[Enum['CR_Core','CR_Core_Memory','CR_Socket','CR_Socket_Memory']] $select_type_parameters = undef,
+  Optional[Slurm::SelectTypeParameters] $select_type_parameters = undef,
   $shared = undef,
-  Enum['UP','DOWN','DRAIN','INACTIVE'] $state = 'UP',
-# TODO
-#  Slurm::PartitionState $state = 'UP',
+  Slurm::PartitionState $state = 'UP',
   $tres_billing_weights = undef,
   $order            = '50',
 ) {

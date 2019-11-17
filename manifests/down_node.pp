@@ -2,9 +2,7 @@
 define slurm::down_node (
   String $down_nodes          = $name,
   Optional[String] $reason    = undef,
-# TODO
-#  Slurm::DownNodeState $state = 'UNKNOWN',
-  Enum['DOWN','DRAIN','FAIL','FAILING','UNKNOWN'] $state = 'UNKNOWN',
+  Slurm::DownNodeState $state = 'UNKNOWN',
   $order                      = '75',
 ) {
 
