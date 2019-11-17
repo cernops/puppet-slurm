@@ -1,0 +1,8 @@
+<%-
+switch = []
+@conf_values.each_pair do |key,value|
+  next if (value.nil? || value == 'UNSET')
+  switch << "#{key}=#{value}"
+end
+-%>
+<%= switch.join(" ") -%>

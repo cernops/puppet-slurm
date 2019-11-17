@@ -60,7 +60,28 @@ class slurm::common::config {
       slurm::node { $name: * => $_node }
     }
 
-    # TODO: topology.conf
+    concat { 'slurm-topology.conf':
+      ensure => 'present',
+      path   => $slurm::topology_conf_path,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
+    concat::fragment { 'slurm-topology.conf-header':
+      target  => 'slurm-topology.conf',
+      content => "# File managed by Puppet - DO NOT EDIT\n",
+      order   => '00',
+    }
+    if $slurm::topology_source {
+      concat::fragment { 'slurm-topology.conf-source':
+        target => 'slurm-topology.conf',
+        source => $slurm::topology_source,
+        order  => '01',
+      }
+    }
+    $::slurm::switches.each |$name, $switch| {
+      slurm::switch { $name: * => $switch }
+    }
 
     file { 'plugstack.conf.d':
       ensure  => 'directory',

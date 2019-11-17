@@ -149,6 +149,14 @@ shared_examples_for 'slurm::common::config' do
   end
 
   it do
+    is_expected.to contain_concat('slurm-topology.conf').with(ensure: 'present',
+                                                           path: '/etc/slurm/topology.conf',
+                                                           owner: 'root',
+                                                           group: 'root',
+                                                           mode: '0644')
+  end
+
+  it do
     is_expected.to contain_file('plugstack.conf.d').with(ensure: 'directory',
                                                          path: '/etc/slurm/plugstack.conf.d',
                                                          recurse: 'true',
@@ -299,12 +307,38 @@ shared_examples_for 'slurm::common::config' do
     end
   end
 
+  context 'when switches defined' do
+    let :param_override do
+      {
+        switches: { 'switch01' =>
+                   {
+                     'nodes' => 'c01',
+                   },
+                 'switch00' => {
+                   'switches' => 'switch01',
+                 } },
+      }
+    end
+
+    it do
+      verify_exact_fragment_contents(catalogue, 'slurm-topology.conf-switch01', [
+                                       'SwitchName=switch01 Nodes=c01',
+                                     ])
+    end
+    it do
+      verify_exact_fragment_contents(catalogue, 'slurm-topology.conf-switch00', [
+                                       'SwitchName=switch00 Switches=switch01',
+                                     ])
+    end
+  end
+
   context 'when manage_slurm_conf => false' do
     let(:param_override) {  { manage_slurm_conf: false } }
 
     it { is_expected.not_to contain_file('slurm.conf') }
     it { is_expected.not_to contain_concat('slurm-partitions.conf') }
     it { is_expected.not_to contain_concat('slurm-nodes.conf') }
+    it { is_expected.not_to contain_concat('slurm-topology.conf') }
     it { is_expected.not_to contain_file('plugstack.conf.d') }
     it { is_expected.not_to contain_file('plugstack.conf') }
     it { is_expected.not_to contain_file('slurm-cgroup.conf') }
@@ -328,6 +362,12 @@ shared_examples_for 'slurm::common::config' do
     let(:param_override) {  { node_source: 'file:///path/nodes.conf' } }
 
     it { is_expected.to contain_concat__fragment('slurm-nodes.conf-source').with_source('file:///path/nodes.conf') }
+  end
+
+  context 'when topology_source => "file:///path/topology.conf"' do
+    let(:param_override) {  { topology_source: 'file:///path/topology.conf' } }
+
+    it { is_expected.to contain_concat__fragment('slurm-topology.conf-source').with_source('file:///path/topology.conf') }
   end
 
   context 'when cgroup_conf_source => "file:///path/cgroup.conf"' do

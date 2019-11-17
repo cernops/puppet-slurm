@@ -86,8 +86,11 @@ class slurm (
   $partition_source       = undef,
   $node_template          = 'slurm/slurm.conf/node.conf.erb',
   $node_source            = undef,
+  $switch_template        = 'slurm/switch.conf.erb',
+  $topology_source        = undef,
   $partitions             = {},
   $nodes                  = {},
+  $switches               = {},
 
   # slurm.conf - node
   Optional[Stdlib::Absolutepath] $slurmd_log_file  = undef,
@@ -173,6 +176,7 @@ class slurm (
   $slurm_conf_path                    = "${conf_dir}/slurm.conf"
   $node_conf_path                     = "${conf_dir}/nodes.conf"
   $partition_conf_path                = "${conf_dir}/partitions.conf"
+  $topology_conf_path                 = "${conf_dir}/topology.conf"
   $slurmdbd_conf_path                 = "${conf_dir}/slurmdbd.conf"
   $plugstack_conf_path                = pick($plugstack_conf, "${conf_dir}/plugstack.conf")
   $plugstack_conf_d_path              = pick($plugstack_conf_d, "${conf_dir}/plugstack.conf.d")
