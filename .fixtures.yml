@@ -34,6 +34,8 @@ fixtures:
       repo: https://github.com/camptocamp/puppet-systemd.git
     rsyslog:
       repo: https://github.com/saz/puppet-rsyslog.git
+    nhc:
+      repo: https://github.com/treydock/puppet-module-nhc
   symlinks:
     slurm: "#{source_dir}"
     site_slurm: "#{File.join(source_dir, 'spec/fixtures', 'site_slurm')}"

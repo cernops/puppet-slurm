@@ -111,12 +111,16 @@ class slurm (
   $slurmdbd_storage_user  = 'slurmdbd',
   $slurmdbd_conf_override = {},
 
+  # slurm.conf health check
+  $use_nhc                      = false,
+  $include_nhc                  = false,
+  $health_check_program         = undef,
+  $health_check_program_source  = undef,
+
   # slurm.conf - epilog/prolog
   $manage_epilog                = true,
   $epilog                       = undef,
   $epilog_source                = undef,
-  $health_check_program         = undef,
-  $health_check_program_source  = undef,
   $manage_prolog                = true,
   $prolog                       = undef,
   $prolog_source                = undef,
@@ -199,6 +203,12 @@ class slurm (
     ]
   }
 
+  if $use_nhc {
+    $_health_check_program = pick($health_check_program, '/usr/sbin/nhc')
+  } else {
+    $_health_check_program = $health_check_program
+  }
+
   $slurm_conf_local_defaults = {
     'AccountingStorageHost' => $slurmctld_host,
     'AccountingStoragePort' => $slurmdbd_port,
@@ -207,7 +217,7 @@ class slurm (
     'DefaultStoragePort' => $slurmdbd_port,
     'Epilog' => $epilog,
     'EpilogSlurmctld' => undef, #TODO
-    'HealthCheckProgram' => $health_check_program, #TODO
+    'HealthCheckProgram' => $_health_check_program,
     'JobCheckpointDir' => $job_checkpoint_dir,
     'PlugStackConfig' => $plugstack_conf_path,
     'Prolog' => $prolog,

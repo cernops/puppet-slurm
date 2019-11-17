@@ -26,6 +26,11 @@ class slurm::slurmd {
   Class['slurm::common::config']
   ~> Class['slurm::slurmd::service']
 
+  if $slurm::use_nhc and $slurm::include_nhc {
+    include ::nhc
+    Class['::nhc'] -> Class['slurm::common::config']
+  }
+
   if $slurm::manage_firewall {
     firewall { '100 allow access to slurmd':
       proto  => 'tcp',
