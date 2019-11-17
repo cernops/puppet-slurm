@@ -1,7 +1,7 @@
 # Private class
 class slurm::common::setup {
 
-  if $slurm::slurmctld or $slurm::slurmdbd {
+  if ('slurmctld' in $slurm::roles) or ('slurmdbd' in $slurm::roles) {
     $_dir_owner = $slurm::slurm_user
     $_dir_group = $slurm::slurm_user_group
   } else {
@@ -36,7 +36,7 @@ class slurm::common::setup {
   }
 
   # Don't need these directories on a client - all other roles need them
-  if $slurm::slurmctld or $slurm::slurmdbd or $slurm::slurmd {
+  if ('slurmd' in $slurm::roles) or ('slurmctld' in $slurm::roles) or ('slurmdbd' in $slurm::roles) {
     file { $slurm::log_dir:
       ensure => 'directory',
       owner  => $_dir_owner,
@@ -65,19 +65,19 @@ class slurm::common::setup {
     }
 
     if $slurm::manage_rsyslog {
-      if $slurm::slurmd {
+      if 'slurmd' in $slurm::roles {
         rsyslog::snippet { '60_slurmd':
           ensure  => 'present',
           content => ":programname, isequal, \"slurmd\" -${::slurm::log_dir}/slurmd.log\n& stop",
         }
       }
-      if $slurm::slurmctld {
+      if 'slurmctld' in $slurm::roles {
         rsyslog::snippet { '60_slurmctld':
           ensure  => 'present',
           content => ":programname, isequal, \"slurmctld\" -${::slurm::log_dir}/slurmctld.log\n& stop",
         }
       }
-      if $slurm::slurmdbd {
+      if 'slurmdbd' in $slurm::roles {
         rsyslog::snippet { '60_slurmdbd':
           ensure  => 'present',
           content => ":programname, isequal, \"slurmdbd\" -${::slurm::log_dir}/slurmdbd.log\n& stop",

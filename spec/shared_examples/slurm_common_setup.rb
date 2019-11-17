@@ -1,13 +1,13 @@
 shared_examples_for 'slurm::common::setup' do
   let(:dir_owner) do
-    if param_override[:slurmctld] || param_override[:slurmdbd]
+    if roles.include?('slurmctld') || roles.include?('slurmdbd')
       'slurm'
     else
       'root'
     end
   end
   let(:dir_group) do
-    if param_override[:slurmctld] || param_override[:slurmdbd]
+    if roles.include?('slurmctld') || roles.include?('slurmdbd')
       'slurm'
     else
       'root'
@@ -51,7 +51,7 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
-    if param_override[:slurmctld] || param_override[:slurmd] || param_override[:slurmdbd]
+    if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
       is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
                                                          owner: dir_owner,
                                                          group: dir_group,
@@ -62,7 +62,7 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
-    if param_override[:slurmctld] || param_override[:slurmd] || param_override[:slurmdbd]
+    if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
       is_expected.to contain_logrotate__rule('slurm').with(path: '/var/log/slurm/*.log',
                                                            compress: 'true',
                                                            missingok: 'true',
@@ -88,16 +88,16 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   context 'when manage_logrotate => false' do
-    let(:params) { param_override.merge(manage_logrotate: false) }
+    let(:param_override) {  { manage_logrotate: false } }
 
     it { is_expected.not_to contain_logrotate__rule('slurm') }
   end
 
   context 'when use_syslog => true' do
-    let(:params) { param_override.merge(use_syslog: true) }
+    let(:param_override) {  { use_syslog: true } }
 
     it do
-      if param_override[:slurmctld] || param_override[:slurmd] || param_override[:slurmdbd]
+      if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
         is_expected.to contain_logrotate__rule('slurm').with(postrotate: '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true')
       else
         is_expected.not_to contain_logrotate__rule('slurm')

@@ -19,7 +19,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
                                  'ArchiveTXN=no',
                                  'ArchiveUsage=no',
                                  'AuthType=auth/munge',
-                                 "DbdHost=slurmdbd",
+                                 'DbdHost=slurmdbd',
                                  'DbdPort=6819',
                                  'DebugLevel=info',
                                  'LogFile=/var/log/slurm/slurmdbd.log',
@@ -41,9 +41,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
   end
 
   context 'when slurmdbd_conf_override defined' do
-    let(:params) do
-      param_override.merge(slurmdbd_conf_override: { 'PrivateData' => 'users' })
-    end
+    let(:param_override) { { slurmdbd_conf_override: { 'PrivateData' => 'users' } } }
 
     it 'overrides values' do
       verify_contents(catalogue, 'slurmdbd.conf', ['PrivateData=users'])
@@ -51,7 +49,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
   end
 
   context 'when slurmdbd_storage_pass => "foobar"' do
-    let(:params) { param_override.merge(slurmdbd_storage_pass: 'foobar') }
+    let(:param_override) { { slurmdbd_storage_pass: 'foobar' } }
 
     it 'overrides values' do
       verify_contents(catalogue, 'slurmdbd.conf', ['StoragePass=foobar'])
@@ -59,7 +57,7 @@ shared_examples_for 'slurm::slurmdbd::config' do
   end
 
   context 'when use_syslog => true' do
-    let(:params) { param_override.merge(use_syslog: true) }
+    let(:param_override) { { use_syslog: true } }
 
     it do
       is_expected.to contain_file('slurmdbd.conf') \

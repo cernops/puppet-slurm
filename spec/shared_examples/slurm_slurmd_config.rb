@@ -1,6 +1,6 @@
 shared_examples_for 'slurm::slurmd::config' do
   context 'when manage_scripts => false' do
-    let(:params) { param_override.merge(manage_scripts: false) }
+    let(:param_override) {  { manage_scripts: false } }
 
     it { is_expected.not_to contain_file('epilog') }
     it { is_expected.not_to contain_file('prolog') }
@@ -9,7 +9,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when epilog => /tmp/foo' do
-    let(:params) { param_override.merge(epilog: '/tmp/foo') }
+    let(:param_override) {  { epilog: '/tmp/foo' } }
 
     it 'sets the Epilog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -28,7 +28,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when epilog => /tmp/foo.d/*' do
-    let(:params) { param_override.merge(epilog: '/tmp/foo.d/*') }
+    let(:param_override) { { epilog: '/tmp/foo.d/*' } }
 
     it 'sets the Epilog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -50,7 +50,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when health_check_program => /usr/sbin/nhc' do
-    let(:params) { param_override.merge(health_check_program: '/usr/sbin/nhc') }
+    let(:param_override) { { health_check_program: '/usr/sbin/nhc' } }
 
     it 'sets the HealthCheckProgram option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -60,7 +60,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when prolog => /tmp/bar' do
-    let(:params) { param_override.merge(prolog: '/tmp/bar') }
+    let(:param_override) { { prolog: '/tmp/bar' } }
 
     it 'sets the Prolog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -79,7 +79,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when prolog => /tmp/bar.d/*' do
-    let(:params) { param_override.merge(prolog: '/tmp/bar.d/*') }
+    let(:param_override) { { prolog: '/tmp/bar.d/*' } }
 
     it 'sets the Prolog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -101,7 +101,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when task_epilog => /tmp/epilog' do
-    let(:params) { param_override.merge(task_epilog: '/tmp/epilog') }
+    let(:param_override) {  { task_epilog: '/tmp/epilog' } }
 
     it 'sets the TaskEpilog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -120,7 +120,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when task_prolog => /tmp/foobar' do
-    let(:params) { param_override.merge(task_prolog: '/tmp/foobar') }
+    let(:param_override) {  { task_prolog: '/tmp/foobar' } }
 
     it 'sets the TaskProlog option' do
       verify_contents(catalogue, 'slurm.conf', [

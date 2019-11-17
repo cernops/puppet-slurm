@@ -9,7 +9,8 @@ describe 'slurm' do
                   ]).each do |_os, os_facts|
     let(:facts) { os_facts }
     let(:param_override) { {} }
-    let(:params) { param_override }
+    let(:roles) { ['client'] }
+    let(:params) { param_override.merge(roles: roles) }
 
     it { is_expected.to compile.with_all_deps }
     it { is_expected.to contain_class('slurm::client') }
@@ -21,7 +22,7 @@ describe 'slurm' do
     it_behaves_like 'slurm::client'
 
     context 'slurmd' do
-      let(:param_override) { { client: false, slurmd: true } }
+      let(:roles) { ['slurmd'] }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('slurm::slurmd') }
@@ -34,7 +35,7 @@ describe 'slurm' do
     end
 
     context 'slurmctld' do
-      let(:param_override) { { client: false, slurmctld: true } }
+      let(:roles) { ['slurmctld'] }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('slurm::slurmctld') }
@@ -47,7 +48,7 @@ describe 'slurm' do
     end
 
     context 'slurmdbd' do
-      let(:param_override) { { client: false, slurmdbd: true } }
+      let(:roles) { ['slurmdbd'] }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('slurm::slurmdbd') }
@@ -61,7 +62,7 @@ describe 'slurm' do
 
     context 'database' do
       let(:pre_condition) { 'include ::mysql::server' }
-      let(:param_override) { { client: false, database: true } }
+      let(:roles) { ['database'] }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('slurm::slurmdbd::db') }

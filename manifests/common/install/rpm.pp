@@ -20,27 +20,26 @@ class slurm::common::install::rpm {
     require => $package_require,
   }
 
-  if $slurm::slurmd or $slurm::slurmctld or $slurm::client {
+  if ('slurmd' in $slurm::roles) or ('slurmctld' in $slurm::roles) or ('client' in $slurm::roles) {
     package { 'slurm': }
     package { 'slurm-contribs': }
     package { 'slurm-devel': }
     package { 'slurm-example-configs': }
     package { 'slurm-perlapi': }
     package { 'slurm-libpmi': }
+    if $slurm::install_pam            { package { 'slurm-pam_slurm': } }
+    if $slurm::install_torque_wrapper { package { 'slurm-torque': } }
   }
 
-  if $slurm::slurmd {
+  if 'slurmd' in $slurm::roles {
     package { 'slurm-slurmd': }
   }
 
-  if $slurm::slurmctld {
+  if 'slurmctld' in $slurm::roles {
     package { 'slurm-slurmctld': }
   }
 
-  if $slurm::slurmdbd {
+  if 'slurmdbd' in $slurm::roles {
     package { 'slurm-slurmdbd': }
   }
-
-  if $slurm::install_pam            { package { 'slurm-pam_slurm': } }
-  if $slurm::install_torque_wrapper { package { 'slurm-torque': } }
 }

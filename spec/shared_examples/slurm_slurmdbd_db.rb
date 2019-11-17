@@ -7,13 +7,13 @@ shared_examples_for 'slurm::slurmdbd::db' do
   end
 
   context 'when export_database => true' do
-    let(:params) { param_override.merge(export_database: true) }
+    let(:param_override) {  { export_database: true } }
 
     it { is_expected.not_to contain_mysql__db('slurm_acct_db') }
   end
 
   context 'when manage_database => false' do
-    let(:params) { param_override.merge(manage_database: false) }
+    let(:param_override) {  { manage_database: false } }
 
     it { is_expected.not_to contain_mysql__db('slurm_acct_db') }
   end

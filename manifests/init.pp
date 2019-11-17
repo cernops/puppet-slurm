@@ -2,11 +2,7 @@
 #
 class slurm (
   # Roles
-  Boolean $slurmd     = false,
-  Boolean $slurmctld  = false,
-  Boolean $slurmdbd   = false,
-  Boolean $database   = false,
-  Boolean $client     = true,
+  Array[Enum['slurmd','slurmctld','slurmdbd','database','client']] $roles = ['client'],
 
   # Repo (optional)
   Optional[Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Pattern[/^file:\/\//]]] $repo_baseurl = undef,
@@ -170,8 +166,8 @@ class slurm (
     fail("Unsupported OS: ${os}, module ${module_name} only supports RedHat 7 and 8")
   }
 
-  if ! ($slurmd or $slurmctld or $slurmdbd or $database or $client) {
-    fail("Module ${module_name}: Must select a mode of either slurmd, slurmctld, slurmdbd database, or client.")
+  if empty($roles) {
+    fail("Module ${module_name}: Must select a role(s).")
   }
 
   $slurm_conf_path                    = "${conf_dir}/slurm.conf"
@@ -265,23 +261,23 @@ class slurm (
     $cgroup_conf_content = template($cgroup_conf_template)
   }
 
-  if $slurmd {
+  if 'slurmd' in $roles {
     contain slurm::slurmd
   }
 
-  if $slurmctld {
+  if 'slurmctld' in $roles {
     contain slurm::slurmctld
   }
 
-  if $slurmdbd {
+  if 'slurmdbd' in $roles {
     contain slurm::slurmdbd
   }
 
-  if $database {
+  if 'database' in $roles {
     contain slurm::slurmdbd::db
   }
 
-  if $client {
+  if 'client' in $roles {
     contain slurm::client
   }
 
