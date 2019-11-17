@@ -16,6 +16,7 @@ describe 'slurm' do
     it { is_expected.not_to contain_class('slurm::slurmd') }
     it { is_expected.not_to contain_class('slurm::slurmctld') }
     it { is_expected.not_to contain_class('slurm::slurmdbd') }
+    it { is_expected.not_to contain_class('slurm::slurmdbd::db') }
 
     it_behaves_like 'slurm::client'
 
@@ -27,6 +28,7 @@ describe 'slurm' do
       it { is_expected.not_to contain_class('slurm::slurmctld') }
       it { is_expected.not_to contain_class('slurm::slurmdbd') }
       it { is_expected.not_to contain_class('slurm::client') }
+      it { is_expected.not_to contain_class('slurm::slurmdbd::db') }
 
       it_behaves_like 'slurm::slurmd'
     end
@@ -39,6 +41,7 @@ describe 'slurm' do
       it { is_expected.not_to contain_class('slurm::slurmd') }
       it { is_expected.not_to contain_class('slurm::slurmdbd') }
       it { is_expected.not_to contain_class('slurm::client') }
+      it { is_expected.not_to contain_class('slurm::slurmdbd::db') }
 
       it_behaves_like 'slurm::slurmctld'
     end
@@ -51,8 +54,23 @@ describe 'slurm' do
       it { is_expected.not_to contain_class('slurm::slurmd') }
       it { is_expected.not_to contain_class('slurm::slurmctld') }
       it { is_expected.not_to contain_class('slurm::client') }
+      it { is_expected.not_to contain_class('slurm::slurmdbd::db') }
 
       it_behaves_like 'slurm::slurmdbd'
+    end
+
+    context 'database' do
+      let(:pre_condition) { 'include ::mysql::server' }
+      let(:param_override) { { client: false, database: true } }
+
+      it { is_expected.to compile.with_all_deps }
+      it { is_expected.to contain_class('slurm::slurmdbd::db') }
+      it { is_expected.not_to contain_class('slurm::slurmdbd') }
+      it { is_expected.not_to contain_class('slurm::slurmd') }
+      it { is_expected.not_to contain_class('slurm::slurmctld') }
+      it { is_expected.not_to contain_class('slurm::client') }
+
+      it_behaves_like 'slurm::slurmdbd::db'
     end
   end
 end

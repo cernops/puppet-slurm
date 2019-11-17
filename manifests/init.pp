@@ -5,6 +5,7 @@ class slurm (
   Boolean $slurmd     = false,
   Boolean $slurmctld  = false,
   Boolean $slurmdbd   = false,
+  Boolean $database   = false,
   Boolean $client     = true,
 
   # Repo (optional)
@@ -57,8 +58,8 @@ class slurm (
   $manage_job_checkpoint_dir_nfs_mount  = false,
 
   # Behavior overrides - slurmdbd
-  $manage_database      = true,
-  $use_remote_database  = false,
+  $manage_database  = true,
+  $export_database  = false,
 
   # Config - controller
   $state_dir_nfs_device           = undef,
@@ -68,7 +69,8 @@ class slurm (
 
   # Cluster config
   $cluster_name       = 'linux',
-  $control_machine    = 'slurm',
+  $slurmctld_host     = 'slurm',
+  $slurmdbd_host      = 'slurmdbd',
 
   # Managed directories
   Stdlib::Absolutepath $conf_dir = '/etc/slurm',
@@ -103,7 +105,7 @@ class slurm (
   # slurmdbd.conf
   Optional[Stdlib::Absolutepath] $slurmdbd_log_file      = undef,
   $slurmdbd_storage_host  = 'localhost',
-  $slurmdbd_storage_loc   = 'slurmdbd',
+  $slurmdbd_storage_loc   = 'slurm_acct_db',
   $slurmdbd_storage_pass  = 'slurmdbd',
   $slurmdbd_storage_port  = '3306',
   $slurmdbd_storage_type  = 'accounting_storage/mysql',
@@ -168,8 +170,8 @@ class slurm (
     fail("Unsupported OS: ${os}, module ${module_name} only supports RedHat 7 and 8")
   }
 
-  if ! ($slurmd or $slurmctld or $slurmdbd or $client) {
-    fail("Module ${module_name}: Must select a mode of either slurmd, slurmctld, slurmdbd or client.")
+  if ! ($slurmd or $slurmctld or $slurmdbd or $database or $client) {
+    fail("Module ${module_name}: Must select a mode of either slurmd, slurmctld, slurmdbd database, or client.")
   }
 
   $slurm_conf_path                    = "${conf_dir}/slurm.conf"
@@ -198,10 +200,10 @@ class slurm (
   }
 
   $slurm_conf_local_defaults = {
-    'AccountingStorageHost' => $control_machine,
+    'AccountingStorageHost' => $slurmctld_host,
     'AccountingStoragePort' => $slurmdbd_port,
     'ClusterName' => $cluster_name,
-    'DefaultStorageHost' => $control_machine,
+    'DefaultStorageHost' => $slurmctld_host,
     'DefaultStoragePort' => $slurmdbd_port,
     'Epilog' => $epilog,
     'EpilogSlurmctld' => undef, #TODO
@@ -213,7 +215,7 @@ class slurm (
     'ResvEpilog' => undef, #TODO
     'ResvProlog' => undef, #TODO
     'SlurmUser' => $slurm_user,
-    'SlurmctldHost' => [$control_machine],
+    'SlurmctldHost' => [$slurmctld_host],
     'SlurmctldLogFile' => $_slurmctld_log_file,
     'SlurmctldPort' => $slurmctld_port,
     'SlurmdLogFile' => $_slurmd_log_file,
@@ -236,7 +238,7 @@ class slurm (
   $slurm_conf           = merge($slurm_conf_defaults, $slurm_conf_override)
 
   $slurmdbd_conf_local_defaults = {
-    'DbdHost' => $::hostname,
+    'DbdHost' => $slurmdbd_host,
     'DbdPort' => $slurmdbd_port,
     'LogFile' => $_slurmdbd_log_file,
     'SlurmUser' => $slurm_user,
@@ -273,6 +275,10 @@ class slurm (
 
   if $slurmdbd {
     contain slurm::slurmdbd
+  }
+
+  if $database {
+    contain slurm::slurmdbd::db
   }
 
   if $client {

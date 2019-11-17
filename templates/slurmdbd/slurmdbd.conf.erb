@@ -4,9 +4,17 @@
 # See the slurmdbd.conf man page for more information.
 #
 
-<% slurmdbd_conf = scope['slurm::slurmdbd_conf'] -%>
-<% slurmdbd_conf.keys.sort.each do |key| -%>
-<% unless slurmdbd_conf[key] == :undef or ! slurmdbd_conf[key] or slurmdbd_conf[key] == 'UNSET' -%>
-<%= key %>=<%= slurmdbd_conf[key] %>
+<% slurm_conf = scope['slurm::slurmdbd_conf'] -%>
+<% slurm_conf.keys.sort.each do |key| -%>
+<% value = slurm_conf[key] -%>
+<%- if value == :undef or ! value or value == 'UNSET' -%>
+# <%= key %>
+<%- elsif value.is_a?(Array) -%>
+<%= key %>=<%= value.join(',') %>
+<%- elsif value.is_a?(Hash) -%>
+<%- v = value.map {|k,v| "#{k}=#{v}" }.join(',') %>
+<%= key %>=<%= v %>
+<% else -%>
+<%= key %>=<%= value %>
 <% end -%>
 <% end -%>
