@@ -181,29 +181,4 @@ class slurm::params {
     'PluginDir' => '/usr/lib64/slurm',
     'TrackSlurmctldDown' => 'no',
   }
-
-  $partition_keys = [
-    'PartitionName',
-    'Alternate',
-    'Nodes',
-    'AllocNodes',
-    'Default',
-    'Priority',
-    'PreemptMode',
-    'Shared',
-    'MaxNodes',
-    'MinNodes',
-    'DefaultTime',
-    'MaxTime',
-    'DefMemPerCPU',
-    'MaxMemPerCPU',
-    'DefMemPerNode',
-    'MaxMemPerNode',
-    'AllowGroups',
-    'QOS',
-    'AllowQOS',
-    'DisableRootJobs',
-    'TRESBillingWeights',
-    'State',
-  ]
 }

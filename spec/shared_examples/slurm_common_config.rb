@@ -133,15 +133,11 @@ shared_examples_for 'slurm::common::config' do
   end
 
   it do
-    is_expected.to contain_file('slurm-partitions.conf').with(ensure: 'present',
-                                                              path: '/etc/slurm/partitions.conf',
-                                                              owner: 'root',
-                                                              group: 'root',
-                                                              mode: '0644')
-  end
-
-  it do
-    verify_exact_file_contents(catalogue, 'slurm-partitions.conf', [])
+    is_expected.to contain_concat('slurm-partitions.conf').with(ensure: 'present',
+                                                                path: '/etc/slurm/partitions.conf',
+                                                                owner: 'root',
+                                                                group: 'root',
+                                                                mode: '0644')
   end
 
   it do
@@ -242,69 +238,56 @@ shared_examples_for 'slurm::common::config' do
     end
   end
 
-  context 'when partitionlist defined' do
+  context 'when partitions defined' do
     let :params do
-      param_override.merge(partitionlist: [
+      param_override.merge(partitions: { 'DEFAULT' =>
                              {
-                               'PartitionName' => 'DEFAULT',
-                               'Nodes'         => 'c[0-9]',
-                               'State'         => 'UP',
+                               'nodes'         => 'c[0-9]',
+                               'state'         => 'UP',
                              },
-                             {
-                               'PartitionName' => 'general',
-                               'Priority'      => '3',
-                               'MaxNodes'      => '1',
-                               'MaxTime'       => '48:00:00',
-                               'Default'       => 'YES',
-                             },
-                           ])
+                                         'general' => {
+                                           'max_nodes' => '1',
+                                           'max_time' => '48:00:00',
+                                           'default' => 'YES',
+                                         } })
     end
 
     it do
-      verify_exact_file_contents(catalogue, 'slurm-partitions.conf', [
-                                   'PartitionName=DEFAULT Nodes=c[0-9] State=UP',
-                                   'PartitionName=general Default=YES Priority=3 MaxNodes=1 MaxTime=48:00:00',
-                                 ])
+      verify_exact_fragment_contents(catalogue, 'slurm-partitions.conf-DEFAULT', [
+                                       'PartitionName=DEFAULT Nodes=c[0-9] State=UP',
+                                     ])
+    end
+    it do
+      verify_exact_fragment_contents(catalogue, 'slurm-partitions.conf-general', [
+                                       'PartitionName=general Default=YES MaxNodes=1 MaxTime=48:00:00 State=UP',
+                                     ])
     end
   end
 
-  context 'when partitionlist_template defined' do
+  context 'when nodes defined' do
     let :params do
-      param_override.merge(partitionlist_template: 'site_slurm/slurm.conf/partitions.erb')
+      param_override.merge(nodes: { 'c01' =>
+                             {
+                               'cpus' => 4,
+                               'node_hostname' => 'c01',
+                               'node_addr' => '10.0.0.1',
+                             },
+                                    'c02' => {
+                                      'cpus' => 4,
+                                      'node_hostname' => 'c02',
+                                      'node_addr' => '10.0.0.2',
+                                    } })
     end
 
     it do
-      verify_exact_file_contents(catalogue, 'slurm-partitions.conf', [
-                                   'PartitionName=DEFAULT Nodes=c[0-9] State=UP',
-                                   'PartitionName=ib Nodes=c[0101-0102] Priority=6 MaxTime=12:00:00 State=UP',
-                                 ])
+      verify_exact_fragment_contents(catalogue, 'slurm-nodes.conf-c01', [
+                                       'NodeName=c01 NodeHostname=c01 NodeAddr=10.0.0.1 CPUs=4 State=UNKNOWN',
+                                     ])
     end
-  end
-
-  context 'partitionlist hierarchy - partitionlist_template first' do
-    let :params do
-      param_override.merge(partitionlist: [
-                             {
-                               'PartitionName' => 'DEFAULT',
-                               'Nodes'         => 'c[0-9]',
-                               'State'         => 'UP',
-                             },
-                             {
-                               'PartitionName' => 'general',
-                               'Priority'      => '3',
-                               'MaxNodes'      => '1',
-                               'MaxTime'       => '48:00:00',
-                               'Default'       => 'YES',
-                             },
-                           ],
-                           partitionlist_template: 'site_slurm/slurm.conf/partitions.erb')
-    end
-
     it do
-      verify_exact_file_contents(catalogue, 'slurm-partitions.conf', [
-                                   'PartitionName=DEFAULT Nodes=c[0-9] State=UP',
-                                   'PartitionName=ib Nodes=c[0101-0102] Priority=6 MaxTime=12:00:00 State=UP',
-                                 ])
+      verify_exact_fragment_contents(catalogue, 'slurm-nodes.conf-c02', [
+                                       'NodeName=c02 NodeHostname=c02 NodeAddr=10.0.0.2 CPUs=4 State=UNKNOWN',
+                                     ])
     end
   end
 
@@ -312,7 +295,7 @@ shared_examples_for 'slurm::common::config' do
     let(:params) { param_override.merge(manage_slurm_conf: false) }
 
     it { is_expected.not_to contain_file('slurm.conf') }
-    it { is_expected.not_to contain_file('slurm-partitions.conf') }
+    it { is_expected.not_to contain_concat('slurm-partitions.conf') }
     it { is_expected.not_to contain_concat('slurm-nodes.conf') }
     it { is_expected.not_to contain_file('plugstack.conf.d') }
     it { is_expected.not_to contain_file('plugstack.conf') }
@@ -327,18 +310,16 @@ shared_examples_for 'slurm::common::config' do
     it { is_expected.to contain_file('slurm.conf').with_source('file:///path/slurm.conf') }
   end
 
-  context 'when partitionlist_source => "file:///path/partitions.conf"' do
-    let(:params) { param_override.merge(partitionlist_source: 'file:///path/partitions.conf') }
+  context 'when partition_source => "file:///path/partitions.conf"' do
+    let(:params) { param_override.merge(partition_source: 'file:///path/partitions.conf') }
 
-    it { is_expected.to contain_file('slurm-partitions.conf').without_content }
-    it { is_expected.to contain_file('slurm-partitions.conf').with_source('file:///path/partitions.conf') }
+    it { is_expected.to contain_concat__fragment('slurm-partitions.conf-source').with_source('file:///path/partitions.conf') }
   end
 
   context 'when node_source => "file:///path/nodes.conf"' do
     let(:params) { param_override.merge(node_source: 'file:///path/nodes.conf') }
 
-    it { is_expected.not_to contain_datacat('slurm-nodes.conf') }
-    it { is_expected.to contain_file('slurm-nodes.conf').with_source('file:///path/nodes.conf') }
+    it { is_expected.to contain_concat__fragment('slurm-nodes.conf-source').with_source('file:///path/nodes.conf') }
   end
 
   context 'when cgroup_conf_source => "file:///path/cgroup.conf"' do

@@ -11,53 +11,45 @@ describe 'slurm' do
     let(:param_override) { {} }
     let(:params) { param_override }
 
-    it 'requires a role' do
-      expect { is_expected.to compile }.to raise_error(%r{Must select a mode})
-    end
+    it { is_expected.to compile.with_all_deps }
+    it { is_expected.to contain_class('slurm::client') }
+    it { is_expected.not_to contain_class('slurm::slurmd') }
+    it { is_expected.not_to contain_class('slurm::slurmctld') }
+    it { is_expected.not_to contain_class('slurm::slurmdbd') }
 
-    context 'node' do
-      let(:param_override) { { node: true } }
+    it_behaves_like 'slurm::client'
+
+    context 'slurmd' do
+      let(:param_override) { { client: false, slurmd: true } }
 
       it { is_expected.to compile.with_all_deps }
-      it { is_expected.to contain_class('slurm::node') }
-      it { is_expected.not_to contain_class('slurm::controller') }
+      it { is_expected.to contain_class('slurm::slurmd') }
+      it { is_expected.not_to contain_class('slurm::slurmctld') }
       it { is_expected.not_to contain_class('slurm::slurmdbd') }
       it { is_expected.not_to contain_class('slurm::client') }
 
-      it_behaves_like 'slurm::node'
+      it_behaves_like 'slurm::slurmd'
     end
 
-    context 'controller' do
-      let(:param_override) { { controller: true } }
+    context 'slurmctld' do
+      let(:param_override) { { client: false, slurmctld: true } }
 
       it { is_expected.to compile.with_all_deps }
-      it { is_expected.to contain_class('slurm::controller') }
-      it { is_expected.not_to contain_class('slurm::node') }
+      it { is_expected.to contain_class('slurm::slurmctld') }
+      it { is_expected.not_to contain_class('slurm::slurmd') }
       it { is_expected.not_to contain_class('slurm::slurmdbd') }
       it { is_expected.not_to contain_class('slurm::client') }
 
-      it_behaves_like 'slurm::controller'
-    end
-
-    context 'client' do
-      let(:param_override) { { client: true } }
-
-      it { is_expected.to compile.with_all_deps }
-      it { is_expected.to contain_class('slurm::client') }
-      it { is_expected.not_to contain_class('slurm::node') }
-      it { is_expected.not_to contain_class('slurm::controller') }
-      it { is_expected.not_to contain_class('slurm::slurmdbd') }
-
-      it_behaves_like 'slurm::client'
+      it_behaves_like 'slurm::slurmctld'
     end
 
     context 'slurmdbd' do
-      let(:param_override) { { slurmdbd: true } }
+      let(:param_override) { { client: false, slurmdbd: true } }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('slurm::slurmdbd') }
-      it { is_expected.not_to contain_class('slurm::node') }
-      it { is_expected.not_to contain_class('slurm::controller') }
+      it { is_expected.not_to contain_class('slurm::slurmd') }
+      it { is_expected.not_to contain_class('slurm::slurmctld') }
       it { is_expected.not_to contain_class('slurm::client') }
 
       it_behaves_like 'slurm::slurmdbd'

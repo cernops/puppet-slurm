@@ -1,4 +1,4 @@
-shared_examples_for 'slurm::controller::config' do
+shared_examples_for 'slurm::slurmctld::config' do
   it do
     is_expected.to contain_file('StateSaveLocation').with(ensure: 'directory',
                                                           path: '/var/spool/slurmctld.state',

@@ -1,0 +1,1 @@
+type Slurm::DownNodeState = Enum['DOWN','DRAIN','FAIL','FAILING','UNKNOWN']

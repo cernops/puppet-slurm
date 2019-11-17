@@ -1,5 +1,5 @@
 # Private class
-class slurm::node::config {
+class slurm::slurmd::config {
 
   if $slurm::manage_scripts {
     if $slurm::manage_epilog and $slurm::epilog {

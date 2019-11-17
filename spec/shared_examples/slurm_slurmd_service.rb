@@ -1,4 +1,4 @@
-shared_examples_for 'slurm::node::service' do
+shared_examples_for 'slurm::slurmd::service' do
   it do
     is_expected.to contain_service('slurmd').with(ensure: 'running',
                                                   enable: 'true',

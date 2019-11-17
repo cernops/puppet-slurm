@@ -1,4 +1,4 @@
-shared_examples_for 'slurm::node::config' do
+shared_examples_for 'slurm::slurmd::config' do
   context 'when manage_scripts => false' do
     let(:params) { param_override.merge(manage_scripts: false) }
 

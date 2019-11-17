@@ -2,10 +2,10 @@
 #
 class slurm (
   # Roles
-  Boolean $node       = false,
-  Boolean $controller = false,
+  Boolean $slurmd     = false,
+  Boolean $slurmctld  = false,
   Boolean $slurmdbd   = false,
-  Boolean $client     = false,
+  Boolean $client     = true,
 
   # Repo (optional)
   Optional[Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Pattern[/^file:\/\//]]] $repo_baseurl = undef,
@@ -82,27 +82,14 @@ class slurm (
 
   # slurm.conf - overrides
   $slurm_conf_override    = {},
-  $partitionlist          = [],
   $slurm_conf_template    = 'slurm/slurm.conf/slurm.conf.erb',
   $slurm_conf_source      = undef,
-  $partitionlist_template = 'slurm/slurm.conf/partitions.conf.erb',
-  $partitionlist_source   = undef,
+  $partition_template     = 'slurm/slurm.conf/partition.conf.erb',
+  $partition_source       = undef,
   $node_template          = 'slurm/slurm.conf/node.conf.erb',
   $node_source            = undef,
-  $slurm_nodelist_tag     = 'slurm_nodelist',
-
-  # node.conf - must update $node_conf
-  $node_name        = $::hostname,
-  $node_addr        = $facts['ipaddress'],
-  $cpus             = $facts['processorcount'],
-  $sockets          = 'UNSET',
-  $cores_per_socket = 'UNSET',
-  $threads_per_core = 'UNSET',
-  $real_memory      = $facts['slurm_real_memory'],
-  $tmp_disk         = '16000',
-  $node_weight      = 'UNSET',
-  $feature          = 'UNSET',
-  $state            = 'UNKNOWN',
+  $partitions             = {},
+  $nodes                  = {},
 
   # slurm.conf - node
   Optional[Stdlib::Absolutepath] $slurmd_log_file  = undef,
@@ -181,28 +168,8 @@ class slurm (
     fail("Unsupported OS: ${os}, module ${module_name} only supports RedHat 7 and 8")
   }
 
-  if ! ($node or $controller or $slurmdbd or $client) {
-    fail("Module ${module_name}: Must select a mode of either node, controller, slurmdbd or client.")
-  }
-
-  if $node and $controller {
-    fail("Module ${module_name}: Does not support both node and controller being enabled on the same host.")
-  }
-
-  if $node and $slurmdbd {
-    fail("Module ${module_name}: Does not support both node and slurmdbd being enabled on the same host.")
-  }
-
-  if $node and $client {
-    fail("Module ${module_name}: Does not support both node and client being enabled on the same host.")
-  }
-
-  if $controller and $client {
-    fail("Module ${module_name}: Does not support both controller and client being enabled on the same host.")
-  }
-
-  if $slurmdbd and $client {
-    fail("Module ${module_name}: Does not support both slurmdbd and client being enabled on the same host.")
+  if ! ($slurmd or $slurmctld or $slurmdbd or $client) {
+    fail("Module ${module_name}: Must select a mode of either slurmd, slurmctld, slurmdbd or client.")
   }
 
   $slurm_conf_path                    = "${conf_dir}/slurm.conf"
@@ -284,68 +251,24 @@ class slurm (
   $slurmdbd_conf_defaults = merge($::slurm::params::slurmdbd_conf_defaults, $slurmdbd_conf_local_defaults)
   $slurmdbd_conf          = merge($slurmdbd_conf_defaults, $slurmdbd_conf_override)
 
-  if $slurm_conf_source == 'UNSET' {
-    $_slurm_conf_source = undef
-  } else {
-    $_slurm_conf_source = $slurm_conf_source
-  }
-
-  if $partitionlist_source == 'UNSET' {
-    $_partitionlist_source = undef
-  } else {
-    $_partitionlist_source = $partitionlist_source
-  }
-
-  if $node_source == 'UNSET' {
-    $_node_source = undef
-  } else {
-    $_node_source = $node_source
-  }
-
-  if $cgroup_conf_source == 'UNSET' {
-    $_cgroup_conf_source = undef
-  } else {
-    $_cgroup_conf_source = $cgroup_conf_source
-  }
-
-  if $_slurm_conf_source {
+  if $slurm_conf_source {
     $slurm_conf_content = undef
   } else {
     $slurm_conf_content = template($slurm_conf_template)
   }
 
-  if $_partitionlist_source {
-    $partitionlist_content = undef
-  } else {
-    $partitionlist_content = template($partitionlist_template)
-  }
-
-  if $_cgroup_conf_source {
+  if $cgroup_conf_source {
     $cgroup_conf_content = undef
   } else {
     $cgroup_conf_content = template($cgroup_conf_template)
   }
 
-  $node_conf = {
-    'node_name'        => $node_name,
-    'node_addr'        => $node_addr,
-    'cpus'             => $cpus,
-    'sockets'          => $sockets,
-    'cores_per_socket' => $cores_per_socket,
-    'threads_per_core' => $threads_per_core,
-    'real_memory'      => $real_memory,
-    'tmp_disk'         => $tmp_disk,
-    'node_weight'      => $node_weight,
-    'feature'          => $feature,
-    'state'            => $state,
+  if $slurmd {
+    contain slurm::slurmd
   }
 
-  if $node {
-    contain slurm::node
-  }
-
-  if $controller {
-    contain slurm::controller
+  if $slurmctld {
+    contain slurm::slurmctld
   }
 
   if $slurmdbd {

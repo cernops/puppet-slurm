@@ -1,5 +1,5 @@
 # Private class
-class slurm::node::service {
+class slurm::slurmd::service {
 
   file { '/etc/sysconfig/slurmd':
     ensure  => 'file',

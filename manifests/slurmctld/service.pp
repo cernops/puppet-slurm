@@ -1,5 +1,5 @@
 # Private class
-class slurm::controller::service {
+class slurm::slurmctld::service {
 
   file { '/etc/sysconfig/slurmctld':
     ensure  => 'file',

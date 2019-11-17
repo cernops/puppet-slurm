@@ -1,5 +1,5 @@
 # Private class
-class slurm::controller::config {
+class slurm::slurmctld::config {
   file { 'StateSaveLocation':
     ensure => 'directory',
     path   => $slurm::state_save_location,

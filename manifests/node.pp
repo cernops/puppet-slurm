@@ -1,41 +1,59 @@
-# Private class
-class slurm::node {
+#
+define slurm::node (
+  $node_name        = $name,
+  $node_hostname    = $facts['hostname'],
+  $node_addr        = $facts['ipaddress'],
+  $boards           = undef,
+  $core_spec_count  = undef,
+  $cores_per_socket = undef,
+  $cpu_bind         = undef,
+  $cpus             = undef,
+  $cpu_spec_list    = undef,
+  $feature          = undef,
+  $gres             = undef,
+  $mem_spec_limit   = undef,
+  $port             = undef,
+  $real_memory      = undef,
+  $sockets          = undef,
+  $sockets_per_board = undef,
+# TODO
+#  Slurm::NodeState $state = 'UNKNOWN',
+  Enum['CLOUD','FUTURE','DOWN','DRAIN','FAIL','FAILING','UNKNOWN'] $state = 'UNKNOWN',
+  $threads_per_core = undef,
+  Optional[Integer] $tmp_disk = undef,
+  $tres_weights     = undef,
+  Optional[Integer] $weight = undef,
+  $order            = '50',
+) {
 
-  contain ::munge
-  contain slurm::common::user
-  contain slurm::common::install
-  contain slurm::common::setup
-  contain slurm::common::config
-  contain slurm::node::config
-  contain slurm::node::service
+  include ::slurm
 
-  Class['::munge']
-  -> Class['slurm::common::user']
-  -> Class['slurm::common::install']
-  -> Class['slurm::common::setup']
-  -> Class['slurm::common::config']
-  -> Class['slurm::node::config']
-  ~> Class['slurm::node::service']
-
-  Class['slurm::common::install']
-  ~> Class['slurm::node::service']
-
-  Class['slurm::common::setup']
-  ~> Class['slurm::node::service']
-
-  Class['slurm::common::config']
-  ~> Class['slurm::node::service']
-
-  @@slurm::node::conf { $::slurm::node_name:
-    * => $::slurm::node_conf,
+  $conf_values = {
+    'NodeName' => $node_name,
+    'NodeHostname' => $node_hostname,
+    'NodeAddr'  => $node_addr,
+    'Boards'  => $boards,
+    'CoreSpecCount' => $core_spec_count,
+    'CoresPerSocket' => $cores_per_socket,
+    'CpuBind' => $cpu_bind,
+    'CPUs'  => $cpus,
+    'CpuSpecList' => $cpu_spec_list,
+    'Feature' => $feature,
+    'Gres'  => $gres,
+    'MemSpecLimit'  => $mem_spec_limit,
+    'Port'  => $port,
+    'RealMemory'  => $real_memory,
+    'SocketsPerBoard' => $sockets_per_board,
+    'State' => $state,
+    'ThreadsPerCore'  => $threads_per_core,
+    'TmpDisk' => $tmp_disk,
+    'TRESWeights' => $tres_weights,
   }
 
-  if $slurm::manage_firewall {
-    firewall { '100 allow access to slurmd':
-      proto  => 'tcp',
-      dport  => $slurm::slurmd_port,
-      action => 'accept'
-    }
+  concat::fragment { "slurm-nodes.conf-${name}":
+    target  => 'slurm-nodes.conf',
+    content => template($::slurm::node_template),
+    order   => $order,
   }
 
 }

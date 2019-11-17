@@ -1,21 +1,17 @@
 shared_examples_for 'slurm::common::setup' do
   let(:dir_owner) do
-    if param_override[:controller] || param_override[:slurmdbd]
+    if param_override[:slurmctld] || param_override[:slurmdbd]
       'slurm'
     else
       'root'
     end
   end
   let(:dir_group) do
-    if param_override[:controller] || param_override[:slurmdbd]
+    if param_override[:slurmctld] || param_override[:slurmdbd]
       'slurm'
     else
       'root'
     end
-  end
-
-  let(:log_dir) do
-    param_override[:controller] || param_override[:slurmdbd] || param_override[:node]
   end
 
   it do
@@ -55,7 +51,7 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
-    if log_dir
+    if param_override[:slurmctld] || param_override[:slurmd] || param_override[:slurmdbd]
       is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
                                                          owner: dir_owner,
                                                          group: dir_group,
@@ -66,25 +62,29 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
-    is_expected.to contain_logrotate__rule('slurm').with(path: '/var/log/slurm/*.log',
-                                                         compress: 'true',
-                                                         missingok: 'true',
-                                                         copytruncate: 'false',
-                                                         delaycompress: 'false',
-                                                         ifempty: 'false',
-                                                         rotate: '10',
-                                                         sharedscripts: 'true',
-                                                         size: '10M',
-                                                         create: 'true',
-                                                         create_mode: '0640',
-                                                         create_owner: dir_owner,
-                                                         create_group: 'root',
-                                                         postrotate: [
-                                                           'pkill -x --signal SIGUSR2 slurmctld',
-                                                           'pkill -x --signal SIGUSR2 slurmd',
-                                                           'pkill -x --signal SIGUSR2 slurmdbd',
-                                                           'exit 0',
-                                                         ])
+    if param_override[:slurmctld] || param_override[:slurmd] || param_override[:slurmdbd]
+      is_expected.to contain_logrotate__rule('slurm').with(path: '/var/log/slurm/*.log',
+                                                           compress: 'true',
+                                                           missingok: 'true',
+                                                           copytruncate: 'false',
+                                                           delaycompress: 'false',
+                                                           ifempty: 'false',
+                                                           rotate: '10',
+                                                           sharedscripts: 'true',
+                                                           size: '10M',
+                                                           create: 'true',
+                                                           create_mode: '0640',
+                                                           create_owner: dir_owner,
+                                                           create_group: 'root',
+                                                           postrotate: [
+                                                             'pkill -x --signal SIGUSR2 slurmctld',
+                                                             'pkill -x --signal SIGUSR2 slurmd',
+                                                             'pkill -x --signal SIGUSR2 slurmdbd',
+                                                             'exit 0',
+                                                           ])
+    else
+      is_expected.not_to contain_logrotate__rule('slurm')
+    end
   end
 
   context 'when manage_logrotate => false' do
@@ -97,7 +97,11 @@ shared_examples_for 'slurm::common::setup' do
     let(:params) { param_override.merge(use_syslog: true) }
 
     it do
-      is_expected.to contain_logrotate__rule('slurm').with(postrotate: '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true')
+      if param_override[:slurmctld] || param_override[:slurmd] || param_override[:slurmdbd]
+        is_expected.to contain_logrotate__rule('slurm').with(postrotate: '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true')
+      else
+        is_expected.not_to contain_logrotate__rule('slurm')
+      end
     end
   end
 end

@@ -1,8 +1,8 @@
 <%-
-node = []
+partition = []
 @conf_values.each_pair do |key,value|
   next if (value.nil? || value == 'UNSET')
-  node << "#{key}=#{value}"
+  partition << "#{key}=#{value}"
 end
 -%>
-<%= node.join(" ") -%>
+<%= partition.join(" ") -%>

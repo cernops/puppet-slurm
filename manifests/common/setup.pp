@@ -1,7 +1,7 @@
 # Private class
 class slurm::common::setup {
 
-  if $slurm::controller or $slurm::slurmdbd {
+  if $slurm::slurmctld or $slurm::slurmdbd {
     $_dir_owner = $slurm::slurm_user
     $_dir_group = $slurm::slurm_user_group
   } else {
@@ -36,52 +36,52 @@ class slurm::common::setup {
   }
 
   # Don't need these directories on a client - all other roles need them
-  if $slurm::controller or $slurm::slurmdbd or $slurm::node {
+  if $slurm::slurmctld or $slurm::slurmdbd or $slurm::slurmd {
     file { $slurm::log_dir:
       ensure => 'directory',
       owner  => $_dir_owner,
       group  => $_dir_group,
       mode   => '0700',
     }
-  }
 
-  if $slurm::manage_logrotate {
-    #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
-    logrotate::rule { 'slurm':
-      path          => "${slurm::log_dir}/*.log",
-      compress      => true,
-      missingok     => true,
-      copytruncate  => false,
-      delaycompress => false,
-      ifempty       => false,
-      rotate        => 10,
-      sharedscripts => true,
-      size          => '10M',
-      create        => true,
-      create_mode   => '0640',
-      create_owner  => $_dir_owner,
-      create_group  => 'root',
-      postrotate    => $slurm::_logrotate_postrotate,
-    }
-  }
-
-  if $slurm::manage_rsyslog {
-    if $slurm::node {
-      rsyslog::snippet { '60_slurmd':
-        ensure  => 'present',
-        content => ":programname, isequal, \"slurmd\" -${::slurm::log_dir}/slurmd.log\n& stop",
+    if $slurm::manage_logrotate {
+      #Refer to: http://slurm.schedmd.com/slurm.conf.html#SECTION_LOGGING
+      logrotate::rule { 'slurm':
+        path          => "${slurm::log_dir}/*.log",
+        compress      => true,
+        missingok     => true,
+        copytruncate  => false,
+        delaycompress => false,
+        ifempty       => false,
+        rotate        => 10,
+        sharedscripts => true,
+        size          => '10M',
+        create        => true,
+        create_mode   => '0640',
+        create_owner  => $_dir_owner,
+        create_group  => 'root',
+        postrotate    => $slurm::_logrotate_postrotate,
       }
     }
-    if $slurm::controller {
-      rsyslog::snippet { '60_slurmctld':
-        ensure  => 'present',
-        content => ":programname, isequal, \"slurmctld\" -${::slurm::log_dir}/slurmctld.log\n& stop",
+
+    if $slurm::manage_rsyslog {
+      if $slurm::slurmd {
+        rsyslog::snippet { '60_slurmd':
+          ensure  => 'present',
+          content => ":programname, isequal, \"slurmd\" -${::slurm::log_dir}/slurmd.log\n& stop",
+        }
       }
-    }
-    if $slurm::slurmdbd {
-      rsyslog::snippet { '60_slurmdbd':
-        ensure  => 'present',
-        content => ":programname, isequal, \"slurmdbd\" -${::slurm::log_dir}/slurmdbd.log\n& stop",
+      if $slurm::slurmctld {
+        rsyslog::snippet { '60_slurmctld':
+          ensure  => 'present',
+          content => ":programname, isequal, \"slurmctld\" -${::slurm::log_dir}/slurmctld.log\n& stop",
+        }
+      }
+      if $slurm::slurmdbd {
+        rsyslog::snippet { '60_slurmdbd':
+          ensure  => 'present',
+          content => ":programname, isequal, \"slurmdbd\" -${::slurm::log_dir}/slurmdbd.log\n& stop",
+        }
       }
     }
   }

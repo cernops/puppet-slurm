@@ -8,41 +8,56 @@ class slurm::common::config {
       ensure  => 'present',
       path    => $slurm::slurm_conf_path,
       content => $slurm::slurm_conf_content,
-      source  => $slurm::_slurm_conf_source,
+      source  => $slurm::slurm_conf_source,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
     }
 
-    file { 'slurm-partitions.conf':
-      ensure  => 'present',
-      path    => $slurm::partition_conf_path,
-      content => $slurm::partitionlist_content,
-      source  => $slurm::_partitionlist_source,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+    concat { 'slurm-partitions.conf':
+      ensure => 'present',
+      path   => $slurm::partition_conf_path,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
+    concat::fragment { 'slurm-partitions.conf-header':
+      target  => 'slurm-partitions.conf',
+      content => "# File managed by Puppet - DO NOT EDIT\n",
+      order   => '00',
+    }
+    if $slurm::partition_source {
+      concat::fragment { 'slurm-partitions.conf-source':
+        target => 'slurm-partitions.conf',
+        source => $slurm::partition_source,
+        order  => '01',
+      }
+    }
+    $::slurm::partitions.each |$name, $partition| {
+      slurm::partition { $name: * => $partition }
     }
 
-    if $slurm::_node_source {
-      file { 'slurm-nodes.conf':
-        ensure => 'present',
-        path   => $slurm::node_conf_path,
-        source => $slurm::_node_source,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0644',
+    concat { 'slurm-nodes.conf':
+      ensure => 'present',
+      path   => $slurm::node_conf_path,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
+    concat::fragment { 'slurm-nodes.conf-header':
+      target  => 'slurm-nodes.conf',
+      content => "# File managed by Puppet - DO NOT EDIT\n",
+      order   => '00',
+    }
+    if $slurm::node_source {
+      concat::fragment { 'slurm-nodes.conf-source':
+        target => 'slurm-nodes.conf',
+        source => $slurm::node_source,
+        order  => '01',
       }
-    } else {
-      concat { 'slurm-nodes.conf':
-        ensure => 'present',
-        path   => $slurm::node_conf_path,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0644',
-      }
-
-      Concat::Fragment <<| tag == $slurm::slurm_nodelist_tag |>>
+    }
+    $::slurm::nodes.each |$name, $_node| {
+      slurm::node { $name: * => $_node }
     }
 
     # TODO: topology.conf
@@ -73,7 +88,7 @@ class slurm::common::config {
       group   => 'root',
       mode    => '0644',
       content => $slurm::cgroup_conf_content,
-      source  => $slurm::_cgroup_conf_source,
+      source  => $slurm::cgroup_conf_source,
     }
   }
 

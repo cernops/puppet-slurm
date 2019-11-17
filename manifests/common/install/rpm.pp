@@ -20,7 +20,7 @@ class slurm::common::install::rpm {
     require => $package_require,
   }
 
-  if $slurm::node or $slurm::controller or $slurm::client {
+  if $slurm::slurmd or $slurm::slurmctld or $slurm::client {
     package { 'slurm': }
     package { 'slurm-contribs': }
     package { 'slurm-devel': }
@@ -29,11 +29,11 @@ class slurm::common::install::rpm {
     package { 'slurm-libpmi': }
   }
 
-  if $slurm::node {
+  if $slurm::slurmd {
     package { 'slurm-slurmd': }
   }
 
-  if $slurm::controller {
+  if $slurm::slurmctld {
     package { 'slurm-slurmctld': }
   }
 
