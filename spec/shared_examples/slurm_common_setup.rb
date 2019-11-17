@@ -1,19 +1,4 @@
 shared_examples_for 'slurm::common::setup' do
-  let(:dir_owner) do
-    if roles.include?('slurmctld') || roles.include?('slurmdbd')
-      'slurm'
-    else
-      'root'
-    end
-  end
-  let(:dir_group) do
-    if roles.include?('slurmctld') || roles.include?('slurmdbd')
-      'slurm'
-    else
-      'root'
-    end
-  end
-
   it do
     is_expected.to contain_file('/etc/profile.d/slurm.sh').with(ensure: 'file',
                                                                 path: '/etc/profile.d/slurm.sh',
@@ -53,8 +38,8 @@ shared_examples_for 'slurm::common::setup' do
   it do
     if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
       is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
-                                                         owner: dir_owner,
-                                                         group: dir_group,
+                                                         owner: 'slurm',
+                                                         group: 'slurm',
                                                          mode: '0700')
     else
       is_expected.not_to contain_file('/var/log/slurm')
@@ -74,7 +59,7 @@ shared_examples_for 'slurm::common::setup' do
                                                            size: '10M',
                                                            create: 'true',
                                                            create_mode: '0640',
-                                                           create_owner: dir_owner,
+                                                           create_owner: 'slurm',
                                                            create_group: 'root',
                                                            postrotate: [
                                                              'pkill -x --signal SIGUSR2 slurmctld',

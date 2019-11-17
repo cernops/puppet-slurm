@@ -1,14 +1,6 @@
 # Private class
 class slurm::common::setup {
 
-  if ('slurmctld' in $slurm::roles) or ('slurmdbd' in $slurm::roles) {
-    $_dir_owner = $slurm::slurm_user
-    $_dir_group = $slurm::slurm_user_group
-  } else {
-    $_dir_owner = $slurm::slurmd_user
-    $_dir_group = $slurm::slurmd_user_group
-  }
-
   file { '/etc/profile.d/slurm.sh':
     ensure  => 'file',
     path    => '/etc/profile.d/slurm.sh',
@@ -39,8 +31,8 @@ class slurm::common::setup {
   if ('slurmd' in $slurm::roles) or ('slurmctld' in $slurm::roles) or ('slurmdbd' in $slurm::roles) {
     file { $slurm::log_dir:
       ensure => 'directory',
-      owner  => $_dir_owner,
-      group  => $_dir_group,
+      owner  => $slurm::slurm_user,
+      group  => $slurm::slurm_user_group,
       mode   => '0700',
     }
 
@@ -58,7 +50,7 @@ class slurm::common::setup {
         size          => '10M',
         create        => true,
         create_mode   => '0640',
-        create_owner  => $_dir_owner,
+        create_owner  => $slurm::slurm_user,
         create_group  => 'root',
         postrotate    => $slurm::_logrotate_postrotate,
       }

@@ -9,7 +9,7 @@ class slurm (
 
   # Packages
   String $version                 = 'present',
-  Boolean $install_torque_wrapper = true,
+  Boolean $install_torque_wrapper = false,
   Boolean $install_pam            = true,
 
   # Services

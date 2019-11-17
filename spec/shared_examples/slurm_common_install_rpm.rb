@@ -7,7 +7,6 @@ def base_packages
     'slurm-perlapi',
     'slurm-libpmi',
     'slurm-pam_slurm',
-    'slurm-torque',
   ]
 end
 
@@ -17,9 +16,10 @@ shared_examples_for 'slurm::common::install::rpm' do
   end
 
   it { is_expected.not_to contain_yumrepo('slurm') }
+  it { is_expected.not_to contain_package('slurm-torque') }
 
   context 'when version => "19.05.3-2.el7"' do
-    let(:params) { param_override.merge(version: '19.05.3-2.el7') }
+    let(:param_override) {  { version: '19.05.3-2.el7'} }
 
     base_packages.each do |p|
       it { is_expected.to contain_package(p).with_ensure('19.05.3-2.el7').without_require }
@@ -27,7 +27,7 @@ shared_examples_for 'slurm::common::install::rpm' do
   end
 
   context 'when repo_baseurl defined' do
-    let(:params) { param_override.merge(repo_baseurl: 'http://foo') }
+    let(:param_override) {  { repo_baseurl: 'http://foo'} }
 
     it { is_expected.to contain_yumrepo('slurm').with_baseurl('http://foo') }
 
@@ -37,15 +37,15 @@ shared_examples_for 'slurm::common::install::rpm' do
   end
 
   context 'when install_pam => false' do
-    let(:params) { param_override.merge(install_pam: false) }
+    let(:param_override) {  { install_pam: false} }
 
     it { is_expected.not_to contain_package('slurm-pam_slurm') }
   end
 
-  context 'when install_torque_wrapper => false' do
-    let(:params) { param_override.merge(install_torque_wrapper: false) }
+  context 'when install_torque_wrapper => true' do
+    let(:param_override) {  { install_torque_wrapper: true} }
 
-    it { is_expected.not_to contain_package('slurm-torque') }
+    it { is_expected.to contain_package('slurm-torque') }
   end
 end
 
