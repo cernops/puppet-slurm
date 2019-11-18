@@ -36,7 +36,7 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
-    if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
+    if slurmctld || slurmd || slurmdbd
       is_expected.to contain_file('/var/log/slurm').with(ensure: 'directory',
                                                          owner: 'slurm',
                                                          group: 'slurm',
@@ -47,7 +47,7 @@ shared_examples_for 'slurm::common::setup' do
   end
 
   it do
-    if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
+    if slurmctld || slurmd || slurmdbd
       is_expected.to contain_logrotate__rule('slurm').with(path: '/var/log/slurm/*.log',
                                                            compress: 'true',
                                                            missingok: 'true',
@@ -82,7 +82,7 @@ shared_examples_for 'slurm::common::setup' do
     let(:param_override) {  { use_syslog: true } }
 
     it do
-      if roles.include?('slurmctld') || roles.include?('slurmd') || roles.include?('slurmdbd')
+      if slurmctld || slurmd || slurmdbd
         is_expected.to contain_logrotate__rule('slurm').with(postrotate: '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true')
       else
         is_expected.not_to contain_logrotate__rule('slurm')

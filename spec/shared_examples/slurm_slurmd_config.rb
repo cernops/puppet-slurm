@@ -28,7 +28,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when epilog => /tmp/foo.d/*' do
-    let(:param_override) { { epilog: '/tmp/foo.d/*' } }
+    let(:param_override) {  { epilog: '/tmp/foo.d/*' } }
 
     it 'sets the Epilog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -50,7 +50,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when health_check_program => /usr/sbin/nhc' do
-    let(:param_override) { { health_check_program: '/usr/sbin/nhc' } }
+    let(:param_override) {  { health_check_program: '/usr/sbin/nhc' } }
 
     it 'sets the HealthCheckProgram option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -60,7 +60,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when prolog => /tmp/bar' do
-    let(:param_override) { { prolog: '/tmp/bar' } }
+    let(:param_override) {  { prolog: '/tmp/bar' } }
 
     it 'sets the Prolog option' do
       verify_contents(catalogue, 'slurm.conf', [
@@ -79,7 +79,7 @@ shared_examples_for 'slurm::slurmd::config' do
   end
 
   context 'when prolog => /tmp/bar.d/*' do
-    let(:param_override) { { prolog: '/tmp/bar.d/*' } }
+    let(:param_override) {  { prolog: '/tmp/bar.d/*' } }
 
     it 'sets the Prolog option' do
       verify_contents(catalogue, 'slurm.conf', [

@@ -19,7 +19,7 @@ shared_examples_for 'slurm::slurmctld::config' do
   it { is_expected.not_to contain_mount('JobCheckpointDir') }
 
   context 'when manage_state_dir_nfs_mount => true' do
-    let(:param_override) { { manage_state_dir_nfs_mount: true } }
+    let(:param_override) {  { manage_state_dir_nfs_mount: true } }
 
     it do
       is_expected.to contain_mount('StateSaveLocation').with(ensure: 'mounted',
@@ -55,7 +55,7 @@ shared_examples_for 'slurm::slurmctld::config' do
   end
 
   context 'when manage_job_checkpoint_dir_nfs_mount => true' do
-    let(:param_override) { { manage_job_checkpoint_dir_nfs_mount: true } }
+    let(:param_override) {  { manage_job_checkpoint_dir_nfs_mount: true } }
 
     it do
       is_expected.to contain_mount('JobCheckpointDir').with(ensure: 'mounted',

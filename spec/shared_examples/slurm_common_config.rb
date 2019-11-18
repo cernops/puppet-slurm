@@ -2,7 +2,7 @@ shared_examples_for 'slurm::common::config' do
   it { is_expected.to have_slurm__spank_resource_count(0) }
 
   context 'with spank_plugins defined' do
-    let(:param_override) { { spank_plugins: { 'x11' => {} } } }
+    let(:params) { param_override.merge(spank_plugins: { 'x11' => {} }) }
 
     it { is_expected.to have_slurm__spank_resource_count(1) }
     it { is_expected.to contain_slurm__spank('x11') }
@@ -214,7 +214,7 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when use_syslog => true' do
-    let(:param_override) { { use_syslog: true } }
+    let(:params) { param_override.merge(use_syslog: true) }
 
     it do
       is_expected.to contain_file('slurm.conf') \
@@ -224,18 +224,16 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when slurm_conf_override defined' do
-    let :param_override do
-      {
-        slurm_conf_override: {
-          'PreemptMode' => 'SUSPEND,GANG',
-          'PreemptType'         => 'preempt/partition_prio',
-          'ProctrackType'       => 'proctrack/linuxproc',
-          'SchedulerParameters' => [
-            'bf_continue',
-            'defer',
-          ],
-        },
-      }
+    let :params do
+      param_override.merge(slurm_conf_override: {
+                             'PreemptMode' => 'SUSPEND,GANG',
+                             'PreemptType'         => 'preempt/partition_prio',
+                             'ProctrackType'       => 'proctrack/linuxproc',
+                             'SchedulerParameters' => [
+                               'bf_continue',
+                               'defer',
+                             ],
+                           })
     end
 
     it 'overrides values' do
@@ -249,21 +247,17 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when partitions defined' do
-    let :param_override do
-      {
-        partitions: {
-          'DEFAULT' =>
-             {
-               'nodes'         => 'c[0-9]',
-               'state'         => 'UP',
-             },
-          'general' => {
-            'max_nodes' => '1',
-            'max_time' => '48:00:00',
-            'default' => 'YES',
-          },
-        },
-      }
+    let :params do
+      param_override.merge(partitions: { 'DEFAULT' =>
+                             {
+                               'nodes'         => 'c[0-9]',
+                               'state'         => 'UP',
+                             },
+                                         'general' => {
+                                           'max_nodes' => '1',
+                                           'max_time' => '48:00:00',
+                                           'default' => 'YES',
+                                         } })
     end
 
     it do
@@ -279,20 +273,18 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when nodes defined' do
-    let :param_override do
-      {
-        nodes: { 'c01' =>
-                   {
-                     'cpus' => 4,
-                     'node_hostname' => 'c01',
-                     'node_addr' => '10.0.0.1',
-                   },
-                 'c02' => {
-                   'cpus' => 4,
-                   'node_hostname' => 'c02',
-                   'node_addr' => '10.0.0.2',
-                 } },
-      }
+    let :params do
+      param_override.merge(nodes: { 'c01' =>
+                             {
+                               'cpus' => 4,
+                               'node_hostname' => 'c01',
+                               'node_addr' => '10.0.0.1',
+                             },
+                                    'c02' => {
+                                      'cpus' => 4,
+                                      'node_hostname' => 'c02',
+                                      'node_addr' => '10.0.0.2',
+                                    } })
     end
 
     it do
@@ -361,7 +353,7 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when manage_slurm_conf => false' do
-    let(:param_override) {  { manage_slurm_conf: false } }
+    let(:params) { param_override.merge(manage_slurm_conf: false) }
 
     it { is_expected.not_to contain_file('slurm.conf') }
     it { is_expected.not_to contain_concat('slurm-partitions.conf') }
@@ -374,20 +366,20 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when slurm_conf_source => "file:///path/slurm.conf"' do
-    let(:param_override) {  { slurm_conf_source: 'file:///path/slurm.conf' } }
+    let(:params) { param_override.merge(slurm_conf_source: 'file:///path/slurm.conf') }
 
     it { is_expected.to contain_file('slurm.conf').without_content }
     it { is_expected.to contain_file('slurm.conf').with_source('file:///path/slurm.conf') }
   end
 
   context 'when partition_source => "file:///path/partitions.conf"' do
-    let(:param_override) { { partition_source: 'file:///path/partitions.conf' } }
+    let(:params) { param_override.merge(partition_source: 'file:///path/partitions.conf') }
 
     it { is_expected.to contain_concat__fragment('slurm-partitions.conf-source').with_source('file:///path/partitions.conf') }
   end
 
   context 'when node_source => "file:///path/nodes.conf"' do
-    let(:param_override) {  { node_source: 'file:///path/nodes.conf' } }
+    let(:params) { param_override.merge(node_source: 'file:///path/nodes.conf') }
 
     it { is_expected.to contain_concat__fragment('slurm-nodes.conf-source').with_source('file:///path/nodes.conf') }
   end
@@ -399,7 +391,7 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when cgroup_conf_source => "file:///path/cgroup.conf"' do
-    let(:param_override) { { cgroup_conf_source: 'file:///path/cgroup.conf' } }
+    let(:params) { param_override.merge(cgroup_conf_source: 'file:///path/cgroup.conf') }
 
     it { is_expected.to contain_file('slurm-cgroup.conf').without_content }
     it { is_expected.to contain_file('slurm-cgroup.conf').with_source('file:///path/cgroup.conf') }
