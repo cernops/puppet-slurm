@@ -60,50 +60,54 @@ class slurm::common::config {
       slurm::node { $name: * => $_node }
     }
 
-    concat { 'slurm-topology.conf':
-      ensure => 'present',
-      path   => $slurm::topology_conf_path,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-    }
-    concat::fragment { 'slurm-topology.conf-header':
-      target  => 'slurm-topology.conf',
-      content => "# File managed by Puppet - DO NOT EDIT\n",
-      order   => '00',
-    }
-    if $slurm::topology_source {
-      concat::fragment { 'slurm-topology.conf-source':
-        target => 'slurm-topology.conf',
-        source => $slurm::topology_source,
-        order  => '01',
+    if $slurm::slurmd or $slurm::slurmctld {
+      concat { 'slurm-topology.conf':
+        ensure => 'present',
+        path   => $slurm::topology_conf_path,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
       }
-    }
-    $::slurm::switches.each |$name, $switch| {
-      slurm::switch { $name: * => $switch }
+      concat::fragment { 'slurm-topology.conf-header':
+        target  => 'slurm-topology.conf',
+        content => "# File managed by Puppet - DO NOT EDIT\n",
+        order   => '00',
+      }
+      if $slurm::topology_source {
+        concat::fragment { 'slurm-topology.conf-source':
+          target => 'slurm-topology.conf',
+          source => $slurm::topology_source,
+          order  => '01',
+        }
+      }
+      $::slurm::switches.each |$name, $switch| {
+        slurm::switch { $name: * => $switch }
+      }
     }
 
-    concat { 'slurm-gres.conf':
-      ensure => 'present',
-      path   => $slurm::gres_conf_path,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0644',
-    }
-    concat::fragment { 'slurm-gres.conf-header':
-      target  => 'slurm-gres.conf',
-      content => "# File managed by Puppet - DO NOT EDIT\n",
-      order   => '00',
-    }
-    if $slurm::gres_source {
-      concat::fragment { 'slurm-gres.conf-source':
-        target => 'slurm-gres.conf',
-        source => $slurm::gres_source,
-        order  => '01',
+    if $slurm::slurmd {
+      concat { 'slurm-gres.conf':
+        ensure => 'present',
+        path   => $slurm::gres_conf_path,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
       }
-    }
-    $::slurm::greses.each |$name, $gres| {
-      slurm::gres { $name: * => $gres }
+      concat::fragment { 'slurm-gres.conf-header':
+        target  => 'slurm-gres.conf',
+        content => "# File managed by Puppet - DO NOT EDIT\n",
+        order   => '00',
+      }
+      if $slurm::gres_source {
+        concat::fragment { 'slurm-gres.conf-source':
+          target => 'slurm-gres.conf',
+          source => $slurm::gres_source,
+          order  => '01',
+        }
+      }
+      $::slurm::greses.each |$name, $gres| {
+        slurm::gres { $name: * => $gres }
+      }
     }
 
     file { 'plugstack.conf.d':
