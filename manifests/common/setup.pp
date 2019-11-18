@@ -56,7 +56,7 @@ class slurm::common::setup {
       }
     }
 
-    if $slurm::manage_rsyslog {
+    if $slurm::use_syslog and $slurm::manage_rsyslog {
       if $slurm::slurmd {
         rsyslog::snippet { '60_slurmd':
           ensure  => 'present',
