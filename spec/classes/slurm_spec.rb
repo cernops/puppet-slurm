@@ -20,7 +20,7 @@ describe 'slurm' do
         slurmd: slurmd,
         slurmctld: slurmctld,
         slurmdbd: slurmdbd,
-        database: database
+        database: database,
       }
     end
     let(:params) { param_override.merge(role_params) }

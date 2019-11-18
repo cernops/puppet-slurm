@@ -151,10 +151,10 @@ shared_examples_for 'slurm::common::config' do
   it do
     if slurmd || slurmctld
       is_expected.to contain_concat('slurm-topology.conf').with(ensure: 'present',
-                                                             path: '/etc/slurm/topology.conf',
-                                                             owner: 'root',
-                                                             group: 'root',
-                                                             mode: '0644')
+                                                                path: '/etc/slurm/topology.conf',
+                                                                owner: 'root',
+                                                                group: 'root',
+                                                                mode: '0644')
     else
       is_expected.not_to contain_concat('slurm-topology.conf')
     end
@@ -163,10 +163,10 @@ shared_examples_for 'slurm::common::config' do
   it do
     if slurmd
       is_expected.to contain_concat('slurm-gres.conf').with(ensure: 'present',
-                                                             path: '/etc/slurm/gres.conf',
-                                                             owner: 'root',
-                                                             group: 'root',
-                                                             mode: '0644')
+                                                            path: '/etc/slurm/gres.conf',
+                                                            owner: 'root',
+                                                            group: 'root',
+                                                            mode: '0644')
     else
       is_expected.not_to contain_concat('slurm-gres.conf')
     end
@@ -330,9 +330,9 @@ shared_examples_for 'slurm::common::config' do
                    {
                      'nodes' => 'c01',
                    },
-                 'switch00' => {
-                   'switches' => 'switch01',
-                 } },
+                    'switch00' => {
+                      'switches' => 'switch01',
+                    } },
       }
     end
 
@@ -360,11 +360,11 @@ shared_examples_for 'slurm::common::config' do
                      'node_name' => 'c0[1-2]',
                      'file' => '/dev/nvidia[0-1]',
                    },
-                 'gpu2' => {
-                   'gres_name' => 'gpu',
-                   'node_name' => 'c0[3-4]',
-                   'file' => '/dev/nvidia[0-3]',
-                 } },
+                  'gpu2' => {
+                    'gres_name' => 'gpu',
+                    'node_name' => 'c0[3-4]',
+                    'file' => '/dev/nvidia[0-3]',
+                  } },
       }
     end
 
@@ -417,7 +417,7 @@ shared_examples_for 'slurm::common::config' do
   end
 
   context 'when topology_source => "file:///path/topology.conf"' do
-    let(:param_override) {  { topology_source: 'file:///path/topology.conf' } }
+    let(:param_override) { { topology_source: 'file:///path/topology.conf' } }
 
     it do
       if slurmd || slurmctld
