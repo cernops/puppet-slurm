@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::slurmdbd::config {
   file { 'slurmdbd.conf':
     ensure  => 'file',

@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::common::install {
 
   if $slurm::osfamily == 'RedHat' {

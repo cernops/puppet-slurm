@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::common::user {
 
   if $slurm::manage_slurm_user {

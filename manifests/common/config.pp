@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::common::config {
 
   create_resources('slurm::spank', $slurm::spank_plugins)

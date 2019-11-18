@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::slurmdbd::db {
   if $slurm::manage_database {
     if $slurm::export_database {

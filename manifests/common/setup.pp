@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::common::setup {
 
   file { '/etc/profile.d/slurm.sh':

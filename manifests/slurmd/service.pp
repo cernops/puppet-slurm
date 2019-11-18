@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::slurmd::service {
 
   file { '/etc/sysconfig/slurmd':

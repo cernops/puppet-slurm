@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::common::install::rpm {
 
   if $slurm::repo_baseurl {

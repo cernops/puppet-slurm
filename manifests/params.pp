@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::params {
 
   $slurm_conf_multiple = [

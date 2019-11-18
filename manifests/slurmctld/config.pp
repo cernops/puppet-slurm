@@ -1,4 +1,4 @@
-# Private class
+# @api private
 class slurm::slurmctld::config {
   file { 'StateSaveLocation':
     ensure => 'directory',
