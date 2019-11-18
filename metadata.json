@@ -47,10 +47,6 @@
     {
       "name": "camptocamp/systemd",
       "version_requirement": ">= 1.1.0 <3.0.0"
-    },
-    {
-      "name": "saz/rsyslog",
-      "version_requirement": ">= 5.0.0 <6.0.0"
     }
   ],
   "operatingsystem_support": [
@@ -87,7 +83,7 @@
     "hpc",
     "batch"
   ],
-  "pdk-version": "1.10.0",
+  "pdk-version": "1.14.1",
   "template-url": "https://github.com/treydock/pdk-templates.git#master",
-  "template-ref": "heads/master-0-g35f0335"
+  "template-ref": "heads/master-0-g7275233"
 }

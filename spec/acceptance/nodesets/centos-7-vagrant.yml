@@ -1,0 +1,44 @@
+HOSTS:
+  slurmctld:
+    roles:
+      - agent
+      - slurmctld
+    platform: el-7-x86_64
+    box: centos/7
+    hypervisor: vagrant
+    ip: 192.168.1.2
+  slurmdbd:
+    roles:
+      - agent
+      - slurmdbd
+    platform: el-7-x86_64
+    box: centos/7
+    hypervisor: vagrant
+    ip: 192.168.1.3
+  slurmd1:
+    roles:
+      - agent
+      - slurmd
+    platform: el-7-x86_64
+    box: centos/7
+    hypervisor: vagrant
+    ip: 192.168.1.4
+  slurmd2:
+    roles:
+      - agent
+      - slurmd
+    platform: el-7-x86_64
+    box: centos/7
+    hypervisor: vagrant
+    ip: 192.168.1.5
+  slurm-client:
+    roles:
+      - agent
+      - slurm-client
+    platform: el-7-x86_64
+    box: centos/7
+    hypervisor: vagrant
+    ip: 192.168.1.6
+CONFIG:
+  log_level: debug
+  type: foss

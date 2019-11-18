@@ -1,5 +1,10 @@
 ---
 .travis.yml:
+  docker_sets:
+    - set: centos-7
+      collection: puppet5
+    - set: centos-7
+      collection: puppet6
   user: treydock
   secure: "DlHNXo5jMQGcdbHw32QwmPqvBzFa248FTt/ZAzKJoqMsRRHpk8YtxmumlrDPq8XkhpY22lqsMhFe2oa8KAkmuThd5pFuBm0gHqZIDRgKmRRHihttYNc6R/t4d3JuFbfDiZrqBdcHQsA92zcQ1GxHTF2EnEBcqlkdg/8zfNjEl3s="
 .gitlab-ci.yml:
@@ -7,7 +12,7 @@
 appveyor.yml:
   delete: true
 spec/acceptance/nodesets/centos-6.yml:
-  unmanaged: true
+  delete: true
 spec/acceptance/nodesets/centos-7.yml:
   unmanaged: true
 spec/acceptance/nodesets/centos-8.yml:
