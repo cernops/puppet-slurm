@@ -18,7 +18,7 @@ shared_examples_for 'slurm::common::config' do
 
   it do
     verify_exact_file_contents(catalogue, 'slurm.conf', [
-                                 'AccountingStorageHost=slurm',
+                                 'AccountingStorageHost=slurmdbd',
                                  'AccountingStoragePort=6819',
                                  'AccountingStorageType=accounting_storage/slurmdbd',
                                  'AccountingStoreJobComment=YES',
@@ -32,7 +32,7 @@ shared_examples_for 'slurm::common::config' do
                                  'CoreSpecPlugin=core_spec/none',
                                  'CpuFreqGovernors=OnDemand,Performance,UserSpace',
                                  'CredType=cred/munge',
-                                 'DefaultStorageHost=slurm',
+                                 'DefaultStorageHost=slurmdbd',
                                  'DefaultStoragePort=6819',
                                  'DisableRootJobs=NO',
                                  'EioTimeout=60',

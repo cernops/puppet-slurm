@@ -218,10 +218,10 @@ class slurm (
   }
 
   $slurm_conf_local_defaults = {
-    'AccountingStorageHost' => $slurmctld_host,
+    'AccountingStorageHost' => $slurmdbd_host,
     'AccountingStoragePort' => $slurmdbd_port,
     'ClusterName' => $cluster_name,
-    'DefaultStorageHost' => $slurmctld_host,
+    'DefaultStorageHost' => $slurmdbd_host,
     'DefaultStoragePort' => $slurmdbd_port,
     'Epilog' => $epilog,
     'EpilogSlurmctld' => undef, #TODO
