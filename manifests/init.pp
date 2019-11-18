@@ -284,6 +284,23 @@ class slurm (
   }
 
   if $slurmd {
+    $slurmd_notify = Service['slurmd']
+  } else {
+    $slurmd_notify = undef
+  }
+  if $slurmctld {
+    $slurmctld_notify = Service['slurmctld']
+  } else {
+    $slurmctld_notify = undef
+  }
+  if $slurmdbd {
+    $slurmdbd_notify = Service['slurmdbd']
+  } else {
+    $slurmdbd_notify = undef
+  }
+  $service_notify = delete_undef_values([$slurmd_notify, $slurmctld_notify, $slurmdbd_notify])
+
+  if $slurmd {
     contain slurm::slurmd
   }
 

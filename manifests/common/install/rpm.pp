@@ -18,6 +18,7 @@ class slurm::common::install::rpm {
   Package {
     ensure  => $slurm::version,
     require => $package_require,
+    notify  => $slurm::service_notify,
   }
 
   if $slurm::slurmd or $slurm::slurmctld or $slurm::client {

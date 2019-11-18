@@ -12,6 +12,7 @@ class slurm::common::config {
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
+      notify  => $slurm::service_notify,
     }
 
     concat { 'slurm-partitions.conf':
@@ -20,6 +21,7 @@ class slurm::common::config {
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
+      notify => $slurm::service_notify,
     }
     concat::fragment { 'slurm-partitions.conf-header':
       target  => 'slurm-partitions.conf',
@@ -43,6 +45,7 @@ class slurm::common::config {
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
+      notify => $slurm::service_notify,
     }
     concat::fragment { 'slurm-nodes.conf-header':
       target  => 'slurm-nodes.conf',
@@ -67,6 +70,7 @@ class slurm::common::config {
         owner  => 'root',
         group  => 'root',
         mode   => '0644',
+        notify => $slurm::service_notify,
       }
       concat::fragment { 'slurm-topology.conf-header':
         target  => 'slurm-topology.conf',
@@ -92,6 +96,7 @@ class slurm::common::config {
         owner  => 'root',
         group  => 'root',
         mode   => '0644',
+        notify => $slurm::service_notify,
       }
       concat::fragment { 'slurm-gres.conf-header':
         target  => 'slurm-gres.conf',
@@ -127,6 +132,7 @@ class slurm::common::config {
       group   => 'root',
       mode    => '0644',
       content => template('slurm/spank/plugstack.conf.erb'),
+      notify  => $slurm::service_notify,
     }
 
     file { 'slurm-cgroup.conf':
@@ -137,6 +143,7 @@ class slurm::common::config {
       mode    => '0644',
       content => $slurm::cgroup_conf_content,
       source  => $slurm::cgroup_conf_source,
+      notify  => $slurm::service_notify,
     }
   }
 
