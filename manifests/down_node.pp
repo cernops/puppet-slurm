@@ -1,3 +1,12 @@
+# @summary Manage SLURM down node configuration
+#
+#
+#
+#
+# @param down_nodes
+# @param reason
+# @param state
+# @param order
 #
 define slurm::down_node (
   String $down_nodes          = $name,

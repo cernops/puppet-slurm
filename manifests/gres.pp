@@ -1,3 +1,21 @@
+# @summary Manage SLURM GRES configuration
+#
+#
+#
+#
+# @param gres_name
+# @param type
+# @param node_name
+# @param auto_detect
+# @param count
+# @param cores
+# @param file
+# @param links
+# @param switch_name
+# @param switches
+# @param nodes
+# @param link_speed
+# @param order
 #
 define slurm::gres (
   $gres_name = $name,

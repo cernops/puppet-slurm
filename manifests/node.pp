@@ -1,3 +1,29 @@
+# @summary Manage SLURM node configuration
+#
+#
+#
+# @param node_name
+# @param node_hostname
+# @param node_addr
+# @param boards
+# @param core_spec_count
+# @param cores_per_socket
+# @param cpu_bind
+# @param cpus
+# @param cpu_spec_list
+# @param feature
+# @param gres
+# @param mem_spec_limit
+# @param port
+# @param real_memory
+# @param sockets
+# @param sockets_per_board
+# @param state
+# @param threads_per_core
+# @param tmp_disk
+# @param tres_weights
+# @param weight
+# @param order
 #
 define slurm::node (
   $node_name        = $name,

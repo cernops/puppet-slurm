@@ -1,3 +1,46 @@
+# @summary Manage a SLURM partition configuration
+#
+#
+#
+# @param partition_name
+# @param alloc_nodes
+# @param allow_accounts
+# @param allow_groups
+# @param allow_qos
+# @param alternate
+# @param cpu_bind
+# @param default
+# @param def_cpu_per_gpu
+# @param def_mem_per_cpu
+# @param def_mem_per_gpu
+# @param def_mem_per_node
+# @param deny_accounts
+# @param deny_qos
+# @param default_time
+# @param disable_root_jobs
+# @param exclusive_user
+# @param grace_time
+# @param hidden
+# @param lln
+# @param max_cpus_per_node
+# @param max_mem_per_cpu
+# @param max_mem_per_node
+# @param max_nodes
+# @param max_time
+# @param min_nodes
+# @param nodes
+# @param over_subscribe
+# @param preempt_mode
+# @param priority_job_factor
+# @param priority_tier
+# @param qos
+# @param req_resv
+# @param root_only
+# @param select_type_parameters
+# @param shared
+# @param state
+# @param tres_billing_weights
+# @param order
 #
 define slurm::partition (
   $partition_name = $name,

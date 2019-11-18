@@ -1,4 +1,19 @@
-# == Define: slurm::spank
+# @summary Manage SLURM SPANK plugin
+#
+# @param plugin
+#   The shared library
+# @param arguments
+#   Arguments for the plugin
+# @param required
+#   Is this plugin required?
+# @param config_path
+#   Configuration path
+# @param manage_package
+#   Manage plugin package?
+# @param package_name
+#   Plugin package name
+# @param restart_slurmd
+#   Restart slurmd upon changes?
 #
 define slurm::spank (
   $plugin = "${title}.so",
