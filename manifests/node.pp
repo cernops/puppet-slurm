@@ -1,8 +1,8 @@
 #
 define slurm::node (
   $node_name        = $name,
-  $node_hostname    = $facts['hostname'],
-  $node_addr        = $facts['ipaddress'],
+  $node_hostname    = undef,
+  $node_addr        = undef,
   $boards           = undef,
   $core_spec_count  = undef,
   $cores_per_socket = undef,
