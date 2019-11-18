@@ -83,6 +83,29 @@ class slurm::common::config {
       slurm::switch { $name: * => $switch }
     }
 
+    concat { 'slurm-gres.conf':
+      ensure => 'present',
+      path   => $slurm::gres_conf_path,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
+    concat::fragment { 'slurm-gres.conf-header':
+      target  => 'slurm-gres.conf',
+      content => "# File managed by Puppet - DO NOT EDIT\n",
+      order   => '00',
+    }
+    if $slurm::gres_source {
+      concat::fragment { 'slurm-gres.conf-source':
+        target => 'slurm-gres.conf',
+        source => $slurm::gres_source,
+        order  => '01',
+      }
+    }
+    $::slurm::greses.each |$name, $gres| {
+      slurm::gres { $name: * => $gres }
+    }
+
     file { 'plugstack.conf.d':
       ensure  => 'directory',
       path    => $slurm::plugstack_conf_d_path,

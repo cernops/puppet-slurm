@@ -1,0 +1,8 @@
+<%-
+gres = []
+@conf_values.each_pair do |key,value|
+  next if (value.nil? || value == 'UNSET')
+  gres << "#{key}=#{value}"
+end
+-%>
+<%= gres.join(" ") -%>

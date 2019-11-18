@@ -332,6 +332,34 @@ shared_examples_for 'slurm::common::config' do
     end
   end
 
+  context 'when GRESes defined' do
+    let :param_override do
+      {
+        greses: { 'gpu' =>
+                   {
+                     'node_name' => 'c0[1-2]',
+                     'file' => '/dev/nvidia[0-1]',
+                   },
+                 'gpu2' => {
+                   'gres_name' => 'gpu',
+                   'node_name' => 'c0[3-4]',
+                   'file' => '/dev/nvidia[0-3]',
+                 } },
+      }
+    end
+
+    it do
+      verify_exact_fragment_contents(catalogue, 'slurm-gres.conf-gpu', [
+                                       'Name=gpu NodeName=c0[1-2] File=/dev/nvidia[0-1]',
+                                     ])
+    end
+    it do
+      verify_exact_fragment_contents(catalogue, 'slurm-gres.conf-gpu2', [
+                                       'Name=gpu NodeName=c0[3-4] File=/dev/nvidia[0-3]',
+                                     ])
+    end
+  end
+
   context 'when manage_slurm_conf => false' do
     let(:param_override) {  { manage_slurm_conf: false } }
 
