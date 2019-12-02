@@ -229,6 +229,8 @@ class slurm::config (
 
   Boolean $open_firewall = false,
   Array[String] $munge_packages = $slurm::params::munge_packages,
+  Boolean $shared_config = false,
+  Optional[String] $shared_config_path = undef,
 ) inherits slurm::params {
 
   # The following variables are version dependent
@@ -319,14 +321,48 @@ class slurm::config (
     $openssl_credential_files = []
   }
 
-  # Common SLURM configuration file
-  file{'/etc/slurm/slurm.conf':
-    ensure  => file,
-    content => template('slurm/slurm.conf.erb'),
-    owner   => 'slurm',
-    group   => 'slurm',
-    mode    => '0644',
-    require => User['slurm'],
+  if $cluster_name != undef {
+    $shared_config_filepath = "${shared_config_path}/${cluster_name}.conf"
+  } else {
+    $shared_config_filepath = "${shared_config_path}/slurm.conf"
+  }
+
+  if $shared_config {
+    # slurm.conf just includes another file. That file's path is either:
+    # $shared_config_path/slurm.conf if $slurm::cluster_name is undefined,
+    # $shared_config_path/$cluster_name.conf otherwise.
+    if $shared_config_path == undef {
+      fail('shared_config_path needs to be defined when $shared_config=True')
+    }
+    file { '/etc/slurm/slurm.conf':
+      ensure  => file,
+      content => template('slurm/slurm-shared.conf.erb'),
+      owner   => 'slurm',
+      group   => 'slurm',
+      mode    => '0644',
+      require => User['slurm'],
+    }
+  } else {
+    # Create slurm.conf with full configuration
+    file{'/etc/slurm/slurm.conf':
+      ensure  => file,
+      content => template('slurm/slurm.conf.erb'),
+      owner   => 'slurm',
+      group   => 'slurm',
+      mode    => '0644',
+      require => User['slurm'],
+    }
+  }
+
+  if $shared_config and $slurm::node_type == 'head' {
+    file { $shared_config_filepath:
+      ensure  => file,
+      content => template('slurm/slurm.conf.erb'),
+      owner   => 'slurm',
+      group   => 'slurm',
+      mode    => '0644',
+      require => User['slurm'],
+    }
   }
 
   # Plugin loader

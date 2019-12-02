@@ -205,6 +205,14 @@ The setup class, common to all types of nodes, is responsible for setting up all
 
 The configuration class, common to all types of nodes, is responsible for creating the main slurm.conf configuration file. For more details about each parameter, please refer to the [SLURM documentation](https://slurm.schedmd.com/slurm.conf.html). This class holds over 200 parameters, and the names of the class parameters map to the names of the SLURM configuration file parameters. Mostly slurm.conf and plugstack.conf. Almost all default values are taken from SLURM's official documentation, except the control_machine, the workernodes and the partitions; these are mandatory values that must be provided by the user.
 
+#### slurm::config::shared_config
+
+Boolean parameter that determines whether each node will independently generate the same slurm.conf (for the case when this parameter is False, the default), or whether a single shared file will be used.
+When this parameter is True, every node still creates their own slurm.conf, but this file will simply use Slurm's Include directive to include the contents of the shared file. The path to the shared file is controlled with the parameter `$slurm::config::shared_config_path`. This parameter is expected to be the path to a directory (no trailing slash). The filename is assumed to be either slurm.conf (when `$slurm::config::cluster_name` is undefined), or `$cluster_name.conf` otherwise.
+
+#### slurm::config::shared_config_path
+
+Optional String which should contain the path to a directory (no trailing slash) in a shared filesystem. Use together with `$::slurm::config::shared_config` set to `True`.
 
 #### slurm::config::acct_gather
 ```ruby
