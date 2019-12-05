@@ -137,7 +137,7 @@ class slurm::config (
   Optional[Hash[Enum['ports'],String]] $mpi_params = undef,
   Optional[String] $prolog_slurmctld = undef,
   Optional[String] $prolog = undef,
-  Optional[Array[Enum['Alloc','Contain','NoHold']]] $prolog_flags = undef,
+  Optional[Array[Enum['Alloc','Contain','NoHold', 'Serial', 'X11']]] $prolog_flags = undef,
   Optional[String] $requeue_exit = undef,
   Optional[String] $requeue_exit_hold = undef,
   Integer[0] $scheduler_time_slice = 30,
