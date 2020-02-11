@@ -144,7 +144,7 @@ class slurm::config (
   Enum['sched/backfill','sched/builtin','sched/hold'] $scheduler_type = 'sched/backfill',
   Optional[Array[String]] $scheduler_parameters = undef,
   Enum['select/bluegene','select/cons_res','select/cray','select/linear','select/serial'] $select_type = 'select/linear',
-  Optional[Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory']] $select_type_parameters = undef,
+  Optional[Array[Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory']]] $select_type_parameters = undef,
   Integer[0] $vsize_factor = 0,
 
   Enum['priority/basic','priority/multifactor'] $priority_type = 'priority/basic',
