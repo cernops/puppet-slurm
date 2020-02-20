@@ -15,13 +15,15 @@ class slurm::headnode::config (
   Boolean $refresh_service = true,
 ) {
 
+  $subscribe = $refresh_service ? { true  => [ Package['slurm'], File[$slurm::config::required_files] ],
+                                    false => [ Package['slurm']                                       ],
+                                  };
+
   service{'slurmctld':
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => $refresh_service ? { true  => [ Package['slurm'], File[$slurm::config::required_files] ],
-                                      false => [ Package['slurm']                                       ],
-                                    };
+    subscribe => $subscribe,
   }
 
   if ($slurm::config::open_firewall) {

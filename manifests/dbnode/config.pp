@@ -74,13 +74,15 @@ class slurm::dbnode::config (
     require => User['slurm'],
   }
 
+  $subscribe = $refresh_service ? { true  => [ Package['slurm-slurmdbd'], File[$slurm::config::required_files] ],
+                                    false => [ Package['slurm-slurmdbd']                                       ],
+                                  };
+
   service{'slurmdbd':
     ensure    => running,
     enable    => true,
     hasstatus => true,
-    subscribe => $refresh_service ? { true  => [ Package['slurm-slurmdbd'], File[$slurm::config::required_files] ],
-                                      false => [ Package['slurm-slurmdbd']                                       ],
-                                    };
+    subscribe => $subscribe,
   }
 
   if ($slurm::config::open_firewall) {
