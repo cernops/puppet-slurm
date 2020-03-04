@@ -51,3 +51,20 @@ InfinibandOFEDPort=<%= @interconnect_ofed_port %>
 <% else -%>
 #InfinibandOFEDPort=
 <% end %>
+
+# Options used for AcctGatherProfileType/influxdb
+<% if @with_profile_influxdb -%>
+ProfileInfluxDBHost=<%= @profile_influxdb_host %>
+ProfileInfluxDBDatabase=<%= @profile_influxdb_db %>
+<%= @profile_influxdb_username.nil? ? '#ProfileInfluxDBUser=' : ('ProfileInfluxDBUser=' + @profile_influxdb_username) %>
+<%= @profile_influxdb_password.nil? ? '#ProfileInfluxDBPass=' : ('ProfileInfluxDBPass=' + @profile_influxdb_password) %>
+ProfileInfluxDBDefault=<%= @profile_influxdb_default %>
+ProfileInfluxDBRTPolicy=<%= @profile_influxdb_rtpolicy %>
+<% else -%>
+# ProfileInfluxDBDatabase=
+# ProfileInfluxDBDefault=
+# ProfileInfluxDBHost=
+# ProfileInfluxDBPass=
+# ProfileInfluxDBRTPolicy=
+# ProfileInfluxDBUser=
+<% end -%>

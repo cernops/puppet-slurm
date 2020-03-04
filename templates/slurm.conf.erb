@@ -35,7 +35,7 @@ ExtSensorsType=<%= @ext_sensors_type %>
 ExtSensorsFreq=<%= @ext_sensors_freq %>
 FirstJobId=<%= @first_job_id %>
 MaxJobId=<%= @max_job_id %>
-<%= @gres_types.nil? ? '#GresTypes=' : ('GresTypes=' + @gres_types) %>
+<%= @gres_types.nil? ? '#GresTypes=' : ('GresTypes=' + @gres_types.join(',')) %>
 GroupUpdateForce=<%= @group_update_force %>
 JobCheckpointDir=<%= @job_checkpoint_dir %>
 JobContainerType=<%= @job_container_type %>
@@ -213,6 +213,11 @@ MpiDefault=<%= @mpi_default %>
 <% else -%>
 PrologFlags=<%= @prolog_flags.join(',') %>
 <% end -%>
+<% if @x11_parameters.nil? -%>
+#X11Parameters=
+<% else -%>
+X11Parameters=<%= @x11_parameters.join(',') %>
+<% end -%>
 <%#                                                                          -%>
 <%= @requeue_exit.nil? ? '#RequeueExit=' : ('RequeueExit=' + @requeue_exit) %>
 <%= @requeue_exit_hold.nil? ? '#RequeueExitHold=' : ('RequeueExitHold=' + @requeue_exit_hold) %>
@@ -226,7 +231,7 @@ SchedulerParameters=<%= @scheduler_parameters.join(',') %>
 <% end -%>
 <%#                                                                          -%>
 SelectType=<%= @select_type %>
-<%= @select_type_parameters.nil? ? '#SelectTypeParameters=' : ('SelectTypeParameters=' + @select_type_parameters) %>
+<%= @select_type_parameters.nil? ? '#SelectTypeParameters=' : ('SelectTypeParameters=' + @select_type_parameters.join(',')) %>
 VSizeFactor=<%= @vsize_factor %>
 
 

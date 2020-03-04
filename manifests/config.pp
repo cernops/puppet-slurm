@@ -25,7 +25,7 @@ class slurm::config (
   Enum['Conservative','OnDemand','Performance','PowerSave'] $cpu_freq_def = 'Performance',
   Array[Enum['Conservative','OnDemand','Performance','PowerSave','UserSpace']] $cpu_freq_governors = ['OnDemand','Performance'],
   Enum['NO','YES'] $disable_root_jobs = 'NO',
-  Enum['NO','YES'] $enforce_part_limits = 'NO',
+  Enum['NO','YES','ALL','ANY'] $enforce_part_limits = 'NO',
   Enum['ext_sensors/none','ext_sensors/rrd'] $ext_sensors_type = 'ext_sensors/none',
   Integer[0] $ext_sensors_freq = 0,
   Integer[1] $first_job_id = 1,
@@ -46,7 +46,7 @@ class slurm::config (
   Optional[String] $mail_domain = undef,
   Integer[1] $max_job_count = 10000,
   Integer[1] $max_step_count = 40000,
-  Enum['no','yes'] $mem_limit_enforce = 'yes',
+  Enum['no','yes'] $mem_limit_enforce = 'no',
   Hash[Enum['WindowMsgs','WindowTime'],Integer[1]] $msg_aggregation_params = {'WindowMsgs' => 1, 'WindowTime' => 100},
   String $plugin_dir = '/usr/local/lib/slurm',
   Optional[String] $plug_stack_config = undef,
@@ -81,7 +81,7 @@ class slurm::config (
   String $state_save_location = '/var/spool/slurmctld',
   Enum['switch/none','switch/nrt'] $switch_type = 'switch/none',
   Array[Enum['task/affinity','task/cgroup','task/none']] $task_plugin = ['task/none'],
-  Array[Enum['Boards','Cores','Cpusets','None','Sched','Sockets','Threads','Verbose','Autobind']] $task_plugin_param = ['Sched'],
+  Array[String] $task_plugin_param = ['Sched'],
   Optional[String] $task_epilog = undef,
   Optional[String] $task_prolog = undef,
   Integer[1] $tcp_timeout = 2,
@@ -137,14 +137,15 @@ class slurm::config (
   Optional[Hash[Enum['ports'],String]] $mpi_params = undef,
   Optional[String] $prolog_slurmctld = undef,
   Optional[String] $prolog = undef,
-  Optional[Array[Enum['Alloc','Contain','NoHold', 'Serial', 'X11']]] $prolog_flags = undef,
+  Optional[Array[Enum['Alloc','Contain','NoHold','Serial','x11','X11']]] $prolog_flags = undef,
+  Optional[Array[String]] $x11_parameters = undef,
   Optional[String] $requeue_exit = undef,
   Optional[String] $requeue_exit_hold = undef,
   Integer[0] $scheduler_time_slice = 30,
   Enum['sched/backfill','sched/builtin','sched/hold'] $scheduler_type = 'sched/backfill',
   Optional[Array[String]] $scheduler_parameters = undef,
   Enum['select/bluegene','select/cons_res','select/cray','select/linear','select/serial'] $select_type = 'select/linear',
-  Optional[Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory']] $select_type_parameters = undef,
+  Optional[Array[Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory']]] $select_type_parameters = undef,
   Integer[0] $vsize_factor = 0,
 
   Enum['priority/basic','priority/multifactor'] $priority_type = 'priority/basic',
@@ -192,7 +193,7 @@ class slurm::config (
   Enum['acct_gather_energy/none','acct_gather_energy/ipmi','acct_gather_energy/rapl'] $acct_gather_energy_type = 'acct_gather_energy/none',
   Enum['acct_gather_interconnect/none','acct_gather_interconnect/ofed','acct_gather_infiniband/ofed'] $acct_gather_interconnect_type = 'acct_gather_interconnect/none',
   Enum['acct_gather_filesystem/none','acct_gather_filesystem/lustre'] $acct_gather_filesystem_type = 'acct_gather_filesystem/none',
-  Enum['acct_gather_profile/none','acct_gather_profile/hdf5'] $acct_gather_profile_type = 'acct_gather_profile/none',
+  Enum['acct_gather_profile/none','acct_gather_profile/hdf5', 'acct_gather_profile/influxdb' ] $acct_gather_profile_type = 'acct_gather_profile/none',
 
   Optional[Array[String]] $debug_flags = undef,
   Enum['iso8601','iso8601_ms','rfc5424','rfc5424_ms','clock','short'] $log_time_format = 'iso8601_ms',
@@ -226,6 +227,7 @@ class slurm::config (
 
   Array[Hash,1] $workernodes,
   Array[Hash,1] $partitions,
+  Optional[Array[Hash,1]] $gres_definitions = undef,
 
   Boolean $open_firewall = false,
   Array[String] $munge_packages = $slurm::params::munge_packages,
@@ -378,10 +380,12 @@ class slurm::config (
   # Accounting gatherer configuration file
   if  ('acct_gather_energy/ipmi' in $acct_gather_energy_type) or
       ('acct_gather_profile/hdf5' in $acct_gather_profile_type) or
+      ('acct_gather_profile/influxdb' in $acct_gather_profile_type) or
       (['acct_gather_infiniband/ofed', 'acct_gather_interconnect/ofed'] in $acct_gather_interconnect_type) {
     class{ '::slurm::config::acct_gather':
       with_energy_ipmi       => ('acct_gather_energy/ipmi' in $acct_gather_energy_type),
       with_profile_hdf5      => ('acct_gather_profile/hdf5' in $acct_gather_profile_type),
+      with_profile_influxdb  => ('acct_gather_profile/influxdb' in $acct_gather_profile_type),
       with_interconnect_ofed => (['acct_gather_infiniband/ofed', 'acct_gather_interconnect/ofed'] in $acct_gather_interconnect_type),
     }
 
@@ -403,6 +407,18 @@ class slurm::config (
     $cgroup_conf_file = []
   }
 
+  # GRES configuration file
+  if  $gres_definitions {
+    class{ '::slurm::config::gres':
+      gres_definitions => $gres_definitions,
+    }
+
+    $gres_conf_file = ['/etc/slurm/gres.conf']
+  }
+  else {
+    $gres_conf_file = []
+  }
+
   # Topology plugin configuration file
   if  ('topology/tree' in $topology_plugin) {
     class{ '::slurm::config::topology':}
@@ -417,6 +433,6 @@ class slurm::config (
     '/etc/slurm/slurm.conf',
   ]
 
-  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $common_config_files)
+  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
 
 }
