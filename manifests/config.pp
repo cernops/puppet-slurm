@@ -19,7 +19,7 @@ class slurm::config (
   Optional[String] $backup_controller = undef,
   Optional[String] $backup_addr = $backup_controller,
   Integer[0,1] $allow_spec_resources_usage = 0,
-  Enum['checkpoint/blcr','checkpoint/none','checkpoint/ompi','checkpoint/poe'] $checkpoint_type= 'checkpoint/none',
+  Enum['checkpoint/none','checkpoint/ompi'] $checkpoint_type= 'checkpoint/none',
   Optional[String] $chos_loc = undef,
   Enum['core_spec/cray','core_spec/none'] $core_spec_plugin = 'core_spec/none',
   Enum['Conservative','OnDemand','Performance','PowerSave'] $cpu_freq_def = 'Performance',
