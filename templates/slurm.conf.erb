@@ -63,7 +63,6 @@ MailProg=<%= @mail_prog %>
 <%= @mail_domain.nil? ? '#MailDomain=' : ('MailDomain=' + @mail_domain) %>
 MaxJobCount=<%= @max_job_count %>
 MaxStepCount=<%= @max_step_count %>
-MemLimitEnforce=<%= @mem_limit_enforce %>
 MsgAggregationParams=<%= @msg_aggregation_params.map{|pair| pair.join('=')}.join(',') %>
 PluginDir=<%= @plugin_dir %>
 <%= @plug_stack_config.nil? ? '#PlugStackConfig=' : ('PlugStackConfig=' + @plug_stack_config) %>
