@@ -91,9 +91,9 @@ class slurm::config (
 
   Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
   Optional[String] $auth_info = undef,
-  Enum['crypto/munge','crypto/openssl'] $crypto_type = 'crypto/munge',
   Optional[String] $job_credential_private_key = undef,
   Optional[String] $job_credential_public_certificate = undef,
+  Enum['cred/munge'] $cred_type = 'cred/munge',
   Enum['mcs/account','mcs/group','mcs/none','mcs/user'] $mcs_plugin = 'mcs/none',
   Optional[String] $mcs_parameters = undef,
   Integer[0,1] $use_pam = 0,
@@ -244,7 +244,7 @@ class slurm::config (
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin
   if  ($auth_type == 'auth/munge') or
-      ($crypto_type == 'crypto/munge') {
+      ($cred_type == 'cred/munge') {
 
     ensure_packages($munge_packages, {'ensure' => $munge_version})
 
@@ -313,14 +313,6 @@ class slurm::config (
       hasstatus => true,
       subscribe => File['munge homedir','/etc/munge/munge.key'],
     }
-  }
-
-  # If openssl will be used for the crypto plugin, the key pair is a required file
-  if $crypto_type == 'crypto/openssl' {
-    $openssl_credential_files = [$job_credential_private_key,$job_credential_public_certificate]
-  }
-  else {
-    $openssl_credential_files = []
   }
 
   if $cluster_name != undef {
@@ -433,6 +425,6 @@ class slurm::config (
     '/etc/slurm/slurm.conf',
   ]
 
-  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
+  $required_files = concat($acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
 
 }
