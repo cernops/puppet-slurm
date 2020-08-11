@@ -19,7 +19,7 @@ class slurm::config (
   Optional[String] $backup_controller = undef,
   Optional[String] $backup_addr = $backup_controller,
   Integer[0,1] $allow_spec_resources_usage = 0,
-  Enum['checkpoint/blcr','checkpoint/none','checkpoint/ompi','checkpoint/poe'] $checkpoint_type= 'checkpoint/none',
+  Enum['checkpoint/none','checkpoint/ompi'] $checkpoint_type= 'checkpoint/none',
   Optional[String] $chos_loc = undef,
   Enum['core_spec/cray','core_spec/none'] $core_spec_plugin = 'core_spec/none',
   Enum['Conservative','OnDemand','Performance','PowerSave'] $cpu_freq_def = 'Performance',
@@ -38,7 +38,7 @@ class slurm::config (
   Integer[0,1] $job_requeue = 0,
   Optional[Array[String]] $job_submit_plugins = undef,
   Integer[0,1] $kill_on_bad_exit = 0,
-  Enum['launch/aprun','launch/poe','launch/runjob','launch/slurm'] $launch_type = 'launch/slurm',
+  Enum['launch/aprun','launch/runjob','launch/slurm'] $launch_type = 'launch/slurm',
   Optional[Array[Enum['mem_sort','slurmstepd_memlock','slurmstepd_memlock_all','test_exec']]] $launch_parameters = undef,
   Optional[Array[String]] $licenses = undef,
   Optional[Enum['node_features/knl_cray','node_features/knl_generic']] $node_features_plugins = undef,
@@ -46,7 +46,6 @@ class slurm::config (
   Optional[String] $mail_domain = undef,
   Integer[1] $max_job_count = 10000,
   Integer[1] $max_step_count = 40000,
-  Enum['no','yes'] $mem_limit_enforce = 'no',
   Hash[Enum['WindowMsgs','WindowTime'],Integer[1]] $msg_aggregation_params = {'WindowMsgs' => 1, 'WindowTime' => 100},
   String $plugin_dir = '/usr/local/lib/slurm',
   Optional[String] $plug_stack_config = undef,
@@ -55,7 +54,7 @@ class slurm::config (
   Enum['preempt/none','preempt/partition_prio','preempt/qos'] $preempt_type = 'preempt/none',
   Array[Enum['OFF','CANCEL','CHECKPOINT','GANG','REQUEUE','SUSPEND']] $preempt_mode = ['OFF'],
   Optional[Array[Enum['accounts','cloud','jobs','nodes','partitions','reservations','usage','users']]] $private_data = undef,
-  Optional[Enum['proctrack/cgroup','proctrack/cray','proctrack/linuxproc','proctrack/lua','proctrack/sgi_job','proctrack/pgid']] $proctrack_type = undef,
+  Optional[Enum['proctrack/cgroup','proctrack/cray','proctrack/linuxproc','proctrack/pgid']] $proctrack_type = undef,
   Integer[0,2] $propagate_prio_process = 0,
   Optional[Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']]] $propagate_resource_limits = undef,
   Optional[Array[Enum['ALL','NONE','AS','CORE','CPU','DATA','FSIZE','MEMLOCK','NOFILE','NPROC','RSS','STACK']]] $propagate_resource_limits_except = undef,
@@ -79,7 +78,7 @@ class slurm::config (
   Optional[String] $srun_prolog = undef,
   Optional[String] $srun_port_range = undef,
   String $state_save_location = '/var/spool/slurmctld',
-  Enum['switch/none','switch/nrt'] $switch_type = 'switch/none',
+  Enum['switch/none'] $switch_type = 'switch/none',
   Array[Enum['task/affinity','task/cgroup','task/none']] $task_plugin = ['task/none'],
   Array[String] $task_plugin_param = ['Sched'],
   Optional[String] $task_epilog = undef,
@@ -91,9 +90,9 @@ class slurm::config (
 
   Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
   Optional[String] $auth_info = undef,
-  Enum['crypto/munge','crypto/openssl'] $crypto_type = 'crypto/munge',
   Optional[String] $job_credential_private_key = undef,
   Optional[String] $job_credential_public_certificate = undef,
+  Enum['cred/munge'] $cred_type = 'cred/munge',
   Enum['mcs/account','mcs/group','mcs/none','mcs/user'] $mcs_plugin = 'mcs/none',
   Optional[String] $mcs_parameters = undef,
   Integer[0,1] $use_pam = 0,
@@ -144,12 +143,12 @@ class slurm::config (
   Integer[0] $scheduler_time_slice = 30,
   Enum['sched/backfill','sched/builtin','sched/hold'] $scheduler_type = 'sched/backfill',
   Optional[Array[String]] $scheduler_parameters = undef,
-  Enum['select/bluegene','select/cons_res','select/cray','select/linear','select/serial'] $select_type = 'select/linear',
+  Enum['select/bluegene','select/cons_res','select/cons_tres','select/cray','select/linear'] $select_type = 'select/linear',
   Optional[Array[Enum['OTHER_CONS_RES','NHC_ABSOLUTELY_NO','NHC_NO_STEPS','NHC_NO','CR_CPU','CR_CPU_Memory','CR_Core','CR_Core_Memory','CR_ONE_TASK_PER_CORE','CR_CORE_DEFAULT_DIST_BLOCK','CR_LLN','CR_Pack_Nodes','CR_Socket','CR_Socket_Memory','CR_Memory']]] $select_type_parameters = undef,
   Integer[0] $vsize_factor = 0,
 
   Enum['priority/basic','priority/multifactor'] $priority_type = 'priority/basic',
-  Optional[Array[Enum['ACCRUE_ALWAYS','CALCULATE_RUNNING','DEPTH_OBLIVIOUS','FAIR_TREE','INCR_ONLY','MAX_TRES','SMALL_RELATIVE_TO_TIME']]] $priority_flags = undef,
+  Optional[Array[Enum['ACCRUE_ALWAYS','CALCULATE_RUNNING','DEPTH_OBLIVIOUS','NO_FAIR_TREE','INCR_ONLY','MAX_TRES','SMALL_RELATIVE_TO_TIME','NO_NORMAL_ALL','NO_NORMAL_ASSOC','NO_NORMAL_PART','NO_NORMAL_QOS','NO_NORMAL_TRES']]] $priority_flags = undef,
   Integer[0] $priority_calc_period = 5,
   String $priority_decay_half_life = '7-0',
   Enum['NO','YES'] $priority_favor_small = 'NO',
@@ -187,7 +186,7 @@ class slurm::config (
   Optional[String] $job_comp_pass = undef,
   Optional[String] $job_comp_loc = undef,
   Enum['jobacct_gather/linux','jobacct_gather/cgroup','jobacct_gather/none'] $job_acct_gather_type = 'jobacct_gather/none',
-  Optional[Array[Enum['NoShared','UsePss','NoOverMemoryKill']]] $job_acct_gather_params = undef,
+  Optional[Array[Enum['NoShared','UsePss','OverMemoryKill']]] $job_acct_gather_params = undef,
   Hash[Enum['task','energy','network','filesystem'],Integer[0]] $job_acct_gather_frequency = {'task' => 30,'energy' => 0,'network' => 0,'filesystem' => 0},
   Integer[0] $acct_gather_node_freq = 0,
   Enum['acct_gather_energy/none','acct_gather_energy/ipmi','acct_gather_energy/rapl'] $acct_gather_energy_type = 'acct_gather_energy/none',
@@ -244,7 +243,7 @@ class slurm::config (
 
   # Authentication service for SLURM if MUNGE is used as authentication plugin
   if  ($auth_type == 'auth/munge') or
-      ($crypto_type == 'crypto/munge') {
+      ($cred_type == 'cred/munge') {
 
     ensure_packages($munge_packages, {'ensure' => $munge_version})
 
@@ -313,14 +312,6 @@ class slurm::config (
       hasstatus => true,
       subscribe => File['munge homedir','/etc/munge/munge.key'],
     }
-  }
-
-  # If openssl will be used for the crypto plugin, the key pair is a required file
-  if $crypto_type == 'crypto/openssl' {
-    $openssl_credential_files = [$job_credential_private_key,$job_credential_public_certificate]
-  }
-  else {
-    $openssl_credential_files = []
   }
 
   if $cluster_name != undef {
@@ -433,6 +424,6 @@ class slurm::config (
     '/etc/slurm/slurm.conf',
   ]
 
-  $required_files = concat($openssl_credential_files, $acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
+  $required_files = concat($acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
 
 }
