@@ -87,6 +87,7 @@ class slurm::config (
   String $tmp_fs = '/tmp',
   Enum['no','yes'] $track_wckey = 'no',
   Optional[String] $unkillable_step_program = undef,
+  Optional[Array[String]] $slurmctld_parameters = undef,
 
   Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
   Optional[String] $auth_info = undef,
@@ -238,6 +239,18 @@ class slurm::config (
   if $slurmctld_syslog_debug != undef or $slurmd_syslog_debug != undef {
     if versioncmp('17.11', $slurm::params::slurm_version) > 0 {
       fail('Parameters SlurmctldSyslogDebug,SlurmdSyslogDebug are supported from version 17.11 onwards.')
+    }
+  }
+
+  if $slurmctld_parameters != undef {
+    if versioncmp('18.08', $slurm::params::slurm_version) > 0 {
+      fail('Parameter SlurmctldParameters is supported from version 18.08 onwards.')
+    }
+  }
+
+  if $resume_fail_program != undef 
+    if versioncmp('18.08', $slurm::params::slurm_version) > 0 {
+      fail('Parameter ResumeFailProgram is supported from version 18.08 onwards.')
     }
   }
 

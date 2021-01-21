@@ -125,6 +125,12 @@ SlurmctldPidFile=<%= @slurmctld_pid_file %>
 <% else -%>
 SlurmctldPlugstack=<%= @slurmctld_plugstack.join(',') %>
 <% end -%>
+<%# comment out if empty, expand array if not                                -%>
+<% if @slurmctld_parameters.nil? -%>
+#SlurmctldParameters=
+<% else -%>
+SlurmctldParameters=<%= @slurmctld_parameters.join(',') %>
+<% end -%>
 <%#                                                                          -%>
 SlurmctldPort=<%= @slurmctld_port %>
 SlurmdPidFile=<%= @slurmd_pid_file %>
