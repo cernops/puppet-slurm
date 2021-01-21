@@ -217,6 +217,7 @@ class slurm::config (
   Optional[String] $suspend_exc_nodes = undef,
   Optional[String] $suspend_exc_parts = undef,
   Optional[String] $resume_program = undef,
+  Optional[String] $resume_fail_program = undef,
   Integer[0] $resume_timeout = 60,
   Integer[0] $resume_rate = 300,
 
@@ -248,7 +249,7 @@ class slurm::config (
     }
   }
 
-  if $resume_fail_program != undef 
+  if $resume_fail_program != undef {
     if versioncmp('18.08', $slurm::params::slurm_version) > 0 {
       fail('Parameter ResumeFailProgram is supported from version 18.08 onwards.')
     }
