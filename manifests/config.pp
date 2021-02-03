@@ -88,6 +88,7 @@ class slurm::config (
   Enum['no','yes'] $track_wckey = 'no',
   Optional[String] $unkillable_step_program = undef,
   Optional[Array[String]] $slurmctld_parameters = undef,
+  Optional[Array[String]] $communication_parameters = undef,
 
   Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
   Optional[String] $auth_info = undef,
@@ -249,8 +250,14 @@ class slurm::config (
     }
   }
 
+  if $communication_parameters != undef {
+    if versioncmp('18.00', $slurm::params::slurm_version) > 0 {
+      fail('Parameter CommunicationParameters is supported from version 18.08 onwards.')
+    }
+  }
+
   if $resume_fail_program != undef {
-    if versioncmp('18.08', $slurm::params::slurm_version) > 0 {
+    if versioncmp('18.00', $slurm::params::slurm_version) > 0 {
       fail('Parameter ResumeFailProgram is supported from version 18.08 onwards.')
     }
   }
