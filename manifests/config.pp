@@ -92,6 +92,7 @@ class slurm::config (
 
   Enum['auth/none','auth/munge'] $auth_type = 'auth/munge',
   Optional[String] $auth_info = undef,
+  Optional[Array[String]] $auth_alt_types = undef,
   Optional[String] $job_credential_private_key = undef,
   Optional[String] $job_credential_public_certificate = undef,
   Enum['cred/munge'] $cred_type = 'cred/munge',
@@ -259,6 +260,12 @@ class slurm::config (
   if $resume_fail_program != undef {
     if versioncmp('18.00', $slurm::params::slurm_version) > 0 {
       fail('Parameter ResumeFailProgram is supported from version 18.08 onwards.')
+    }
+  }
+
+  if $auth_alt_types != undef {
+    if versioncmp('19.00', $slurm::params::slurm_version) > 0 {
+      fail('Parameter AuthAltTypes is supported from version 19 onwards.')
     }
   }
 

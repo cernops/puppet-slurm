@@ -182,6 +182,7 @@ CredType=<%= @cred_type %>
 MCSPlugin=<%= @mcs_plugin %>
 <%= @mcs_parameters.nil? ? '#MCSParameters=' : ('MCSParameters=' + @mcs_parameters) %>
 UsePAM=<%= @use_pam %>
+<%= @auth_alt_types.nil? ? '#AuthAltTypes=' : ('AuthAltTypes=' + @auth_alt_types.join(',')) %>
 
 
 # TIMERS
