@@ -14,8 +14,8 @@
 #
 
 class slurm::config (
-  String $control_machine,
-  String $control_addr = $control_machine,
+  Optional[String] $control_machine = undef,
+  Optional[String] $control_addr = $control_machine,
   Optional[String] $backup_controller = undef,
   Optional[String] $backup_addr = $backup_controller,
   Integer[0,1] $allow_spec_resources_usage = 0,
@@ -228,8 +228,8 @@ class slurm::config (
   Enum['route/default','route/topology'] $route_plugin = 'route/default',
   Integer[1] $tree_width = 50,
 
-  Array[Hash,1] $workernodes,
-  Array[Hash,1] $partitions,
+  Optional[Array[Hash,1]] $workernodes = undef,
+  Optional[Array[Hash,1]] $partitions = undef,
   Optional[Array[Hash,1]] $gres_definitions = undef,
 
   Boolean $open_firewall = false,
