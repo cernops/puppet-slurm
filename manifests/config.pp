@@ -224,7 +224,7 @@ class slurm::config (
   Integer[0] $resume_rate = 300,
 
   Enum['topology/3d_torus','topology/node_rank','topology/none','topology/tree'] $topology_plugin= 'topology/none',
-  Array[Enum['Dragonfly','NoCtldInAddrAny','NoInAddrAny','TopoOptional']] $topology_param = ['NoCtldInAddrAny','NoInAddrAny'],
+  Optional[Array[String]] $topology_param = undef,
   Enum['route/default','route/topology'] $route_plugin = 'route/default',
   Integer[1] $tree_width = 50,
 
