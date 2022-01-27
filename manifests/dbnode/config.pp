@@ -70,7 +70,7 @@ class slurm::dbnode::config (
     content => template('slurm/slurmdbd.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
-    mode    => '0400',
+    mode    => '0600',
     require => User['slurm'],
   }
 
