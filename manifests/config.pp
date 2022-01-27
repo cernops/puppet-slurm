@@ -128,7 +128,6 @@ class slurm::config (
   Integer[0] $def_mem_per_node = 0,
   Optional[String] $epilog = undef,
   Optional[String] $epilog_slurmctld = undef,
-  Integer[0,2] $fast_schedule = 1,
   Integer[0] $max_array_size = 1001,
   Integer[0] $max_mem_per_cpu = 0,
   Integer[0] $max_mem_per_node = 0,

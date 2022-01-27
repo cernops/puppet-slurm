@@ -209,7 +209,6 @@ Waittime=<%= @wait_time %>
 <%= @def_mem_per_node==0 ? '#DefMemPerNode=' : ('DefMemPerNode=' + @def_mem_per_node.to_s) %>
 <%= @epilog.nil? ? '#Epilog=' : ('Epilog=' + @epilog) %>
 <%= @epilog_slurmctld.nil? ? '#EpilogSlurmctld=' : ('EpilogSlurmctld=' + @epilog_slurmctld) %>
-FastSchedule=<%= @fast_schedule %>
 MaxArraySize=<%= @max_array_size %>
 MaxMemPerCPU=<%= @max_mem_per_cpu %>
 MaxMemPerNode=<%= @max_mem_per_node %>
