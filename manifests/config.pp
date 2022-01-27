@@ -44,7 +44,6 @@ class slurm::config (
   Optional[String] $mail_domain = undef,
   Integer[1] $max_job_count = 10000,
   Integer[1] $max_step_count = 40000,
-  Hash[Enum['WindowMsgs','WindowTime'],Integer[1]] $msg_aggregation_params = {'WindowMsgs' => 1, 'WindowTime' => 100},
   String $plugin_dir = '/usr/local/lib/slurm',
   Optional[String] $plug_stack_config = undef,
   Enum['power/cray','power/none'] $power_plugin = 'power/none',
