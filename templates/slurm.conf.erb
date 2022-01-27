@@ -276,7 +276,6 @@ PriorityWeightTRES=<%= @priority_weight_tres.map{|pair| pair.join('=')}.join(','
 # ACCOUNTING
 <%= @cluster_name.nil? ? '#ClusterName=' : ('ClusterName=' + @cluster_name) %>
 <%= @default_storage_host.nil? ? '#DefaultStorageHost=' : ('DefaultStorageHost=' + @default_storage_host) %>
-DefaultStoragePort=<%= @default_storage_port %>
 <%= @default_storage_type.nil? ? '#DefaultStorageType=' : ('DefaultStorageType=' + @default_storage_type) %>
 <%= @default_storage_user.nil? ? '#DefaultStorageUser=' : ('DefaultStorageUser=' + @default_storage_user) %>
 <%= @default_storage_pass.nil? ? '#DefaultStoragePass=' : ('DefaultStoragePass=' + @default_storage_pass) %>
