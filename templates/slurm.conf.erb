@@ -24,7 +24,6 @@ ControlAddr=<%= @control_addr %>
 
 # GENERAL OPTIONS
 AllowSpecResourcesUsage=<%= @allow_spec_resources_usage %>
-CheckpointType=<%= @checkpoint_type %>
 <%= @chos_loc.nil? ? '#ChosLoc=' : ('ChosLoc=' + @chos_loc) %>
 CoreSpecPlugin=<%= @core_spec_plugin %>
 CpuFreqDef=<%= @cpu_freq_def %>
@@ -37,7 +36,6 @@ FirstJobId=<%= @first_job_id %>
 MaxJobId=<%= @max_job_id %>
 <%= @gres_types.nil? ? '#GresTypes=' : ('GresTypes=' + @gres_types.join(',')) %>
 GroupUpdateForce=<%= @group_update_force %>
-JobCheckpointDir=<%= @job_checkpoint_dir %>
 JobContainerType=<%= @job_container_type %>
 JobFileAppend=<%= @job_file_append %>
 JobRequeue=<%= @job_requeue %>
