@@ -108,11 +108,12 @@ PropagateResourceLimitsExcept=<%= @propagate_resource_limits_except.join(',') %>
 <%= @resv_prolog.nil? ? '#ResvProlog=' : ('ResvProlog=' + @resv_prolog) %>
 ReturnToService=<%= @return_to_service %>
 <%= @salloc_default_command.nil? ? '#SallocDefaultCommand=' : ('SallocDefaultCommand=' + @salloc_default_command) %>
+<%= @bcast_exclude.nil? ? '#BcastExclude=' : ('BcastExclude=' + @bcast_exclude.join(',')) %>
 <%# comment out if empty, expand hash if not                                 -%>
 <% if @sbcast_parameters.nil? -%>
 #SbcastParameters=
 <% else -%>
-SbcastParameters=<%= @sbcast_parameters.map{|pair| pair.join('=')}.join(',') %>
+BcastParameters=<%= @bcast_parameters.map{|pair| pair.join('=')}.join(',') %>
 <% end -%>
 <%#                                                                          -%>
 SlurmctldPidFile=<%= @slurmctld_pid_file %>
@@ -293,9 +294,9 @@ AccountingStorageTRES=<%= @accounting_storage_tres.join(',') %>
 <%#                                                                          -%>
 AccountingStorageType=<%= @accounting_storage_type %>
 <%= @accounting_storage_user.nil? ? '#AccountingStorageUser=' : ('AccountingStorageUser=' + @accounting_storage_user) %>
+<%= @accounting_store_flags.nil? ? '#AccountingStoreFlags=' : ('AccountingStoreFlags=' + @accounting_store_flags.join(',')) %>
 <%= @accounting_storage_pass.nil? ? '#AccountingStoragePass=' : ('AccountingStoragePass=' + @accounting_storage_pass) %>
 <%= @accounting_storage_loc.nil? ? '#AccountingStorageLoc=' : ('AccountingStorageLoc=' + @accounting_storage_loc) %>
-AccountingStoreJobComment=<%= @accounting_store_jobhost %>
 JobCompType=<%= @job_comp_type %>
 <%= @job_comp_host.nil? ? '#JobCompHost=' : ('JobCompHost=' + @job_comp_host) %>
 JobCompPort=<%= @job_comp_port %>
