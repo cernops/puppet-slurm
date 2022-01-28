@@ -78,7 +78,7 @@ class slurm::config (
   String $state_save_location = '/var/spool/slurmctld',
   Enum['switch/none'] $switch_type = 'switch/none',
   Array[Enum['task/affinity','task/cgroup','task/none']] $task_plugin = ['task/none'],
-  Array[String] $task_plugin_param = ['Sched'],
+  Optional[Array[String]] $task_plugin_param = undef,
   Optional[String] $task_epilog = undef,
   Optional[String] $task_prolog = undef,
   Integer[1] $tcp_timeout = 2,
