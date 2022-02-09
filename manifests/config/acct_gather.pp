@@ -27,6 +27,7 @@
 #
 
 class slurm::config::acct_gather (
+  String $ensure,
   Boolean $with_energy_ipmi = false,
   Integer[0] $energy_ipmi_frequency = 10,
   Enum['no','yes'] $energy_ipmi_calc_adjustment = 'no',
@@ -49,7 +50,7 @@ class slurm::config::acct_gather (
 
   # AcctGather* plugin configuration
   file{'/etc/slurm/acct_gather.conf':
-    ensure  => file,
+    ensure  => $ensure,
     content => template('slurm/acct_gather.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',

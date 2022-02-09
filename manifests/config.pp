@@ -162,7 +162,7 @@ class slurm::config (
   Integer[0] $priority_weight_qos = 0,
   Optional[Hash[String,Integer[0]]] $priority_weight_tres = undef,
 
-  String $cluster_name,
+  Optional[String] $cluster_name = undef,
   Optional[String] $default_storage_host = undef,
   Optional[String] $default_storage_type = undef,
   Optional[String] $default_storage_user = undef,
@@ -229,8 +229,8 @@ class slurm::config (
 
   Boolean $open_firewall = false,
   Array[String] $munge_packages = $slurm::params::munge_packages,
-  Boolean $shared_config = false,
-  Optional[String] $shared_config_path = undef,
+
+  Boolean $configless = false,
 ) inherits slurm::params {
 
   # The following variables are version dependent
@@ -337,53 +337,30 @@ class slurm::config (
     }
   }
 
-  if $cluster_name != undef {
-    $shared_config_filepath = "${shared_config_path}/${cluster_name}.conf"
-  } else {
-    $shared_config_filepath = "${shared_config_path}/slurm.conf"
+  # If not configless, all nodes will get the config files.
+  # If configless, config files are only written in the headnode.
+  if $configless and $slurm::node_type == 'head' {
+    $slurmctld_params = $slurmctld_parameters + 'enable_configless'
+    $config_files_ensure = 'file'
+  } elsif $configless {
+    $config_files_ensure = 'absent'
+  } else { # not configless
+    $slurmctld_params = $slurmctld_parameters
+    $config_files_ensure = 'file'
   }
 
-  if $shared_config {
-    # slurm.conf just includes another file. That file's path is either:
-    # $shared_config_path/slurm.conf if $slurm::cluster_name is undefined,
-    # $shared_config_path/$cluster_name.conf otherwise.
-    if $shared_config_path == undef {
-      fail('shared_config_path needs to be defined when $shared_config=True')
-    }
-    file { '/etc/slurm/slurm.conf':
-      ensure  => file,
-      content => template('slurm/slurm-shared.conf.erb'),
-      owner   => 'slurm',
-      group   => 'slurm',
-      mode    => '0644',
-      require => User['slurm'],
-    }
-  } else {
-    # Create slurm.conf with full configuration
-    file{'/etc/slurm/slurm.conf':
-      ensure  => file,
-      content => template('slurm/slurm.conf.erb'),
-      owner   => 'slurm',
-      group   => 'slurm',
-      mode    => '0644',
-      require => User['slurm'],
-    }
-  }
-
-  if $shared_config and $slurm::node_type == 'head' {
-    file { $shared_config_filepath:
-      ensure  => file,
-      content => template('slurm/slurm.conf.erb'),
-      owner   => 'slurm',
-      group   => 'slurm',
-      mode    => '0644',
-      require => User['slurm'],
-    }
+  file { '/etc/slurm/slurm.conf':
+    ensure  => $config_files_ensure,
+    content => template('slurm/slurm.conf.erb'),
+    owner   => 'slurm',
+    group   => 'slurm',
+    mode    => '0644',
+    require => User['slurm'],
   }
 
   # Plugin loader
   file{ '/etc/slurm/plugstack.conf':
-    ensure  => file,
+    ensure  => $config_files_ensure,
     content => template('slurm/plugstack.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
@@ -397,6 +374,7 @@ class slurm::config (
       ('acct_gather_profile/influxdb' in $acct_gather_profile_type) or
       (['acct_gather_infiniband/ofed', 'acct_gather_interconnect/ofed'] in $acct_gather_interconnect_type) {
     class{ '::slurm::config::acct_gather':
+      ensure                 => $config_files_ensure,
       with_energy_ipmi       => ('acct_gather_energy/ipmi' in $acct_gather_energy_type),
       with_profile_hdf5      => ('acct_gather_profile/hdf5' in $acct_gather_profile_type),
       with_profile_influxdb  => ('acct_gather_profile/influxdb' in $acct_gather_profile_type),
@@ -413,7 +391,9 @@ class slurm::config (
   if  ('proctrack/cgroup' in $proctrack_type) or
       ('task/cgroup' in $task_plugin) or
       ('jobacct_gather/cgroup' in $job_acct_gather_type) {
-    class{ '::slurm::config::cgroup':}
+    class{ '::slurm::config::cgroup':
+      ensure => $config_files_ensure,
+    }
 
     $cgroup_conf_file = ['/etc/slurm/cgroup.conf']
   }
@@ -424,6 +404,7 @@ class slurm::config (
   # GRES configuration file
   if  $gres_definitions {
     class{ '::slurm::config::gres':
+      ensure           => $config_files_ensure,
       gres_definitions => $gres_definitions,
     }
 
@@ -435,7 +416,9 @@ class slurm::config (
 
   # Topology plugin configuration file
   if  ('topology/tree' in $topology_plugin) {
-    class{ '::slurm::config::topology':}
+    class{ '::slurm::config::topology':
+      ensure => $config_files_ensure,
+    }
     $topology_conf_file = ['/etc/slurm/topology.conf']
   }
   else {
@@ -448,5 +431,4 @@ class slurm::config (
   ]
 
   $required_files = concat($acct_gather_conf_file, $cgroup_conf_file, $topology_conf_file, $gres_conf_file, $common_config_files)
-
 }

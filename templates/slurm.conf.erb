@@ -124,10 +124,10 @@ SlurmctldPidFile=<%= @slurmctld_pid_file %>
 SlurmctldPlugstack=<%= @slurmctld_plugstack.join(',') %>
 <% end -%>
 <%# comment out if empty, expand array if not                                -%>
-<% if @slurmctld_parameters.nil? -%>
+<% if @slurmctld_params.nil? -%>
 #SlurmctldParameters=
 <% else -%>
-SlurmctldParameters=<%= @slurmctld_parameters.join(',') %>
+SlurmctldParameters=<%= @slurmctld_params.join(',') %>
 <% end -%>
 <%#                                                                          -%>
 <%# comment out if empty, expand array if not                                -%>
@@ -387,11 +387,15 @@ TreeWidth=<%= @tree_width %>
 
 
 # COMPUTE NODES
+<% if @workernodes -%>
 <% @workernodes.each do |workernode| -%>
 <%= workernode.map{|pair| pair.join('=')}.join(' ') %>
 <% end %>
+<% end -%>
 
 # PARTITIONS
+<% if @partitions -%>
 <% @partitions.each do |partition| -%>
 <%= partition.map{|pair| pair.join('=')}.join(' ') %>
 <% end %>
+<% end -%>

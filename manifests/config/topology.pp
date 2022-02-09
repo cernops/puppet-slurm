@@ -14,12 +14,13 @@
 #
 
 class slurm::config::topology (
+  String $ensure,
   Array[Hash[String, String]] $switches,
 ) {
 
   # Topology file
   file{'/etc/slurm/topology.conf':
-    ensure  => file,
+    ensure  => $ensure,
     content => template('slurm/topology.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',

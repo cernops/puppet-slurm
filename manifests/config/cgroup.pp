@@ -30,6 +30,7 @@
 #
 
 class slurm::config::cgroup (
+  String $ensure,
   Enum['no','yes'] $cgroup_automount = 'no',
   String $cgroup_mountpoint = '/sys/fs/cgroup',
   Enum['no','yes'] $constrain_cores = 'no',
@@ -50,7 +51,7 @@ class slurm::config::cgroup (
 
   # Cgroup configuration
   file{ '/etc/slurm/cgroup.conf':
-    ensure  => file,
+    ensure  => $ensure,
     content => template('slurm/cgroup.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',

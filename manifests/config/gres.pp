@@ -12,12 +12,13 @@
 #
 
 class slurm::config::gres (
+  String $ensure,
   Array[Hash,1] $gres_definitions,
 ) {
 
   # Cgroup configuration
   file{ '/etc/slurm/gres.conf':
-    ensure  => file,
+    ensure  => $ensure,
     content => template('slurm/gres.conf.erb'),
     owner   => 'slurm',
     group   => 'slurm',
