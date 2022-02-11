@@ -46,6 +46,10 @@ Please note that since this module supports over 300 parameters, these have not 
 
 # Usage 
 
+## Notes for RHEL/CentOS users
+
+The Slurm packages provided by EPEL may have certain packages renamed. This Slurm puppet module follows the upstream nomenclature and assumes the upstream specfile has been used to generate packages.
+
 ## Requirements for usage at CERN
 
 This package should provide everything necessary for most SLURM deployments.
