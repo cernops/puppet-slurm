@@ -60,7 +60,6 @@ class slurm::config (
   Optional[String] $resv_epilog = undef,
   Optional[String] $resv_prolog = undef,
   Integer[0,2] $return_to_service = 0,
-  Optional[String] $salloc_default_command = undef,
   Optional[Array[String]] $bcast_exclude = ['/lib', '/usr/lib', '/lib64', '/usr/lib64'],
   Optional[Hash[Enum['send_libs', 'DestDir','Compression'],String]] $bcast_parameters = undef,
   String $slurmctld_pid_file = '/var/run/slurmctld.pid',

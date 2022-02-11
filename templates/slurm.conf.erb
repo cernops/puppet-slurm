@@ -107,7 +107,6 @@ PropagateResourceLimitsExcept=<%= @propagate_resource_limits_except.join(',') %>
 <%= @resv_epilog.nil? ? '#ResvEpilog=' : ('ResvEpilog=' + @resv_epilog) %>
 <%= @resv_prolog.nil? ? '#ResvProlog=' : ('ResvProlog=' + @resv_prolog) %>
 ReturnToService=<%= @return_to_service %>
-<%= @salloc_default_command.nil? ? '#SallocDefaultCommand=' : ('SallocDefaultCommand=' + @salloc_default_command) %>
 <%= @bcast_exclude.nil? ? '#BcastExclude=' : ('BcastExclude=' + @bcast_exclude.join(',')) %>
 <%# comment out if empty, expand hash if not                                 -%>
 <% if @sbcast_parameters.nil? -%>
