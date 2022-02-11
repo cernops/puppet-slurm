@@ -54,6 +54,7 @@ LaunchType=<%= @launch_type %>
 <% else -%>
 LaunchParameters=<%= @launch_parameters.join(',') %>
 <% end -%>
+<%= @interactive_step_options.nil? ? '#InteractiveStepOptions=' : ('InteractiveStepOptions=' + @interactive_step_options) %>
 <%#                                                                          -%>
 <%= @licenses.nil? ? '#Licenses=' : ('Licenses=' + @licenses) %>
 <%= @node_features_plugins.nil? ? '#NodeFeaturesPlugins=' : ('NodeFeaturesPlugins=' + @node_features_plugins) %>

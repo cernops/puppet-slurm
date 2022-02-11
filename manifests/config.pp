@@ -38,6 +38,7 @@ class slurm::config (
   Integer[0,1] $kill_on_bad_exit = 0,
   Enum['launch/aprun','launch/runjob','launch/slurm'] $launch_type = 'launch/slurm',
   Optional[Array[String]] $launch_parameters = undef,
+  Optional[String] $interactive_step_options = undef,
   Optional[Array[String]] $licenses = undef,
   Optional[Enum['node_features/knl_cray','node_features/knl_generic']] $node_features_plugins = undef,
   String $mail_prog = '/bin/mail',
